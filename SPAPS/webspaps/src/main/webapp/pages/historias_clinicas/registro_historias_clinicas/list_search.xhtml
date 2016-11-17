@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic">LISTADO DE PACIENTES</div>
+				<div class="SeparatorFull"></div>
+				<div class="Container100 Responsive100 Flex">
+					<div
+						class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="nombre" value="Nombre" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:inputText id="nombre" required="false"
+							value="#{hojaMedicaController.nombre}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="nombre" display="tooltip" />
+					</div>
+					
+					<div
+						class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="apellidoPaterno" value="Ap. Paterno" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:inputText id="apellidoPaterno" required="false"
+							value="#{hojaMedicaController.apellidoPaterno}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="apellidoPaterno" display="tooltip" />
+					</div>
+					
+					<div
+						class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="apellidoMaterno" value="Ap. Materno" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:inputText id="apellidoMaterno" required="false"
+							value="#{hojaMedicaController.apellidoMaterno}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="apellidoMaterno" display="tooltip" />
+					</div>
+				</div>
+				<div class="Container100 ui-fluid">
+					<p:dataTable id="singleHC" var="var"
+						value="#{hojaMedicaController.listaPaciente}"
+						selectionMode="single"
+						selection="#{hojaMedicaController.pacienteSelected}"
+						rowKey="#{var.id}" emptyMessage="No se encontraron registros."
+						reflow="true">
+						<f:facet name="header">
+                        	Seleccione una Paciente para ingresar al sistema
+                        </f:facet>
+
+						<p:ajax update="form001" event="rowSelect"
+							listener="#{hojaMedicaController.onRowSelect}" />
+
+						<p:column width="5%" headerText="Accion">
+							<p:commandButton icon="fa fa-file-text-o"
+								styleClass="Fs14 White OrangeButton" update="form001"
+								immediate="true"
+								actionListener="#{hojaMedicaController.redireccionar(var)}">
+							</p:commandButton>
+						</p:column>
+						<p:column width="25%" headerText="Nombre">
+							<h:outputText value="#{var.nombre}" />
+
+						</p:column>
+						<p:column width="25%" headerText="Aplellido Paterno">
+							<h:outputText value="#{var.apellidoPaterno}" />
+						</p:column>
+						<p:column width="25%" headerText="Apellido Materno">
+							<h:outputText value="#{var.apellidoMaterno}" />
+						</p:column>
+
+						<p:column width="12%" headerText="Estado"
+							style="text-align:center;">
+							<h:outputText value="#{var.estado}" />
+						</p:column>
+						<p:column width="12%" headerText="Fecha Registro"
+							style="text-align:center;">
+							<h:outputText value="#{var.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column width="12%" headerText="Registro">
+							<h:outputText value="#{var.usuarioRegistro}" />
+						</p:column>
+
+						<f:facet name="footer">
+							<h:outputText
+								value="#{hojaMedicaController.listaPaciente.size()} Registros en Total" />
+						</f:facet>
+					</p:dataTable>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

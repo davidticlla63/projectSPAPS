@@ -1,0 +1,175 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic Container100 Responsive100 TexAlLeft">LISTA
+				COMPROBANTE</div>
+
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+				<p:dataTable id="dataTableComprobante" var="item" rendered="true"
+					widgetVar="comprobanteTable" expandedRow="#{true}"
+					value="#{comprobanteController.listComprobante}" reflow="true"
+					emptyMessage="No se encontraron comprobantes."
+					selection="#{comprobanteController.comprobante}"
+					selectionMode="single" rowKey="#{item.id}">
+
+					<f:facet name="header">
+       						 Expandir un Comprobante para ver su Detalle
+       						 <p:commandButton icon="fa fa-cogs" value="Ajuste"
+							style="float:right" type="button" rendered="false"
+							immediate="true" oncomplete="PF('dlgConfiguracion').show();" />
+					</f:facet>
+
+					<p:column style="width:16px">
+						<p:rowToggler />
+					</p:column>
+					
+					<p:rowExpansion>
+							<br />
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group ">
+										<div class="col-md-12">
+											<p:dataTable id="dataTableDetalleComprobante"
+												var="itemDetail" value="#{item.listLineaContable}"
+												rowKey="#{itemDetail.id}">
+												<f:facet name="header">
+													Detalle Comprobante #{item.correlativo}
+												</f:facet>
+												<p:column width="25%" headerText="Código"
+													style="text-align:center;">
+													<h:outputText
+														value="#{itemDetail.planCuenta.codigoAuxiliar}" />
+												</p:column>
+												<p:column width="25%" headerText="Nombre"
+													style="text-align:center;">
+													<h:outputText value="#{itemDetail.planCuenta.descripcion}" />
+												</p:column>
+												<p:column width="25%" headerText="Debe"
+													style="text-align:center;">
+													<h:outputText value="#{itemDetail.debeNacional}">
+														<f:convertNumber type="number" groupingUsed="true"
+															minFractionDigits="2" pattern="#0.00" />
+													</h:outputText>
+												</p:column>
+												<p:column width="25%" headerText="Haber"
+													style="text-align:center;">
+													<h:outputText value="#{itemDetail.haberNacional}">
+														<f:convertNumber type="number" groupingUsed="true"
+															minFractionDigits="2" pattern="#0.00" />
+													</h:outputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</div>
+							<br />
+						</p:rowExpansion>
+
+					<p:ajax event="rowSelect"
+						listener="#{comprobanteController.onRowSelect}" update="form001" />
+
+					<p:column width="8%" headerText="Código"
+						filterBy="#{item.correlativo}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.correlativo}" />
+					</p:column>
+
+					<p:column width="17%" headerText="Glosa" filterBy="#{item.glosa}"
+						filterStyle="width: 100%; height:25px;" style="text-align:left;">
+						<h:outputText value="#{item.glosa}" />
+					</p:column>
+					
+					<p:column width="7%" headerText="T.Cambio"
+							filterBy="#{item.tipoCambio}"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;">
+							<h:outputText value="#{item.tipoCambio}">
+								<f:convertNumber type="number" groupingUsed="true"
+									minFractionDigits="2" pattern="#0.00" />
+							</h:outputText>
+						</p:column>
+
+					<p:column width="7%" headerText="Total Bs."
+							filterBy="#{item.importeTotalDebeNacional}"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;">
+							<h:outputText value="#{item.importeTotalDebeNacional}">
+								<f:convertNumber type="number" groupingUsed="true"
+									minFractionDigits="2" pattern="#0.00" />
+							</h:outputText>
+						</p:column>
+
+						<p:column width="7%" headerText="Total $us."
+							filterBy="#{item.importeTotalDebeExtranjero}"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;">
+							<h:outputText value="#{item.importeTotalDebeExtranjero}">
+								<f:convertNumber type="number" groupingUsed="true"
+									minFractionDigits="2" pattern="#0.00" />
+							</h:outputText>
+						</p:column>
+
+					<p:column width="10%" headerText="Tipo"
+						filterBy="#{item.tipoComprobante.nombre}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<f:facet name="filter">
+							<p:selectOneMenu onchange="PF('dataTableComprobante').filter()">
+								<f:selectItem itemLabel="TODOS" itemValue="#{null}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{sessionContable.listTipoComprobante}"
+									var="item" itemLabel="#{item.nombre}"
+									itemValue="#{item.nombre}" />
+							</p:selectOneMenu>
+						</f:facet>
+						<h:outputText value="#{item.tipoComprobante.nombre}" />
+					</p:column>
+
+					<p:column width="10%" headerText="Estado" filterBy="#{item.estado}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<f:facet name="filter">
+							<p:selectOneMenu onchange="PF('comprobanteTable').filter()">
+								<f:selectItem itemLabel="PROCESADO" itemValue="AC" />
+								<f:selectItem itemLabel="ANULADO" itemValue="AN" />
+							</p:selectOneMenu>
+						</f:facet>
+						<span class="label label-success"><h:outputText
+								rendered="#{item.estado=='AC'}" value="PROCESADO" /></span>
+						<span class="label label-danger"><h:outputText
+								rendered="#{item.estado=='AN'}" value="ANULADO" /></span>
+					</p:column>
+
+					<p:column width="8%" headerText="Usuario Reg." priority="6"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;"
+						rendered=" #{ ! comprobanteController.seleccionado}"
+						filterBy="#{item.usuarioRegistro}">
+						<h:outputText value="#{item.usuarioRegistro}">
+						</h:outputText>
+					</p:column>
+
+					<p:column width="6%" headerText="Fecha Reg."
+						filterBy="#{item.fecha}" priority="2"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.fecha}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<f:facet name="footer">
+						<h:outputText
+							value="#{comprobanteController.listComprobante.size()} Registros en Total" />
+					</f:facet>
+
+				</p:dataTable>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

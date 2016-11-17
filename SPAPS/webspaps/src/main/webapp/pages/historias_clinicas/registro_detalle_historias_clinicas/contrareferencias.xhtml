@@ -1,0 +1,200 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<div class="Container100 Responsive100 TexAlLeft"
+		onload="#{historiaClinicaDetalleController.resetContrareferencia()}">
+		<h:form id="formContrareferencia">
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="medicoEmisorCRF" value="Médico Emisor:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:outputLabel id="medicoEmisorCRF"
+						value="#{historiaClinicaDetalleController.contrareferencia.medicoReceptor.nombre} #{historiaClinicaDetalleController.contrareferencia.medicoReceptor.apellidoPaterno} #{historiaClinicaDetalleController.contrareferencia.medicoReceptor.apellidoMaterno} - #{historiaClinicaDetalleController.contrareferencia.medicoReceptor.obtenerEspecialidadActiva().nombre}" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="medicoReceptorCRF" value="Médico Receptor:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:outputLabel id="medicoReceptorCRF"
+						value="#{historiaClinicaDetalleController.contrareferencia.medicoEmisor} - #{historiaClinicaDetalleController.contrareferencia.especialidadMedicoEmisor}" />
+				</div>
+
+			</div>
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<div class="Container100 Responsive100 TexAlLeft">
+					<p:outputLabel value="Atención brindada en consulta:" />
+				</div>
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="consultaExternaCRF" value="Consulta Externa:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputTextarea id="consultaExternaCRF"
+						value="#{historiaClinicaDetalleController.contrareferencia.consultaExterna}"
+						style="width:100%">
+						<p:ajax event="change" update="consultaExternaCRF" />
+					</p:inputTextarea>
+					<p:message for="consultaExternaCRF" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="salaCRF" value="Sala:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputTextarea id="salaCRF"
+						value="#{historiaClinicaDetalleController.contrareferencia.sala}"
+						style="width:100%">
+						<p:ajax event="change" update="salaCRF" />
+					</p:inputTextarea>
+					<p:message for="salaCRF" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="consultaGuardiaCRF" value="Consulta Guardia:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputTextarea id="consultaGuardiaCRF"
+						value="#{historiaClinicaDetalleController.contrareferencia.consultaGuardia}"
+						style="width:100%">
+						<p:ajax event="change" update="consultaGuardiaCRF" />
+					</p:inputTextarea>
+					<p:message for="consultaGuardiaCRF" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="impresionDiagnosticaCRF"
+						value="Impresion Diagnostica:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputTextarea id="impresionDiagnosticaCRF"
+						value="#{historiaClinicaDetalleController.contrareferencia.impresionDiagnostica}"
+						style="width:100%">
+						<p:ajax event="change" update="impresionDiagnosticaCRF" />
+					</p:inputTextarea>
+					<p:message for="impresionDiagnosticaCRF" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="conductaCRF" value="Conducta:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputTextarea id="conductaCRF"
+						value="#{historiaClinicaDetalleController.contrareferencia.conducta}"
+						style="width:100%">
+						<p:ajax event="change" update="conductaCRF" />
+					</p:inputTextarea>
+					<p:message for="conductaCRF" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container60 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:commandButton id="cancelarCRF" icon="fa fa-arrow-left"
+						value="Cancelar" styleClass="Fs14 White OrangeButton">
+						<p:ajax update="form001"
+							listener="#{historiaClinicaDetalleController.cancelarContrareferencia()}" />
+					</p:commandButton>
+				</div>
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:commandButton id="guardarCRF" icon="fa fa-check" value="Guardar"
+						styleClass="Fs14 White GreenButton">
+						<p:ajax update="form001"
+							listener="#{historiaClinicaDetalleController.registrarContrareferencia}" />
+					</p:commandButton>
+				</div>
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:commandButton id="imprimir" icon="fa fa-check" value="Imprimir" rendered="#{historiaClinicaDetalleController.modificar}"
+						styleClass="Fs14 White BlueButton">
+						<p:ajax update="form001"
+							listener="#{historiaClinicaDetalleController.imprimirContraTransferencia()}" />
+					</p:commandButton>
+				</div>
+			</div>
+
+			<!-- listado  -->
+			<div class="Container100 Responsive100 Flex">
+
+				<div class="Card">
+					<p:dataTable id="singleDTCRF" var="item" widgetVar="CRFTable"
+						value="#{historiaClinicaDetalleController.listaContrareferencias}"
+						selectionMode="single" scrollRows="10" scrollable="true"
+						liveScroll="true" scrollHeight="150"
+						selection="#{historiaClinicaDetalleController.contrareferenciaSelected}"
+						style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+						emptyMessage="No se encontraron Registros." rowKey="#{item.id}"
+						reflow="true">
+
+						<p:ajax event="rowSelect"
+							listener="#{historiaClinicaDetalleController.onRowSelectContrareferencia}"
+							update="form001" />
+
+						<p:column headerText="Médico Receptor"
+							filterBy="#{item.medicoReceptor.nombre}">
+							<h:outputText
+								value="#{item.medicoReceptor.nombre} #{item.medicoReceptor.apellidoPaterno} #{item.medicoReceptor.apellidoMaterno} - #{item.medicoReceptor.obtenerEspecialidadActiva().nombre}" />
+						</p:column>
+						<p:column headerText="Médico Solicitante"
+							filterBy="#{item.medicoEmisor}">
+							<h:outputText
+								value="#{item.medicoEmisor} - #{item.especialidadMedicoEmisor}" />
+						</p:column>
+						<p:column width="10%" headerText="Fecha Registro"
+							filterBy="#{item.fechaRegistro}">
+							<h:outputText value="#{item.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column style="width:30px">
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="singleDTCRF"
+									listener="#{historiaClinicaDetalleController.onRowDeleteContrareferencia(item)}" />
+							</p:commandButton>
+						</p:column>
+						<f:facet name="footer">
+							<h:outputText
+								value="#{historiaClinicaDetalleController.listaContrareferencias.size()} Registros en Total" />
+						</f:facet>
+					</p:dataTable>
+					<p:growl id="msgs2" showDetail="true" for="singleDTCRF" />
+				</div>
+			</div>
+		</h:form>
+	</div>
+
+
+</ui:composition>

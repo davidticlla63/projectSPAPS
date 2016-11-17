@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Medicamento</title>
+		<f:event listener="#{medicamentoController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TexAlLeft">
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{medicamentoController.crear}"
+								styleClass="Fs14 White GreenButton" value="Nuevo Medicamento">
+								<p:ajax update="form001"
+									listener="#{medicamentoController.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{medicamentoController.modificar or medicamentoController.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{medicamentoController.initNew()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{medicamentoController.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar">
+								<p:ajax update="form001"
+									listener="#{medicamentoController.registrar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{medicamentoController.modificar}" value="Modificar"
+								styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{medicamentoController.actualizar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{medicamentoController.modificar}" value="Eliminar"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{medicamentoController.eliminar()}" />
+							</p:commandButton>
+						</div>
+						<div class="Container25 Responsive100 TexAlRight">
+							<p:breadCrumb>
+								<p:menuitem value="."
+									url="#{request.contextPath}/dashboard.xhtml" />
+								<p:menuitem value="Seguridad"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+								<p:menuitem value="Pais"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+							</p:breadCrumb>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment
+						rendered="#{medicamentoController.modificar or medicamentoController.registrar}">
+
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<div class="CardBigTopic">INFORMACIÓN DE MEDICAMENTO</div>
+								<div class="SeparatorFull"></div>
+								<div class="Container100 ui-fluid">
+									<p:focus for="nombreGenerico" />
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="nombreGenerico" value="Nombre Genérico:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="nombreGenerico" required="true"
+												value="#{medicamentoController.medicamento.nombreGenerico}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="nombreGenerico" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="nombreComercial"
+												value="Nombre Comercial:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="nombreComercial" required="true"
+												value="#{medicamentoController.medicamento.nombreComercial}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="nombreComercial" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="presentacion" value="Presentación:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="presentacion" required="true"
+												value="#{medicamentoController.medicamento.presentacion}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="presentacion" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="indicaciones" value="Indicaciones:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="indicaciones"
+												value="#{medicamentoController.medicamento.indicaciones}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="indicaciones" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="contraIndicaciones"
+												value="Contra Indicaciones:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="contraIndicaciones"
+												value="#{medicamentoController.medicamento.contraIndicaciones}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="contraIndicaciones" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="sobreDosis" value="Sobre Dosis:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="sobreDosis" required="true"
+												value="#{medicamentoController.medicamento.sobreDosis}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="sobreDosis" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="reaccionesAdversas"
+												value="Reacciones Adversas:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="reaccionesAdversas" required="true"
+												value="#{medicamentoController.medicamento.reaccionesAdversas}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="reaccionesAdversas" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="observaciones" value="Observaciones:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="observaciones" required="true"
+												value="#{medicamentoController.medicamento.observaciones}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="observaciones" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="estados" value="Estado:" />
+										</div>
+										<div class="Container60 Responsive50">
+											<p:selectOneMenu id="estados" style=""
+												value="#{medicamentoController.medicamento.estado}">
+												<p:ajax event="valueChange" update="estados" />
+												<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+												<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+												<f:selectItem itemLabel="ELIMINADO" itemValue="RM" />
+											</p:selectOneMenu>
+											<p:message for="estados" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+											<p:outputLabel for="sucursales" value="Sucursal:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:autoComplete id="sucursales" style="width: 100%"
+												inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+												value="#{medicamentoController.sucursal.nombre}"
+												completeMethod="#{medicamentoController.onCompleteSucursal}"
+												minQueryLength="1" forceSelection="true" var="_var"
+												itemLabel="#{_var}" itemValue="#{_var.nombre}"
+												placeholder="Escriba la sucursal" maxResults="10"
+												dropdown="true">
+												<p:ajax event="itemSelect"
+													update="sucursales, formDetalle:cars1, msgs1"
+													listener="#{medicamentoController.onRowSelectSucursalClick}" />
+												<p:column>
+													<h:outputText value="#{_var.nombre}" />
+												</p:column>
+											</p:autoComplete>
+											<p:message for="sucursales" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 Flex">
+										<div class="Card">
+											<div class="CardBigTopic">Listado de Sucursales</div>
+											<div class="SeparatorFull"></div>
+											<div class="Container100 ui-fluid">
+												<h:form id="formDetalle">
+													<p:dataTable id="cars1" var="car"
+														value="#{medicamentoController.listaDetalleMedicamentoSucursal}"
+														editable="true" style="margin-bottom:20px" reflow="true">
+
+														<p:column headerText="Sucursal">
+															<h:outputText value="#{car.sucursal.nombre}" />
+														</p:column>
+
+														<p:column style="width:70px">
+															<p:commandButton type="button" icon="fa fa-trash-o"
+																styleClass="Fs14 White RedButton">
+																<p:ajax update="cars1"
+																	listener="#{medicamentoController.onRowDeleteSucursal(car)}" />
+															</p:commandButton>
+														</p:column>
+
+													</p:dataTable>
+
+												</h:form>
+
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</ui:fragment>
+
+
+					<!-- listado  -->
+					<ui:fragment rendered="#{medicamentoController.crear}">
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<p:dataTable id="singleDT" var="item"
+									widgetVar="MedicamentoTable"
+									value="#{medicamentoController.listaMedicamento}"
+									selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{medicamentoController.medicamento}"
+									rowKey="#{item.id}" reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{medicamentoController.onRowSelect}"
+										update="form001" />
+
+									<p:column width="8%" headerText="Identificador"
+										filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" filterBy="#{item.id}">
+										<h:outputText value="#{item.id}" />
+									</p:column>
+									<p:column headerText="Descripcion"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.nombre}">
+										<h:outputText value="#{item.nombreGenerico}" />
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										headerText="Estado" style="text-align:center;"
+										filterBy="#{item.estado}">
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado=='AC'}" value="Activo" /></span>
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado=='IN'}" value="Inactivo" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado=='RM'}" value="Eliminado" /></span>
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" headerText="Usuario Registro"
+										filterBy="#{item.usuarioRegistro}">
+										<h:outputText value="#{item.usuarioRegistro}" />
+									</p:column>
+									<p:column width="10%" headerText="Fecha Registro"
+										style="text-align:center;"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.fechaRegistro}">
+										<h:outputText value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{medicamentoController.listaMedicamento.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

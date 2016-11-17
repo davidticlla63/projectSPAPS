@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="form001">
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container60 Responsive100 TexAlLeft">
+
+						<p:commandButton icon="fa fa-plus"
+							rendered="#{cotizacionController1.nuevo}"
+							styleClass="Fs14 White GreenButton" value="Nueva Cotizacion"
+							update="form001" immediate="true"
+							actionListener="#{cotizacionController1.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{cotizacionController1.seleccionado or cotizacionController1.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{cotizacionController1.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{cotizacionController1.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001" process="@this form001:panelcabecera"
+							actionListener="#{cotizacionController1.registrarNotaDeVenta()}">
+						</p:commandButton>
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{cotizacionController1.seleccionado}"
+							styleClass="Fs14 White BlueButton" value="Modificar"
+							update="form001" process="@this form001:panelcabecera"
+							actionListener="#{cotizacionController1.modificarCotizacion()}">
+						</p:commandButton>
+
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/dashboard.xhtml" />
+							<p:menuitem value="Ventas"
+								url="/pages/inventario/proceso/orden_traspaso/index.xhtml" />
+							<p:menuitem value="Cotizacion"
+								url="/pages/inventario/proceso/orden_traspaso/index.xhtml" />
+
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100">
+				<ui:include src="#{cotizacionController1.currentPage}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+		<!-- BEGIN DIALOG -->
+		<!-- BEGIN DIALOG -->
+		<p:dialog header="ORDEN DE LABORATORIO" widgetVar="dlgProducto" id="xxx"
+			responsive="true" modal="true" resizable="false" closable="false">
+			<h:form id="formDlgDetalleOrdenIngreso">
+				<p:focus for="orden">
+				</p:focus>
+				<p:panelGrid id="grid1" columns="3" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="orden" value="Numero Orden" />
+					<p:inputText id="orden" required="true"
+						value="#{cotizacionController1.numeroOrden}">
+					</p:inputText>
+					<p:message for="orden" display="tooltip" />
+				</p:panelGrid>
+
+				<p:panelGrid id="grid2" columns="2" cellpadding="5" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+					<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+						styleClass="Fs14 White OrangeButton"
+						onclick="PF('dlgProducto').hide()" immediate="true"
+						actionListener="#{cotizacionController1.cancelarOrdenLab()}">
+						<p:resetInput target="formDlgDetalleOrdenIngreso" />
+					</p:commandButton>
+					<p:commandButton icon="fa fa-check" value="Aceptar"
+						styleClass="Fs14 White GreenButton"
+						update="formDlgDetalleOrdenIngreso, form001" process="@form"
+						actionListener="#{cotizacionController1.obtenerOrdenLab()}">
+					</p:commandButton>
+				</p:panelGrid>
+
+			</h:form>
+		</p:dialog>
+		<!-- END DIALOG -->
+		<p:dialog header="Informacion" widgetVar="dlg2" modal="true"
+			height="100">
+			<h:outputText
+				value="No se encontro ninguna Orden de Laboratorio" />
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

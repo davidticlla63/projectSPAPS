@@ -1,0 +1,240 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Container100 NoIndent Flex FlexWrap">
+			<div class="Container100 Responsive100 Flex">
+				<ui:fragment>
+					<div class="Container100">
+						<div class="Card">
+							<p:panel header="Datos Orden Laboratorio" toggleable="true">
+								<div class="Container100 ui-fluid">
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="codigo" value="Codigo" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="codigo" readonly="true"
+												value="#{labOrdenResultadosController.labOrden.codigo}">
+											</p:inputText>
+											<p:message for="codigo" display="tooltip" />
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="pacienteID" value="Paciente" />
+										</div>
+
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="pacienteID" readonly="true"
+												value="#{labOrdenResultadosController.labOrden.paciente.nombre} #{labOrdenResultadosController.labOrden.paciente.apellidoPaterno} #{labOrdenResultadosController.labOrden.paciente.apellidoMaterno}">
+												<p:ajax event="change" />
+											</p:inputText>
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="medicoID" value="Medico" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="medicoID" readonly="true"
+												value="#{labOrdenResultadosController.labOrden.medico.nombre} #{labOrdenResultadosController.labOrden.medico.apellidoPaterno} #{labOrdenResultadosController.labOrden.medico.apellidoMaterno}">
+												<p:ajax event="change" />
+											</p:inputText>
+
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="especialidadID" value="Especialidad" />
+										</div>
+										<div class="Container60 Responsive50 TexAlLeft">
+											<p:inputText id="especialidadID" readonly="true"
+												value="#{labOrdenResultadosController.labOrden.especialidad}">
+											</p:inputText>
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="fechaID" value="Fecha" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:calendar id="fechaID" required="true"
+												value="#{labOrdenResultadosController.labOrden.fecha}"
+												pattern="dd/MM/yyyy HH:mm" mask="true" lang="en" />
+											<p:message for="fechaID" display="tooltip" />
+										</div>
+									</div>
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="comentario" value="Descripcion" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputTextarea id="comentario"
+												value="#{labOrdenResultadosController.labOrden.descripcion}">
+												<p:ajax event="change" />
+											</p:inputTextarea>
+											<p:message for="comentario" display="tooltip" />
+										</div>
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="lugar" value="Sucursal" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="lugar" readonly="true"
+												value="#{labOrdenResultadosController.labOrden.sucursal.nombre} #{labOrdenResultadosController.labOrden.sucursal.ciudad.nombre}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="lugar" display="tooltip" />
+										</div>
+
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="estados" value="Estado" />
+										</div>
+										<div class="Container60 Responsive50">
+											<p:selectOneMenu id="estados" style=""
+												value="#{labOrdenController.labOrden.estado}">
+												<p:ajax event="valueChange" update="estados" />
+												<f:selectItem itemLabel="Pendiente" itemValue="PE" />
+												<f:selectItem itemLabel="Aprobada" itemValue="AP" />
+												<f:selectItem itemLabel="Vigente" itemValue="VI" />
+												<f:selectItem itemLabel="Procesada" itemValue="PR" />
+											</p:selectOneMenu>
+											<p:message for="estados" display="tooltip" />
+										</div>
+									</div>
+								</div>
+							</p:panel>
+
+						</div>
+					</div>
+				</ui:fragment>
+
+			</div>
+
+			<div class="Container100 Responsive100 Flex">
+				<div class="Card">
+					<div class="CardBigTopic Container90 Responsive100 TexAlLeft">
+						EXAMENES</div>
+					<div class="CardBigTopic Container10 Responsive100 TexAlRight"
+						style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+					</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+
+						<p:dataTable var="car" expandedRow="#{true}" id="examenesID"
+							value="#{labOrdenResultadosController.listOrdenDetalles}"
+							selection="#{labOrdenResultadosController.selectedDetalleImag}"
+							selectionMode="single" rowKey="#{car.id}" reflow="true">
+
+							<f:facet name="header">
+										Lista de Examenes
+								</f:facet>
+
+							<p:column style="width:16px">
+								<p:rowToggler />
+							</p:column>
+							<!-- 	 <p:ajax update="form001" event="rowSelect" -->
+							<!--	listener="#{labOrdenResultadosController.onRowSelectDetalle}" /> -->
+
+							<p:column width="5%" headerText="Id">
+								<h:outputText value="#{car.id}" />
+							</p:column>
+
+							<p:column width="60%" headerText="Descripcion">
+								<h:outputText value="#{car.descripcion}" />
+							</p:column>
+
+							<p:column width="10%" headerText="Completado">
+								<p:progressBar value="#{car.porcentaje}"
+									labelTemplate="#{car.porcentaje}%" displayOnly="true" />
+							</p:column>
+							<p:column width="25%" headerText="Fecha">
+								<h:outputText value="#{car.fechaRegistro}">
+									<f:convertDateTime pattern="dd/MM/yyy" />
+								</h:outputText>
+							</p:column>
+							<p:rowExpansion>
+								<p:dataTable id="resultadoID" var="item"
+									value="#{car.listOrdenSubDetalle}" editable="true"
+									style="margin-bottom:20px; size:10px" reflow="true">
+
+									<f:facet name="header">
+										Lista de Resultados
+									</f:facet>
+
+									<p:column width="20%" headerText="Nombre">
+										<h:outputText value="#{item.descripcion}" />
+									</p:column>
+									<p:column width="20%" headerText="Valores Ref.">
+										<h:outputText value="#{item.parametros} #{item.unidaMedida}" />
+									</p:column>
+									<p:column width="10%" headerText="Resultados">
+										<p:inputText
+											rendered="#{item.fueraRango=='false' and item.tipoValor=='RANGOS'}"
+											value="#{item.resultado}"
+											style="text-align: right; color:red;">
+											<p:ajax event="change" update="resultadoID,form001:examenesID" />
+										</p:inputText>
+										<p:inputText
+											rendered="#{item.fueraRango=='true' and item.tipoValor=='RANGOS'}"
+											value="#{item.resultado}" style="text-align: right;">
+											<p:ajax event="change" update="resultadoID,form001:examenesID" />
+											<f:convertNumber type="number" maxFractionDigits="2"
+												minFractionDigits="2" />
+										</p:inputText>
+
+										<p:selectOneMenu rendered="#{item.tipoValor=='MULTIPLE'}"
+											style="width: 100%" value="#{item.resultado}">
+											<p:ajax event="valueChange" update="resultadoID,form001:examenesID" />
+											<f:selectItems value="#{item.obtenerTextoMultiples()}" />
+										</p:selectOneMenu>
+
+										<p:inputText rendered="#{item.tipoValor=='NUMERICO'}"
+											value="#{item.resultado}" style="text-align: right;">
+											<p:ajax event="change" update="resultadoID,form001:examenesID" />
+										</p:inputText>
+									</p:column>
+
+									<p:column width="30%" headerText="Observacion">
+										<p:inputText value="#{item.observacion}">
+											<p:ajax event="change" update="resultadoID,form001:examenesID" />
+										</p:inputText>
+									</p:column>
+									<p:column width="10%" headerText="Estado">
+										<span class="FontLatoBold Fs14 Green DispBlock"> <h:outputText
+												rendered="#{item.completado=='false'}" value="Nuevo" />
+										</span>
+										<span class="FontLatoBold Fs14 Blue DispBlock"> <h:outputText
+												rendered="#{item.completado=='true'}" value="Completado" />
+										</span>
+									</p:column>
+									<f:facet name="footer">
+										<p:progressBar value="#{car.porcentaje}"
+											labelTemplate="#{car.porcentaje}%" displayOnly="true" />
+									</f:facet>
+								</p:dataTable>
+							</p:rowExpansion>
+						</p:dataTable>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

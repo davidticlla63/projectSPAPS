@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Antecedente</title>
+		<f:event listener="#{antecedenteController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TexAlLeft">
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{antecedenteController.crear}"
+								styleClass="Fs14 White GreenButton" value="Nuevo Antecedente">
+								<p:ajax update="form001"
+									listener="#{antecedenteController.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{antecedenteController.modificar or antecedenteController.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{antecedenteController.initNew()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{antecedenteController.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar">
+								<p:ajax update="form001"
+									listener="#{antecedenteController.registrar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{antecedenteController.modificar}" value="Modificar"
+								styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{antecedenteController.actualizar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{antecedenteController.modificar}" value="Eliminar"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{antecedenteController.eliminar()}" />
+							</p:commandButton>
+						</div>
+						<div class="Container25 Responsive100 TexAlRight">
+							<p:breadCrumb>
+								<p:menuitem value="."
+									url="#{request.contextPath}/dashboard.xhtml" />
+								<p:menuitem value="Seguridad"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+								<p:menuitem value="Pais"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+							</p:breadCrumb>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment
+						rendered="#{antecedenteController.modificar or antecedenteController.registrar}">
+
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<div class="CardBigTopic">INFORMACIÓN DE ANTECEDENTES</div>
+								<div class="SeparatorFull"></div>
+								<div class="Container100 Responsive100 ui-fluid TexAlLeft">
+									<p:focus for="descripcionAntecedente" />
+									<div class="Container60 Responsive100 ui-fluid TexAlLeft">
+
+										<div
+											class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="descripcionAntecedente"
+												value="Descripcion" />
+										</div>
+										<div class="Container50 Responsive50 TexAlRight">
+											<p:inputText id="descripcionAntecedente" required="true"
+												value="#{antecedenteController.antecedente.descripcion}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="descripcionAntecedente" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container60 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+											<p:outputLabel for="tipoAntecedente"
+												value="Tipo de Diagnostico:" />
+										</div>
+										<div class="Container50 Responsive50 TexAlRight">
+											<p:autoComplete id="tipoAntecedente" style="width: 100%"
+												inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+												value="#{antecedenteController.tipoAntecedente.nombre}"
+												completeMethod="#{antecedenteController.onCompleteTipoAntecedente}"
+												minQueryLength="1" forceSelection="true" var="_var"
+												itemLabel="#{_var}" itemValue="#{_var.nombre}"
+												placeholder="Escriba el Tipo de Antecedente" maxResults="10"
+												dropdown="true">
+												<p:ajax event="itemSelect" update="form001"
+													listener="#{antecedenteController.onRowSelectTipoAntecedenteClick}" />
+												<p:column>
+													<h:outputText value="#{_var.nombre}" />
+												</p:column>
+											</p:autoComplete>
+											<p:message for="tipoAntecedente" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 Flex">
+										<div class="Card">
+											<div class="CardBigTopic">Listado de Tipos de
+												Antecedentes</div>
+											<div class="SeparatorFull"></div>
+											<div class="Container100 ui-fluid">
+												<h:form id="formDetalleTipoAntecedentes">
+													<p:dataTable id="cars1" var="car"
+														value="#{antecedenteController.listaDetalleTipoAntecedente}"
+														editable="true" style="margin-bottom:20px" reflow="true">
+
+														<p:column headerText="Nombre de Tipo de Antecedente">
+															<h:outputText value="#{car.tipoAntecedente.nombre}" />
+														</p:column>
+
+														<p:column style="width:70px">
+															<p:commandButton type="button" icon="fa fa-trash-o"
+																styleClass="Fs14 White RedButton">
+																<p:ajax update="cars1"
+																	listener="#{antecedenteController.onRowDeleteTipoAntecedente(car)}" />
+															</p:commandButton>
+														</p:column>
+													</p:dataTable>
+												</h:form>
+											</div>
+										</div>
+									</div>
+
+									<div class="Container60 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="especialidadID" value="Especialidad" />
+										</div>
+										<div class="Container50 Responsive50 TexAlRight">
+											<p:autoComplete id="especialidadID" style="width: 100%"
+												inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+												value="#{antecedenteController.especialidad.nombre}"
+												completeMethod="#{antecedenteController.completeEspecialidad}"
+												minQueryLength="1" forceSelection="true" var="_var"
+												itemLabel="#{_var}" itemValue="#{_var.nombre}"
+												placeholder="Escriba Especialidad" maxResults="10"
+												dropdown="true">
+												<p:ajax event="itemSelect" update="form001"
+													listener="#{antecedenteController.onRowSelectEspecialidadClick}" />
+												<p:column>
+													<h:outputText value="#{_var.nombre}" />
+												</p:column>
+											</p:autoComplete>
+										</div>
+									</div>
+
+									<div class="Container50 Responsive100 Flex">
+										<div class="Card">
+											<div class="CardBigTopic">Listado de Especialidades</div>
+											<div class="SeparatorFull"></div>
+											<div class="Container100 ui-fluid">
+												<h:form id="formDetalle">
+													<p:dataTable id="cars1" var="car"
+														value="#{antecedenteController.listaDetalleAntecedenteEspecialidad}"
+														editable="true" style="margin-bottom:20px" reflow="true">
+
+														<p:column headerText="Nombre de Especialidad">
+															<h:outputText value="#{car.especialidad.nombre}" />
+														</p:column>
+
+														<p:column style="width:70px">
+															<p:commandButton type="button" icon="fa fa-trash-o"
+																styleClass="Fs14 White RedButton">
+																<p:ajax update="cars1"
+																	listener="#{antecedenteController.onRowDeleteEspecialidad(car)}" />
+															</p:commandButton>
+														</p:column>
+
+													</p:dataTable>
+
+												</h:form>
+
+											</div>
+
+										</div>
+
+									</div>
+
+									<div class="Container60 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="estados" value="Estado" />
+										</div>
+										<div class="Container50 Responsive50">
+											<p:selectOneMenu id="estados" style=""
+												value="#{antecedenteController.antecedente.estado}">
+												<p:ajax event="valueChange" update="estados" />
+												<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+												<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+												<f:selectItem itemLabel="ELIMINADO" itemValue="RM" />
+											</p:selectOneMenu>
+											<p:message for="estados" display="tooltip" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</ui:fragment>
+
+
+					<!-- listado  -->
+					<ui:fragment rendered="#{antecedenteController.crear}">
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<p:dataTable id="singleDT" var="item"
+									widgetVar="AntecedenteTable"
+									value="#{antecedenteController.listaAntecedente}"
+									selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{antecedenteController.antecedente}"
+									rowKey="#{item.id}" reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{antecedenteController.onRowSelect}"
+										update="form001" />
+
+									<p:column width="8%" headerText="Identificador"
+										filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" filterBy="#{item.id}">
+										<h:outputText value="#{item.id}" />
+									</p:column>
+									<p:column headerText="Descripcion"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.descripcion}">
+										<h:outputText value="#{item.descripcion}" />
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										headerText="Estado" style="text-align:center;"
+										filterBy="#{item.estado}">
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado=='AC'}" value="Activo" /></span>
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado=='IN'}" value="Inactivo" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado=='RM'}" value="Eliminado" /></span>
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" headerText="Usuario Registro"
+										filterBy="#{item.usuarioRegistro}">
+										<h:outputText value="#{item.usuarioRegistro}" />
+									</p:column>
+									<p:column width="10%" headerText="Fecha Registro"
+										style="text-align:center;"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.fechaRegistro}">
+										<h:outputText value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{antecedenteController.listaAntecedente.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<ui:fragment rendered="#{!facturacionVentaController.verReporte}">
+					<div class="CardBigTopic">LISTADO DE FACTURAS</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+						<p:dataTable id="singleDT" var="var"
+							value="#{facturacionVentaController.listFacturaVenta}"
+							selectionMode="single"
+							selection="#{facturacionVentaController.facturaVenta}"
+							rowKey="#{var.id}" paginator="true"
+							emptyMessage="No se encontraron registros." reflow="true">
+							<f:facet name="header">
+							Selecciona una Factura.
+						</f:facet>
+							<p:ajax update="form001" event="rowSelect"
+								listener="#{facturacionVentaController.onRowSelect}" />
+
+							<p:column width="8%" headerText="Código" filterBy="#{var.codigo}">
+								<h:outputText value="#{var.id}" />
+							</p:column>
+
+							<p:column width="18%" headerText="Cliente"
+								filterBy="#{var.concepto}">
+								<h:outputText value="#{var.concepto}" />
+							</p:column>
+
+							<p:column width="18%" headerText="Total"
+								filterBy="#{var.totalFacturado}">
+								<h:outputText value="#{var.totalFacturado}" />
+							</p:column>
+
+							<p:column width="10%" headerText="Fecha Registro"
+								style="text-align:center;" filterBy="#{var.fechaRegistro}">
+								<h:outputText value="#{var.fechaRegistro}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<f:facet name="footer">
+								<h:outputText
+									value="#{facturacionVentaController.listFacturaVenta.size()} Registros en Total" />
+							</f:facet>
+						</p:dataTable>
+
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{facturacionVentaController.verReporte}">
+					<div class="CardBigTopic">REPORTE FACTURA</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid"></div>
+					<p:media player="pdf" rendered="true"
+						value="#{facturacionVentaController.urlReport}" width="800px"
+						height="800px" />
+				</ui:fragment>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

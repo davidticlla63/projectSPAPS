@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Diagnostico</title>
+		<f:event listener="#{diagnosticoController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TexAlLeft">
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{diagnosticoController.crear}"
+								styleClass="Fs14 White GreenButton" value="Nuevo Diagnostico">
+								<p:ajax update="form001"
+									listener="#{diagnosticoController.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{diagnosticoController.modificar or diagnosticoController.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{diagnosticoController.initNew()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{diagnosticoController.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar">
+								<p:ajax update="form001"
+									listener="#{diagnosticoController.registrar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{diagnosticoController.modificar}" value="Modificar"
+								styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{diagnosticoController.actualizar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{diagnosticoController.modificar}" value="Eliminar"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{diagnosticoController.eliminar()}" />
+							</p:commandButton>
+						</div>
+						<div class="Container25 Responsive100 TexAlRight">
+							<p:breadCrumb>
+								<p:menuitem value="."
+									url="#{request.contextPath}/dashboard.xhtml" />
+								<p:menuitem value="Seguridad"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+								<p:menuitem value="Pais"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+							</p:breadCrumb>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment
+						rendered="#{diagnosticoController.modificar or diagnosticoController.registrar}">
+
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<div class="CardBigTopic">INFORMACIÓN DE DIAGNOSTICO</div>
+								<div class="SeparatorFull"></div>
+								<div class="Container100 ui-fluid">
+									<p:focus for="descripcionDiagnostico" />
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="descripcionDiagnostico" value="Nombre" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="descripcionDiagnostico" required="true"
+												value="#{diagnosticoController.diagnostico.descripcion}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="descripcionDiagnostico" display="tooltip" />
+										</div>
+
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="estados" value="Estado" />
+										</div>
+										<div class="Container60 Responsive50">
+											<p:selectOneMenu id="estados" style=""
+												value="#{diagnosticoController.diagnostico.estado}">
+												<p:ajax event="valueChange" update="estados" />
+												<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+												<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+												<f:selectItem itemLabel="ELIMINADO" itemValue="RM" />
+											</p:selectOneMenu>
+											<p:message for="estados" display="tooltip" />
+										</div>
+
+										<div class="Container80 Responsive100 ui-fluid TexAlLeft">
+											<div
+												class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+												<p:outputLabel for="tipoDiagnostico"
+													value="Tipo de Diagnostico:" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<p:autoComplete id="tipoDiagnostico" style="width: 100%"
+													inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+													value="#{diagnosticoController.tipoDiagnostico.nombre}"
+													completeMethod="#{diagnosticoController.onCompleteTipoDiagnostico}"
+													minQueryLength="1" forceSelection="true" var="_var"
+													itemLabel="#{_var}" itemValue="#{_var.nombre}"
+													placeholder="Escriba el Tipo de Diagnostico"
+													maxResults="10" dropdown="true">
+													<p:ajax event="itemSelect" update="form001"
+														listener="#{diagnosticoController.onRowSelectTipoDiagnosticoClick}" />
+													<p:column>
+														<h:outputText value="#{_var.nombre}" />
+													</p:column>
+												</p:autoComplete>
+												<p:message for="tipoDiagnostico" display="tooltip" />
+											</div>
+										</div>
+
+										<div class="Container100 Responsive100 Flex">
+											<div class="Card">
+												<div class="CardBigTopic">Listado de Tipos de
+													Diagnosticos</div>
+												<div class="SeparatorFull"></div>
+												<div class="Container100 ui-fluid">
+													<h:form id="formDetalle">
+														<p:dataTable id="cars1" var="car"
+															value="#{diagnosticoController.listaDetalleTipoDiagnostico}"
+															editable="true" style="margin-bottom:20px" reflow="true">
+
+															<p:ajax event="rowEdit" immediate="true"
+																listener="#{diagnosticoController.onRowEdit(car)}"
+																update="cars1" />
+															<p:ajax event="rowEditCancel" immediate="true"
+																listener="#{diagnosticoController.onRowDelete(car)}"
+																update="cars1" />
+
+															<p:column headerText="Nombre de Tipo de Diagnostico">
+																<h:outputText value="#{car.tipoDiagnostico.nombre}" />
+															</p:column>
+
+															<p:column style="width:70px">
+																<p:commandButton type="button" icon="fa fa-trash-o"
+																	styleClass="Fs14 White RedButton">
+																	<p:ajax update="cars1"
+																		listener="#{diagnosticoController.onRowDelete(car)}" />
+																</p:commandButton>
+															</p:column>
+
+														</p:dataTable>
+
+													</h:form>
+
+												</div>
+
+											</div>
+
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="especialidadID" value="Especialidad" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:autoComplete id="especialidadID" style="width: 100%"
+												inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+												value="#{diagnosticoController.especialidad.nombre}"
+												completeMethod="#{diagnosticoController.completeEspecialidad}"
+												minQueryLength="1" forceSelection="true" var="_var"
+												itemLabel="#{_var}" itemValue="#{_var.nombre}"
+												placeholder="Escriba la Especialidad" maxResults="10"
+												dropdown="true">
+												<p:ajax event="itemSelect" update="form001"
+													listener="#{diagnosticoController.onRowSelectEspecialidadClick}" />
+												<p:column>
+													<h:outputText value="#{_var.nombre}" />
+												</p:column>
+											</p:autoComplete>
+										</div>
+
+										<div class="Container100 Responsive100 Flex">
+											<div class="Card">
+												<div class="CardBigTopic">Listado de Especialidades</div>
+												<div class="SeparatorFull"></div>
+												<div class="Container100 ui-fluid">
+													<h:form id="formDetalleDignostico">
+														<p:dataTable id="cars1" var="car"
+															value="#{diagnosticoController.listaDetalleDiagnosticoEspecialidad}"
+															editable="true" style="margin-bottom:20px" reflow="true">
+
+															<p:column headerText="Nombre de Especialidad">
+																<h:outputText value="#{car.especialidad.nombre}" />
+															</p:column>
+
+															<p:column style="width:70px">
+																<p:commandButton type="button" icon="fa fa-trash-o"
+																	styleClass="Fs14 White RedButton">
+																	<p:ajax update="cars1"
+																		listener="#{diagnosticoController.onRowDeleteEspecialidad(car)}" />
+																</p:commandButton>
+															</p:column>
+
+														</p:dataTable>
+
+													</h:form>
+
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</ui:fragment>
+
+
+					<!-- listado  -->
+					<ui:fragment rendered="#{diagnosticoController.crear}">
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<p:dataTable id="singleDT" var="item"
+									widgetVar="DiagnosticoTable"
+									value="#{diagnosticoController.listaDiagnostico}"
+									selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{diagnosticoController.diagnostico}"
+									rowKey="#{item.id}" reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{diagnosticoController.onRowSelect}"
+										update="form001" />
+
+									<p:column width="8%" headerText="Identificador"
+										filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" filterBy="#{item.id}">
+										<h:outputText value="#{item.id}" />
+									</p:column>
+									<p:column headerText="Descripcion"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.descripcion}">
+										<h:outputText value="#{item.descripcion}" />
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										headerText="Estado" style="text-align:center;"
+										filterBy="#{item.estado}">
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado=='AC'}" value="Activo" /></span>
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado=='IN'}" value="Inactivo" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado=='RM'}" value="Eliminado" /></span>
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" headerText="Usuario Registro"
+										filterBy="#{item.usuarioRegistro}">
+										<h:outputText value="#{item.usuarioRegistro}" />
+									</p:column>
+									<p:column width="10%" headerText="Fecha Registro"
+										style="text-align:center;"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.fechaRegistro}">
+										<h:outputText value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{diagnosticoController.listaDiagnostico.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">PARAMETRIZACIÓN VENTAS</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+				<div class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+					<h:panelGrid id="grid1" columns="3" cellpadding="5">
+
+						<p:outputLabel for="bancoNacional" value="Cuenta Banco Nacional" />
+						<p:autoComplete id="bancoNacional" style="width: 100%"
+							inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+							value="#{configuracionVentaController.configuracionContableVenta.cuentaBancoNacional.descripcion}"
+							completeMethod="#{configuracionVentaController.completeCuentaAuxiliar}"
+							minQueryLength="2" forceSelection="true" var="_var"
+							itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+							placeholder="Cuenta" maxResults="10">
+							<p:ajax event="itemSelect" update="bancoNacional"
+								listener="#{configuracionVentaController.onRowSelectCuentaBancoNacional}" />
+							<p:column>
+								<h:outputText value="#{_var.codigoAuxiliar}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{_var.descripcion}" />
+							</p:column>
+						</p:autoComplete>
+						<p:commandButton id="buttonDlgCuenta1" icon="fa fa-file-text-o"
+							styleClass="Fs14 White BlueButton" immediate="true">
+							<p:ajax
+								listener="#{configuracionVentaController.loadDialogCuenta('cuentaBancoNacional')}" />
+						</p:commandButton>
+						
+						<p:outputLabel for="bancoExtranjero" value="Cuenta Banco Extranjero" />
+						<p:autoComplete id="bancoExtranjero" style="width: 100%"
+							inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+							value="#{configuracionVentaController.configuracionContableVenta.cuentaBancoExtranjero.descripcion}"
+							completeMethod="#{configuracionVentaController.completeCuentaAuxiliar}"
+							minQueryLength="2" forceSelection="true" var="_var"
+							itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+							placeholder="Cuenta" maxResults="10">
+							<p:ajax event="itemSelect" update="bancoNacional"
+								listener="#{configuracionVentaController.onRowSelectCuentaBancoExtranjero}" />
+							<p:column>
+								<h:outputText value="#{_var.codigoAuxiliar}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{_var.descripcion}" />
+							</p:column>
+						</p:autoComplete>
+						<p:commandButton id="buttonDlgCuenta2" icon="fa fa-file-text-o"
+							styleClass="Fs14 White BlueButton" immediate="true">
+							<p:ajax
+								listener="#{configuracionVentaController.loadDialogCuenta('cuentaBancoExtranjera')}" />
+						</p:commandButton>
+						
+						<p:outputLabel for="bancoIngreso" value="Cuenta Ingreso por Venta" />
+						<p:autoComplete id="bancoIngreso" style="width: 100%"
+							inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+							value="#{configuracionVentaController.configuracionContableVenta.cuentaIngresoPorVenta.descripcion}"
+							completeMethod="#{configuracionVentaController.completeCuentaAuxiliar}"
+							minQueryLength="2" forceSelection="true" var="_var"
+							itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+							placeholder="Cuenta" maxResults="10">
+							<p:ajax event="itemSelect" update="bancoNacional"
+								listener="#{configuracionVentaController.onRowSelectCuentaIngresoVenta}" />
+							<p:column>
+								<h:outputText value="#{_var.codigoAuxiliar}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{_var.descripcion}" />
+							</p:column>
+						</p:autoComplete>
+						<p:commandButton id="buttonDlgCuenta3" icon="fa fa-file-text-o"
+							styleClass="Fs14 White BlueButton" immediate="true">
+							<p:ajax
+								listener="#{configuracionVentaController.loadDialogCuenta('cuentaIngresoVenta')}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</ui:composition>

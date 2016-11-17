@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- dialog ajuste -->
+	<p:dialog header="PROCESAMIENTO DE AJUSTE"
+			widgetVar="dlgConfiguracion" responsive="true" modal="true"
+			resizable="false" closable="false">
+			<h:form id="formDlg002">
+				<div class="Container100 ui-fluid">
+					Periodo / Gestión
+					<div class="SeparatorFull"></div>
+					<p:panelGrid id="gridDlg1" columns="2"
+						columnClasses="ui-grid-col-6,ui-grid-col-6"
+						styleClass="ui-panelgrid-blank" layout="grid"
+						style="border:0px !important; background:none;">
+
+						<p:outputLabel for="dlgPeriodo" value="Periodo" />
+						<p:selectOneMenu id="dlgPeriodo" 
+							value="#{ajusteComprobanteController.periodo}">
+							<f:selectItem itemLabel="ENERO" itemValue="1" />
+							<f:selectItem itemLabel="FEBRERO" itemValue="2" />
+							<f:selectItem itemLabel="MARZO" itemValue="3" />
+							<f:selectItem itemLabel="ABRIL" itemValue="4" />
+							<f:selectItem itemLabel="MAYO" itemValue="5" />
+							<f:selectItem itemLabel="JUNIO" itemValue="6" />
+							<f:selectItem itemLabel="JULIO" itemValue="7" />
+							<f:selectItem itemLabel="AGOSTO" itemValue="8" />
+							<f:selectItem itemLabel="SEPTIEMBRE" itemValue="9" />
+							<f:selectItem itemLabel="OCTUBRE" itemValue="10" />
+							<f:selectItem itemLabel="NOVIEMBRE" itemValue="11" />
+							<f:selectItem itemLabel="DICIEMBRE" itemValue="12" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel for="dlgGestion" value="Gestión" />
+						<p:selectOneMenu id="dlgGestion" 
+							value="#{ajusteComprobanteController.gestion}">
+							<f:selectItems value="#{ajusteComprobanteController.listGestion}" var="item" itemLabel="#{item.gestion}" itemValue="#{item.gestion}"/>
+						</p:selectOneMenu>
+					</p:panelGrid>
+					<br />
+					Ajustes UFV
+					<div class="SeparatorFull"></div>
+					<p:panelGrid id="gridDlg2" columns="2" styleClass="ui-panelgrid-blank"
+						layout="grid" style="border:0px !important; background:none;">
+						<p:outputLabel  value="Ajuste Por Inflacion" />
+						<p:commandButton icon="fa fa-play-circle-o" value="procesar"
+							styleClass="Fs14 White BlueButton" immediate="true" update="form001"
+							actionListener="#{ajusteComprobanteController.generarAjustePorInflacion()}">
+						</p:commandButton>
+						
+						<p:outputLabel  value="Ajuste al Capital" />
+						<p:commandButton icon="fa fa-play-circle-o" value="procesar"
+							styleClass="Fs14 White BlueButton" immediate="true"
+							actionListener="#{ajusteComprobanteController.generarAjusteAlCapital()}">
+						</p:commandButton>
+						
+						<p:outputLabel  value="Ajuste de Reservas Patrimoniale" />
+						<p:commandButton icon="fa fa-play-circle-o" value="procesar"
+							styleClass="Fs14 White BlueButton" immediate="true"
+							actionListener="#{ajusteComprobanteController.generarAjusteDeReservaPatrimoniales()}">
+						</p:commandButton>
+					</p:panelGrid>
+					<br />
+					Otros Ajustes
+					<div class="SeparatorFull"></div>
+					<p:panelGrid id="gridDlg3" columns="2" styleClass="ui-panelgrid-blank"
+						layout="grid" style="border:0px !important; background:none;">
+						<p:outputLabel  value="Ajuste Por Diferencia de Cambio" />
+						<p:commandButton icon="fa fa-play-circle-o" value="procesar"
+							styleClass="Fs14 White BlueButton" immediate="true"
+							oncomplete="PF('dlgConfiguracion').hide()">
+						</p:commandButton>
+						
+						<p:outputLabel  value="Ajuste Por Correción Monetaria" />
+						<p:commandButton icon="fa fa-play-circle-o" value="procesar"
+							styleClass="Fs14 White BlueButton" immediate="true"
+							oncomplete="PF('dlgConfiguracion').hide()">
+						</p:commandButton>
+					</p:panelGrid>
+					<br />
+					<p:panelGrid id="gridDlg4" columns="2" styleClass="ui-panelgrid-blank"
+						layout="grid" style="border:0px !important; background:none;">
+						<p:outputLabel  value="#{' '}" />
+						<p:commandButton value="Cancelar"
+							styleClass="Fs14 White OrangeButton" immediate="true"
+							oncomplete="PF('dlgConfiguracion').hide()">
+						</p:commandButton>
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+	
+</ui:composition>

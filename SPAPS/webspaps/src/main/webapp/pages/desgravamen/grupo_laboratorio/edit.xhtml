@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">INFORMACIÓN GRUPO EXAMEN DE
+				LABORATORIO</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+				<div class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="nombreEspecialidad" value="Descripcion" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="nombreEspecialidad" required="true"
+							value="#{desgLabGrupoController.desgLabGrupo.descripcion}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="nombreEspecialidad" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="estados" value="Estado" />
+					</div>
+					<div class="Container60 Responsive50">
+						<p:selectOneMenu id="estados" style=""
+							value="#{desgLabGrupoController.desgLabGrupo.estado}">
+							<p:ajax event="valueChange" update="estados" />
+							<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+							<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+						</p:selectOneMenu>
+						<p:message for="estados" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+						<p:outputLabel for="examen" value="Examen de Laboratorio:" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:autoComplete id="examen"
+							value="#{desgLabGrupoController.examen}"
+							completeMethod="#{desgLabGrupoController.onCompleteExamen}"
+							converter="examenLabConverter" minQueryLength="1"
+							forceSelection="true" var="_var" itemLabel="#{_var.descripcion}"
+							itemValue="#{_var}"
+							placeholder="Escriba el examen de laboratorio" maxResults="10"
+							dropdown="true">
+							<p:ajax event="itemSelect" immediate="true"
+								update="examen, cars1, mensajes"
+								listener="#{desgLabGrupoController.onSelectExamenClick}" />
+							<p:column>
+								<h:outputText value="#{_var.descripcion}" />
+							</p:column>
+						</p:autoComplete>
+						<p:message for="
+										examen" display="tooltip" />
+					</div>
+
+					<div class="Container50 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">Listado de Examenes del Grupo</div>
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<p:dataTable id="cars1" var="car"
+									value="#{desgLabGrupoController.grupoExamenes}"
+									style="margin-bottom:20px" reflow="true">
+
+									<p:column headerText="Nombre">
+										<h:outputText value="#{car.examen.descripcion}" />
+									</p:column>
+
+									<p:column style="width:30px">
+										<p:commandButton type="button" icon="fa fa-trash-o"
+											styleClass="Fs14 White RedButton">
+											<p:ajax update="cars1"
+												listener="#{desgLabGrupoController.onRowDeleteExamen(car)}" />
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<p:growl id="mensajes" showDetail="true" />
+
+	</div>
+
+</ui:composition>

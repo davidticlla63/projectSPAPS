@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formDlg001">
+		<div class="Container100 Responsive100 TexAlLeft"
+			onload="#{historiaClinicaDetalleController.resetEstudio()}">
+
+			<p:focus for="tipo" />
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<div class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+					<p:outputLabel for="tipo"
+						value="Seleccione lo que desee registrar:" />
+				</div>
+				<div class="Container60 Responsive50">
+					<p:selectOneRadio id="tipo" style="" immediate="true"
+						value="#{historiaClinicaDetalleController.banderaEstudio}">
+						<p:ajax update="laboratorio, form001, ordenServicio" />
+						<f:selectItem itemLabel="Laboratorio" itemValue="LAB" />
+						<f:selectItem itemLabel="Examenes auxiliares de Diagnostico"
+							itemValue="IMG" />
+						<f:selectItem itemLabel="Ordenes de Servicio" itemValue="ODS" />
+					</p:selectOneRadio>
+					<p:message for="tipo" display="tooltip" />
+				</div>
+			</div>
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<h:form id="laboratorio"
+					rendered="#{historiaClinicaDetalleController.banderaEstudio == 'LAB'}">
+					<ui:include
+						src="/pages/historias_clinicas/registro_detalle_historias_clinicas/laboratorio.xhtml" />
+				</h:form>
+			</div>
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<h:form
+					rendered="#{historiaClinicaDetalleController.banderaEstudio == 'IMG'}">
+					<ui:include
+						src="/pages/historias_clinicas/registro_detalle_historias_clinicas/imageneologia.xhtml" />
+				</h:form>
+			</div>
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<h:form id="ordenServicio"
+					rendered="#{historiaClinicaDetalleController.banderaEstudio == 'ODS'}">
+					<ui:include
+						src="/pages/historias_clinicas/registro_detalle_historias_clinicas/orden_servicio.xhtml" />
+				</h:form>
+			</div>
+
+		</div>
+
+		
+
+	</h:form>
+
+
+</ui:composition>

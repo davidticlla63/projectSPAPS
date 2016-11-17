@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="form001">
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container60 Responsive100 TexAlLeft">
+
+						<p:commandButton icon="fa fa-plus"
+							rendered="#{notaVentaController.nuevo}"
+							styleClass="Fs14 White GreenButton" value="Nueva Venta"
+							update="form001" immediate="true"
+							actionListener="#{notaVentaController.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{notaVentaController.seleccionado or notaVentaController.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{notaVentaController.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{notaVentaController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001"
+							actionListener="#{notaVentaController.registrarNotaDeVenta()}">
+						</p:commandButton>
+
+
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/dashboard.xhtml" />
+							<p:menuitem value="Ventas"
+								url="/pages/inventario/proceso/orden_traspaso/index.xhtml" />
+							<p:menuitem value="Nota de Venta"
+								url="/pages/inventario/proceso/orden_traspaso/index.xhtml" />
+								</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{notaVentaController.currentPage}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+		<!-- BEGIN DIALOG -->
+		<!-- BEGIN DIALOG -->
+		<p:dialog header="DATOS SERVICIOS" widgetVar="dlgProducto" id="xxx"
+			responsive="true" modal="true" resizable="false" closable="false">
+			<h:form id="formDlgDetalleOrdenIngreso">
+				<p:panelGrid id="grid1" columns="3" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="servicio" value="Servicio " />
+					<p:autoComplete id="servicio" required="true"
+						value="#{notaVentaController.detalleNotaVenta.servicio}" var="theme"
+						itemLabel="#{theme.descripcion}" itemValue="#{theme}"
+						completeMethod="#{notaVentaController.onCompleteServicio}"
+						converter="#{servicioConverter}" forceSelection="true"
+						dropdown="true" placeholder="Examen">
+						<p:ajax event="itemSelect" update="precio"
+							listener="#{notaVentaController.mostrarPrecios()}" />
+					</p:autoComplete>
+					<p:message for="servicio" display="tooltip" />
+
+					<p:outputLabel for="precio" value="Precio" />
+					<p:inputText id="precio" required="true" readonly="true"
+						value="#{notaVentaController.detalleNotaVenta.precioUnitario}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="precio" display="tooltip" />
+
+					<p:outputLabel for="cantidad" value="Cantidad " />
+					<p:inputText id="cantidad" required="true"
+						value="#{notaVentaController.detalleNotaVenta.cantidad}">
+						<p:ajax event="blur" update="subtotal"
+							listener="#{notaVentaController.calcularSubTotal}" />
+					</p:inputText>
+					<p:message for="cantidad" display="tooltip" />
+
+					<p:outputLabel for="subtotal" value="Sub Total " />
+					<p:inputText id="subtotal" required="true"
+						value="#{notaVentaController.detalleNotaVenta.precioSubTotal}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="subtotal" display="tooltip" />					
+				</p:panelGrid>
+				<p:panelGrid id="grid2" columns="2" cellpadding="5" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+					<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+						styleClass="Fs14 White OrangeButton"
+						onclick="PF('dlgProducto').hide()"					
+						update="#{notaVentaController.idTablaProductos}, formDlgDetalleOrdenIngreso,xxx,grid1"
+						immediate="true">
+						<p:resetInput target="formDlgDetalleOrdenIngreso" />
+					</p:commandButton>
+					<p:commandButton icon="fa fa-check" value="Aceptar"
+						styleClass="Fs14 White GreenButton"
+						update="#{notaVentaController.idTablaProductos}, formDlgDetalleOrdenIngreso"
+						actionListener="#{notaVentaController.registrarOModificarDetalleVenta()}">
+					</p:commandButton>
+				</p:panelGrid>
+
+			</h:form>
+		</p:dialog>
+		<!-- END DIALOG -->
+		<!-- END DIALOG -->
+		<p:dialog header="Modal Dialog" widgetVar="dlg2" modal="true"
+			height="100">
+			<h:outputText
+				value="Cantidad de Productos en almacen menor a la cantidad solicitada." />
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

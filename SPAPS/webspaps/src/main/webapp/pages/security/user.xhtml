@@ -1,0 +1,302 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+		<h:outputScript name="js/validator.js" library="mbr" />
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container70 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-plus"
+							rendered="#{userController.nuevo}"
+							styleClass="Fs14 White GreenButton" value="Nuevo Usuario"
+							update="form001" immediate="true"
+							actionListener="#{userController.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{userController.seleccionado or userController.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{userController.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{userController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001"
+							actionListener="#{userController.registrarUsuario()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{userController.seleccionado}" value="Modificar"
+							styleClass="Fs14 White BlueButton" update="form001"
+							actionListener="#{userController.modificarUsuario()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-trash-o"
+							rendered="#{userController.seleccionado}" value="Eliminar"
+							styleClass="Fs14 White RedButton"
+							actionListener="#{userController.eliminarUsuario()}"
+							update="form001">
+							<p:confirm header="¿ESTA SEGURO(A) DE ELIMINAR ESTE USUARIO ?"
+								message="Tenga en cuenta que será eliminado definitivamente del sistema."
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/dashboard.xhtml" />
+							<p:menuitem value="Seguridad" url="/pages/security/user.xhtml" />
+							<p:menuitem value="Usuario" url="/pages/security/user.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:fragment
+					rendered="#{userController.seleccionado or userController.registrar}">
+					<div class="Container40 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">INFORMACIÓN DE USUARIO</div>
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<p:focus for="nombreUsuario" />
+								<h:panelGrid id="grid" columns="2" >
+
+									<p:outputLabel for="nombreUsuario" value="Nombre Completo" />
+									<p:inputText id="nombreUsuario" required="true"
+										value="#{userController.usuario.nombre}">
+										<p:ajax event="change" />
+									</p:inputText>
+
+									<p:outputLabel for="emailUsuario" value="Correo Electrónico" />
+									<p:inputText id="emailUsuario" required="true"
+										value="#{userController.usuario.email}"
+										validatorMessage="Correo Electrónico no válido">
+										<p:ajax event="change" />
+										<f:validateRegex
+											pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+									</p:inputText>
+
+									<p:outputLabel for="loginUsuario" value="Usuario" />
+									<p:inputText id="loginUsuario" required="true"
+										value="#{userController.usuario.login}"
+										onkeypress="return validateNoSpace(event)">
+										<p:ajax event="change" />
+									</p:inputText>
+
+									<p:outputLabel for="password" value="Contraseña" />
+									<p:password id="password" redisplay="true"
+										value="#{userController.usuario.password}" autocomplete="off"
+										required="true" onkeypress="return validateNoSpace(event)">
+										<p:ajax event="change" />
+									</p:password>
+
+									<p:outputLabel for="repeatPassword" value="Repetir Contraseña" />
+									<p:password id="repeatPassword" redisplay="true"
+										value="#{userController.repeatPassword}" autocomplete="off"
+										required="true" onkeypress="return validateNoSpace(event)">
+										<p:ajax event="change" />
+									</p:password>
+
+									<p:outputLabel for="roles1" value="Grupo Usuario" />
+									<p:selectOneMenu id="roles1" appendTo="@this"
+										value="#{userController.usuario.rol.id}">
+										<p:ajax event="valueChange" update="roles1" />
+										<f:selectItems value="#{userController.listRol}" var="item"
+											itemLabel="#{item.nombre}" itemValue="#{item.id}" />
+									</p:selectOneMenu>
+
+									<p:outputLabel for="estados" value="Estado" />
+									<p:selectOneMenu id="estados" style=""
+										disabled="#{(userController.usuario.id.equals(0) or (!userController.usuario.id.equals(0)) and userController.usuario.state.equals('PN'))}"
+										value="#{userController.usuario.estado}">
+										<p:ajax event="valueChange" update="roles1" />
+										<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+										<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+										<f:selectItem itemLabel="PENDIENTE" itemValue="PN" itemDisabled="true"/>
+									</p:selectOneMenu>
+								</h:panelGrid>
+							</div>
+						</div>
+					</div>
+					<div class="Container60 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic Container90 Responsive100 TexAlLeft">SUCURSALES
+								ASOCIADAS AL USUARIO</div>
+							<div class="CardBigTopic Container10 Responsive100 TexAlRight"
+								style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+								<p:commandButton icon="fa fa-plus"
+									styleClass="Fs14 White GreenButton" immediate="true"
+									actionListener="#{userController.actionNuevoUsuarioSucursal()}" />
+							</div>
+
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<p:dataTable id="singleDT1" var="var"
+									value="#{userController.listUsuarioSucursal}"
+									selection="#{userController.usuarioSucursal}"
+									rowKey="#{var.id}" paginator="true"
+									emptyMessage="No se encontraron registros." reflow="true">
+									<f:facet name="header">
+										El Usuario tiene que tener al menos una sucursal agregada
+									</f:facet>
+
+									<p:column width="18%" headerText="Nombre">
+										<h:outputText value="#{var.sucursal.nombre}" />
+									</p:column>
+									<p:column width="20%" headerText="Descripcion">
+										<h:outputText value="#{var.sucursal.descripcion}" />
+									</p:column>
+									<p:column width="9%" headerText="Estado">
+										<p:outputLabel styleClass="FontLatoBold Green"
+											rendered="#{var.sucursal.estado=='AC'}" value="Activo"></p:outputLabel>
+										<p:outputLabel styleClass="FontLatoBold Red"
+											rendered="#{var.sucursal.estado=='IN'}" value="Inactivo"></p:outputLabel>
+									</p:column>
+									<p:column width="10%" headerText="Fecha Registro">
+										<h:outputText value="#{var.sucursal.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column width="12%" headerText="Acción">
+										<p:commandButton icon="fa fa-edit"
+											styleClass="Fs14 White BlueButton"
+											actionListener="#{userController.actionMdificarUsuarioSucursal(var.id)}" />
+										<p:commandButton icon="fa fa-trash-o"
+											styleClass="Fs14 White RedButton" update="form001"
+											actionListener="#{userController.actionEliminarUsuarioSucursal(var.id)}">
+											<p:confirm header="¿ESTA SEGURO DE ELIMINAR ESTA SUCURSAL?"
+												message="Tenga en cuenta que será eliminado definitivamente del sistema."
+												icon="ui-icon-alert" />
+										</p:commandButton>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{userController.listUsuarioSucursal.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{userController.nuevo}">
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">LISTADO DE USUARIOS DEL SISTEMA</div>
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<p:dataTable id="singleDT" var="var"
+									value="#{userController.listUsuario}" selectionMode="single"
+									selection="#{userController.usuario}" rowKey="#{var.id}"
+									rows="10" paginator="true"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="5,10,15"
+									emptyMessage="No se encontraron registros." reflow="true">
+									<f:facet name="header">
+                            			Seleccione un usuario para ver su detalle
+                        			</f:facet>
+
+									<p:ajax update="form001" event="rowSelect"
+										listener="#{userController.onRowSelect}" />
+
+									<p:column width="25%" headerText="Nombre Completo">
+										<h:outputText value="#{var.nombre}" />
+									</p:column>
+									<p:column width="12%" headerText="Usuario"
+										style="text-align:center;">
+										<h:outputText value="#{var.login}" />
+									</p:column>
+									<p:column width="12%" headerText="Estado"
+										style="text-align:center;">
+										<span class="FontLatoBold Fs14 Green DispBlock"><h:outputText
+												rendered="#{var.estado=='AC'}" value="Activo" /></span>
+										<span class="FontLatoBold Fs14 Red DispBlock"><h:outputText
+												rendered="#{var.estado=='IN'}" value="Inactivo" /></span>
+										<span class="FontLatoBold Fs14 Orange DispBlock"><h:outputText
+												rendered="#{var.estado=='PN'}" value="Pendiente" /></span>
+									</p:column>
+									<p:column width="12%" headerText="Fecha Registro"
+										style="text-align:center;">
+										<h:outputText value="#{var.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column width="12%" headerText="Registro"
+										style="text-align:center;">
+										<h:outputText value="#{var.usuarioRegistro}" />
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{userController.listUsuario.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</ui:fragment>
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+		<!-- BEGIN DIALOG -->
+		<p:dialog header="INFORMACION SUCURSAL" widgetVar="dlgSucursal"
+			responsive="true" modal="true" resizable="false" closable="false">
+			<h:form id="formDlg001">
+				<p:panelGrid id="grid1" columns="3" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="sucursal" value="Sucursal" />
+					<p:selectOneMenu id="sucursal" appendTo="@this"
+						value="#{userController.usuarioSucursal.sucursal.id}">
+						<p:ajax event="valueChange" update="sucursal" />
+						<f:selectItems value="#{userController.listSucursal}" var="item"
+							itemLabel="#{item.nombre}" itemValue="#{item.id}" />
+					</p:selectOneMenu>
+					<p:message for="sucursal" display="tooltip" />
+
+					<p:outputLabel for="estadosUsuarioSucursal" value="Estado" />
+					<p:selectOneMenu id="estadosUsuarioSucursal"
+						value="#{userController.usuarioSucursal.estado}">
+						<p:ajax event="valueChange" />
+						<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+						<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+					</p:selectOneMenu>
+					<p:message for="estadosUsuarioSucursal" display="tooltip" />
+
+				</p:panelGrid>
+				<p:panelGrid id="grid2" columns="2" cellpadding="5" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+					<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+						styleClass="Fs14 White OrangeButton"
+						oncomplete="PF('dlgSucursal').hide()">
+					</p:commandButton>
+					<p:commandButton icon="fa fa-check" value="Aceptar"
+						styleClass="Fs14 White GreenButton" update="formDlg001,form001"
+						actionListener="#{userController.registrarOModificarSucursal()}">
+					</p:commandButton>
+				</p:panelGrid>
+
+			</h:form>
+		</p:dialog>
+		<!-- END DIALOG -->
+
+	</ui:define>
+
+</ui:composition>

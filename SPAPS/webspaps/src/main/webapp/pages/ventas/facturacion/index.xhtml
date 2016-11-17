@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="form001">
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container60 Responsive100 TexAlLeft">
+					
+						<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+							rendered="#{facturacionVentaController.verReporte}"
+							styleClass="Fs14 White OrangeButton" immediate="true">
+							<p:ajax update="form001"
+								listener="#{facturacionVentaController.loadDefault()}" />
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							styleClass="Fs14 White BlueButton" value="Ver Reporte"
+							rendered="#{facturacionVentaController.seleccionado and !facturacionVentaController.verReporte}"
+							update="form001"
+							actionListener="#{facturacionVentaController.cargarReporte()}">
+						</p:commandButton>
+
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/dashboard.xhtml" />
+							<p:menuitem value="Ventas"
+								url="/pages/ventas/facturacion/index.xhtml" />
+							<p:menuitem value="Facturación"
+								url="/pages/ventas/facturacion/index.xhtml" />
+
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100">
+				<ui:include src="#{facturacionVentaController.currentPage}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

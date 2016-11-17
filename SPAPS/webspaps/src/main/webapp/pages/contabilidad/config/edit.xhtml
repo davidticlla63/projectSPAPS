@@ -1,0 +1,393 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">CONFIGURACIÓN PARA CONTABILIZACIÓN
+				AUTOMÁTICA</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+
+				<p:tabView>
+					<p:tab title="COMPRAS Y VENTAS">
+						<p:focus for="bancoNacional" />
+						<h:panelGrid id="grid1" columns="3" cellpadding="5">
+							<p:outputLabel for="porcentajeIva" value="Porcentaje IVA" />
+							<p:inputText id="porcentajeIva" required="true"
+								value="#{configuracionContableController.configuracionContable.porcentajeIva}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:outputLabel value="#{' '}" />
+
+							<p:outputLabel for="porcentajeIt" value="Porcentaje Impuesto IT" />
+							<p:inputText id="porcentajeIt" required="true"
+								value="#{configuracionContableController.configuracionContable.porcentajeIt}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:outputLabel value="#{' '}" />
+
+							<p:outputLabel for="bancoNacional"
+								value="Cuenta de Debito Fiscal" />
+							<p:autoComplete id="bancoNacional" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaDebitoFiscal.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="bancoNacional"
+									listener="#{configuracionContableController.onRowSelectCuentaDebitoFiscalAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCuenta1" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaDebitoFiscal')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="bancoExtranjero"
+								value="Cuenta de Credito Fiscal" />
+							<p:autoComplete id="bancoExtranjero" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaCreditoFiscal.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="bancoExtranjero"
+									listener="#{configuracionContableController.onRowSelectCuentaCreditoFiscalAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCuenta2" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaCreditoFiscal')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="cuentaGasto"
+								value="Cuenta de Credito Fiscal No deducible" />
+							<p:autoComplete id="cuentaGasto" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaCreditoFiscalNoDeducible.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="cuentaGasto"
+									listener="#{configuracionContableController.onRowSelectCuentaCreditoFiscalNoDeducibleAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCuenta3" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaCreditoFiscalNoDeducible')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="CCFTId"
+								value="Cuenta de Credito Fiscal Transitorio" />
+							<p:autoComplete id="CCFTId" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaCreditoFiscalTransitorio.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="CCFTId"
+									listener="#{configuracionContableController.onRowSelectCuentaCreditoFiscalTransitorioAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCCFTId" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaCreditoFiscalTransitorio')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="CITId"
+								value="Cuenta de Impuesto a las Transacciones" />
+							<p:autoComplete id="CITId" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaImpuestoTransacciones.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="CITId"
+									listener="#{configuracionContableController.onRowSelectCuentaImpuestoTransaccionesAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCITId" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaImpuestoTransacciones')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="CIGId"
+								value="Cuenta Gasto Impuesto a las Transacciones" />
+							<p:autoComplete id="CIGId" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaGastoImpuestoTransacciones.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="CIGId"
+									listener="#{configuracionContableController.onRowSelectCuentaGastoImpuestoTransaccionesAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCGTId" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaGastoImpuestoTransacciones')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="CDFTId"
+								value="Cuenta Debito Fiscal Transitorio" />
+							<p:autoComplete id="CDFTId" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaDebitoFiscalTransitorio.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="CDFTId"
+									listener="#{configuracionContableController.onRowSelectCuentaDebitoFiscalTransitorioAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCDFTd" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaDebitoFiscalTransitorio')}" />
+							</p:commandButton>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="GESTIÓN CONTABLE">
+						<p:focus for="otro" />
+						<h:panelGrid id="grid2" columns="3" cellpadding="5">
+							<p:outputLabel for="otro" value="Proceso Ajuste" />
+							<p:selectOneRadio id="otro"
+								value="#{configuracionContableController.configuracionContable.procesoAjuste}"
+								layout="grid" columns="1">
+								<f:selectItem itemLabel="Un Comprobante por Dia" itemValue="CD" />
+								<f:selectItem itemLabel="un Comprobane Mensual" itemValue="CM" />
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<br />
+						<div class="CardBigTopic">PARÁMETROS PLAN CUENTAS</div>
+						<div class="SeparatorFull"></div>
+						<h:panelGrid id="grid5" columns="4" cellpadding="5">
+							<p:outputLabel for="nivelesPlanCuenta" value="Número Niveles " />
+							<p:spinner id="nivelesPlanCuenta" readonly="true"
+								value="#{configuracionContableController.parametroEmpresa.nivelMaximo}"
+								min="2" max="9">
+							</p:spinner>
+
+							<p:outputLabel for="defPlanCuenta"
+								value="Definición Plan Cuenta " />
+							<p:commandButton id="defPlanCuenta" value="Visualizar"
+								oncomplete="PF('dlgTipoCuenta').show();">
+							</p:commandButton>
+
+							<p:outputLabel for="codificacionPlanCuenta" value="Codificación " />
+							<p:inputText id="codificacionPlanCuenta" readonly="true"
+								value="#{configuracionContableController.parametroEmpresa.codificacionEstandar}">
+							</p:inputText>
+						</h:panelGrid>
+						<h:panelGrid id="grid6" columns="1" cellpadding="5">
+							<p:dataTable id="dataTableNivel" var="var"
+								value="#{configuracionContableController.listNivel}"
+								reflow="true" rowKey="#{var.id}">
+								<f:facet name="header">
+           								Cantidad de digitos por Nivel.
+       								</f:facet>
+								<p:column width="10%" headerText="Número">
+									<h:outputText value="#{var.id}" />
+								</p:column>
+								<p:column width="10%" headerText="Nivel">
+									<h:outputText value="#{var.nombre}" />
+								</p:column>
+								<p:column width="10%" headerText="Cantidad Dígitos">
+									<h:outputText value="#{var.tamanio}" />
+								</p:column>
+							</p:dataTable>
+						</h:panelGrid>
+						<h:panelGrid id="grid7" columns="2" cellpadding="5"
+							rendered="false">
+							<p:outputLabel for="tamanioCodNivelPlanCuenta"
+								value="Cantidad Código por Nivel " />
+							<p:spinner id="tamanioCodNivelPlanCuenta"
+								disabled="#{companiaEmpresaController.selectedNivel.id == '0'}"
+								value="#{companiaEmpresaController.tamanio}" min="1" max="8">
+								<p:ajax update="form001"
+									listener="#{companiaEmpresaController.cargarTamanio()}" />
+							</p:spinner>
+
+						</h:panelGrid>
+
+					</p:tab>
+					<p:tab title="CUENTAS DE AJUSTE">
+						<p:focus for="bancoNacional" />
+						<h:panelGrid id="grid3" columns="3" cellpadding="5">
+							<p:outputLabel for="inflacion" value="Inflación" />
+							<p:autoComplete id="inflacion" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaDebitoFiscal.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="bancoNacional"
+									listener="#{configuracionContableController.onRowSelectCuentaDebitoFiscalAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCuenta21" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaInflacion')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="correccionMonetaria"
+								value="Corrección Monetaria" />
+							<p:autoComplete id="correccionMonetaria" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaDebitoFiscal.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="bancoNacional"
+									listener="#{configuracionContableController.onRowSelectCuentaDebitoFiscalAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCuenta22" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaAjusteCorrecionMonetaria')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="diferenciaCambio"
+								value="Diferencia de cambio" />
+							<p:autoComplete id="diferenciaCambio" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaDebitoFiscal.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="bancoNacional"
+									listener="#{configuracionContableController.onRowSelectCuentaDebitoFiscalAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCuenta23" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaDiferenciaCambio')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="ajusteCapital" value="Ajuste de Capital" />
+							<p:autoComplete id="ajusteCapital" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaDebitoFiscal.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="bancoNacional"
+									listener="#{configuracionContableController.onRowSelectCuentaDebitoFiscalAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCuenta24" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaAjusteCapital')}" />
+							</p:commandButton>
+
+							<p:outputLabel for="ajusteReservaPatrimonial"
+								value="Ajuste de Reserva Patrimonial" />
+							<p:autoComplete id="ajusteReservaPatrimonial" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{configuracionContableController.configuracionContable.cuentaDebitoFiscal.descripcion}"
+								completeMethod="#{configuracionContableController.completeCuentaAuxiliar}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Cuenta" maxResults="10">
+								<p:ajax event="itemSelect" update="bancoNacional"
+									listener="#{configuracionContableController.onRowSelectCuentaDebitoFiscalAuxiliarClick}" />
+								<p:column>
+									<h:outputText value="#{_var.codigoAuxiliar}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:commandButton id="buttonDlgCuenta25" icon="fa fa-file-text-o"
+								styleClass="Fs14 White BlueButton" immediate="true">
+								<p:ajax
+									listener="#{configuracionContableController.loadDialogCuenta('cuentaAjusteReservasPatrimoniales')}" />
+							</p:commandButton>
+						</h:panelGrid>
+					</p:tab>
+				</p:tabView>
+			</div>
+		</div>
+	</div>
+</ui:composition>

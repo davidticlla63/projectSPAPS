@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+		<!-- IMPEDIR QUE EL USUARIO REGRESE A ESTA PAGINA -->
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<script type="text/javascript">
+			if(history.forward(1)){
+			    location.replace( history.forward(1) );
+			 }
+		</script>
+		<style type="text/css">
+.ui-datatable-reflow .ui-datatable-data .ui-expanded-row-content thead .ui-column-title
+	{
+	display: inline;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container75 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-plus"
+							rendered="#{labExamenImagController.crear}"
+							styleClass="Fs14 White GreenButton" value="Nueva Examen"
+							update="form001" immediate="true"
+							actionListener="#{labExamenImagController.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{labExamenImagController.seleccionado or labExamenImagController.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{labExamenImagController.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{labExamenImagController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001"
+							actionListener="#{labExamenImagController.registrar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{labExamenImagController.seleccionado}" value="Modificar"
+							styleClass="Fs14 White BlueButton" update="form001"
+							actionListener="#{labExamenImagController.actualizar()}">
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							rendered="#{labExamenImagController.seleccionado}" value="Eliminar"
+							styleClass="Fs14 White RedButton">
+							<p:ajax update="form001"
+								listener="#{labExamenImagController.eliminar()}" />
+						</p:commandButton>
+
+					</div>
+					<div class="Container25 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Parametros Laboratorio"
+								url="/pages/laboratorio/index.xhtml" />
+							<p:menuitem value="Examens"
+								url="/pages/laboratorio/examen/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{labExamenImagController.currentPage}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+		<p:dialog header="INFORMACION DETALLE EXAMEN" widgetVar="dlgDialog"
+			responsive="true" modal="true" resizable="false" closable="false">
+			<h:form id="formDlg001">
+				<p:panelGrid id="grid1" columns="3" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="nombre" value="Nombre" />
+					<p:inputText id="nombre" required="true"
+						value="#{labExamenImagController.newExamenDetalle.descripcion}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="nombre" display="tooltip" />
+
+
+
+					<p:outputLabel for="visualizar" value="Sub Titulo" />
+					<p:inputSwitch id="visualizar" offLabel="No" onLabel="Si"
+						value="#{labExamenImagController.newExamenDetalle.label}">
+						<p:ajax  update=":formDlg001" />
+					</p:inputSwitch>
+					<p:message for="visualizar" display="tooltip" />
+
+					<p:outputLabel for="detalle" rendered="#{!labExamenImagController.newExamenDetalle.label}" value="Tiene Detalle" />
+					<p:inputSwitch id="detalle" rendered="#{!labExamenImagController.newExamenDetalle.label}" offLabel="No" onLabel="Si"
+						value="#{labExamenImagController.newExamenDetalle.valores}">
+						<p:ajax update=":formDlg001" />
+					</p:inputSwitch>
+					<p:message for="detalle" rendered="#{!labExamenImagController.newExamenDetalle.label}" display="tooltip" />
+
+					<p:outputLabel for="paramentro" rendered="#{!labExamenImagController.newExamenDetalle.label}" value="Paramentro" />
+					<p:inputText id="paramentro" rendered="#{!labExamenImagController.newExamenDetalle.label}" required="false"
+						value="#{labExamenImagController.newExamenDetalle.parametros}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="paramentro" rendered="#{!labExamenImagController.newExamenDetalle.label}" display="tooltip" />
+
+					<p:outputLabel for="unidad" rendered="#{!labExamenImagController.newExamenDetalle.label}" value="U. Medida" />
+					<p:inputText id="unidad" rendered="#{!labExamenImagController.newExamenDetalle.label}" required="false"
+						value="#{labExamenImagController.newExamenDetalle.unidaMedida}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="unidad" rendered="#{!labExamenImagController.newExamenDetalle.label}" display="tooltip" />
+
+				</p:panelGrid>
+				<p:panelGrid id="grid2" columns="2" cellpadding="5" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+					<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+						styleClass="Fs14 White OrangeButton"
+						oncomplete="PF('dlgDialog').hide()">
+					</p:commandButton>
+					<p:commandButton icon="fa fa-check" value="Aceptar"
+						styleClass="Fs14 White GreenButton" update="formDlg001,form001"
+						actionListener="#{labExamenImagController.registrarOModificarDetalle()}">
+					</p:commandButton>
+				</p:panelGrid>
+
+			</h:form>
+		</p:dialog>
+
+
+		
+
+	</ui:define>
+
+</ui:composition>

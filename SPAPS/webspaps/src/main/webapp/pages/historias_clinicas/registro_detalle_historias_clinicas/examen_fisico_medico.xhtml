@@ -1,0 +1,405 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="Container100 Responsive100 TexAlLeft"
+		onload="#{historiaClinicaDetalleController.resetExamenFisico()}">
+
+		<div class="Container100 Responsive100 TexAlLeft">
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<p:commandButton type="button" icon="fa fa-plus"
+					styleClass="Fs14 White GreenButton" value="Nuevo Examen Fisico">
+					<p:ajax update="form001"
+						listener="#{historiaClinicaDetalleController.actionNuevoExamenFisico()}" />
+				</p:commandButton>
+			</div>
+
+		</div>
+
+
+		<!-- listado  -->
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<p:dataTable id="singleDT" var="item" widgetVar="ExamenFisicoTable"
+					value="#{historiaClinicaDetalleController.listaExaamenFisicos}"
+					selectionMode="single"
+					selection="#{historiaClinicaDetalleController.examenFisicoSelected}"
+					style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+					emptyMessage="No se encontraron Registros." rowKey="#{item.id}"
+					reflow="true" editable="true">
+
+					<p:ajax event="rowSelect"
+						listener="#{historiaClinicaDetalleController.onRowSelectExamenFisico()}"
+						update="form001" />
+
+					<p:column headerText="Peso" filterBy="#{item.peso}">
+						<h:outputText value="#{item.peso}" />
+					</p:column>
+					<p:column headerText="Altura" filterBy="#{item.altura}">
+						<h:outputText value="#{item.altura}" />
+					</p:column>
+					<p:column headerText="Indice de Masa Corporal"
+						filterBy="#{item.indiceMasaCorporal}">
+						<h:outputText value="#{item.indiceMasaCorporal}" />
+					</p:column>
+					<p:column headerText="Clasificación Indice de Masa Corporal"
+						filterBy="#{item.clasificacionIndiceMasaCorporal}">
+						<h:outputText value="#{item.clasificacionIndiceMasaCorporal}" />
+					</p:column>
+					<p:column headerText="Clasificación Presión Arterial"
+						filterBy="#{item.clasificacionPresionArterial}">
+						<h:outputText value="#{item.clasificacionPresionArterial}" />
+					</p:column>
+					<p:column headerText="Médico" filterBy="#{item.medico.nombre}">
+						<h:outputText
+							value="#{item.medico.nombre} #{item.medico.apellidoPaterno} #{item.medico.apellidoMaterno} - #{item.medico.obtenerEspecialidadActiva().nombre}" />
+					</p:column>
+					<p:column headerText="Fecha Registro"
+						filterBy="#{item.fechaRegistro}">
+						<h:outputText value="#{item.fechaRegistro}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column style="width:30px">
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							styleClass="Fs14 White RedButton">
+							<p:ajax update="singleDT"
+								listener="#{historiaClinicaDetalleController.onRowDeleteExamenFisico(item)}" />
+						</p:commandButton>
+					</p:column>
+					<f:facet name="footer">
+						<h:outputText
+							value="#{historiaClinicaDetalleController.listaExamenFisicos.size()} Registros en Total" />
+					</f:facet>
+				</p:dataTable>
+				<p:growl id="msgs2" showDetail="true" for="singleDT" />
+			</div>
+		</div>
+
+
+
+		<!-- BEGIN DIALOG -->
+		<div class="Container100 Responsive100 TexAlLeft">
+			<p:dialog id="dialog" header="INFORMACION DE EXÁMEN FÍSICO"
+				widgetVar="dlgExamenFisico" responsive="true" modal="true"
+				resizable="false" closable="false" width="900px" height="550px">
+				<h:form id="formDlg001">
+					<p:panel toggleable="true" header="Signos Vitales:">
+						<p:focus id="focus" for="peso" />
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="peso" value="Peso(Kg.):" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="peso" symbol=" Kg." symbolPosition="s"
+									size="10" required="true"
+									requiredMessage="El campo peso es obligatorio para el cálculo del IMC."
+									value="#{historiaClinicaDetalleController.examenFisico.peso}">
+									<f:validateLength minimum="1" />
+									<p:ajax event="blur" update="peso, msgPeso, imc, claseImc"
+										listener="#{historiaClinicaDetalleController.calcularIMC}" />
+								</p:inputText>
+								<p:message id="msgPeso" for="peso" display="icon" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="altura" value="Altura(Mts.):" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="altura" symbol=" mts." symbolPosition="s"
+									required="true" size="10"
+									requiredMessage="El campo altura es obligatorio para el cálculo del IMC."
+									value="#{historiaClinicaDetalleController.examenFisico.altura}">
+									<f:validateLength minimum="1" />
+									<p:ajax event="blur" update="altura, msgAltura, imc, claseImc"
+										listener="#{historiaClinicaDetalleController.calcularIMC}" />
+								</p:inputText>
+								<p:message id="msgAltura" for="altura" display="icon" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="imc" value="Indice de Masa Corporal:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="imc" readonly="true" size="10"
+									value="#{historiaClinicaDetalleController.examenFisico.indiceMasaCorporal}">
+									<p:ajax event="change" update="imc" />
+								</p:inputText>
+								<p:message for="imc" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="claseImc" value="Clasificación IMC:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="claseImc" readonly="true"
+									value="#{historiaClinicaDetalleController.examenFisico.clasificacionIndiceMasaCorporal}">
+									<p:ajax event="change" update="claseImc" />
+								</p:inputText>
+								<p:message for="claseImc" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="presionSistolica" value="Presión Sistólica:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="presionSistolica" required="true" size="10"
+									requiredMessage="El campo presión sistólica es obligatorio."
+									value="#{historiaClinicaDetalleController.examenFisico.presionSistolica}">
+									<f:validateLength minimum="1" />
+									<p:ajax event="blur" update="presionSistolica, clasePA"
+										listener="#{historiaClinicaDetalleController.calcularPA}" />
+								</p:inputText>
+								<p:message for="presionSistolica" display="icon" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="presionDiastolica"
+									value="Presión Diastólica:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="presionDiastolica" required="true" size="10"
+									requiredMessage="El campo presión diastólica es obligatorio."
+									value="#{historiaClinicaDetalleController.examenFisico.presionDiastolica}">
+									<f:validateLength minimum="1" />
+									<p:ajax event="blur" update="presionDiastolica, msgPD, clasePA"
+										listener="#{historiaClinicaDetalleController.calcularPA}" />
+								</p:inputText>
+								<p:message id="msgPD" for="presionDiastolica" display="icon" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="clasePA"
+									value="Clasificación Presion Arterial:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="clasePA" readonly="true"
+									value="#{historiaClinicaDetalleController.examenFisico.clasificacionPresionArterial}">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="clasePA" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="pulso" value="Pulso:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="pulso" size="10"
+									value="#{historiaClinicaDetalleController.examenFisico.pulso}">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="pulso" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="frecuenciaCardiaca"
+									value="Frecuencia Respiratoria:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="frecuenciaCardiaca" size="10"
+									value="#{historiaClinicaDetalleController.examenFisico.frecuenciaCardiaca}">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="frecuenciaCardiaca" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="temperatura" value="Temperatura:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="temperatura" size="10"
+									value="#{historiaClinicaDetalleController.examenFisico.temperatura}">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="temperatura" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="pb" value="Perimetro Bronquial:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="pb" size="10"
+									value="#{historiaClinicaDetalleController.examenFisico.pb}">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="pb" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container33 Responsive100 TexAlLeft">
+
+							<div class="Container30 Responsive100 TexAlLeft">
+								<p:outputLabel for="pc" value="Perimetro Cefalico:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:inputText id="pc" size="10"
+									value="#{historiaClinicaDetalleController.examenFisico.pc}">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="pc" display="tooltip" />
+							</div>
+						</div>
+
+					</p:panel>
+
+					<div class="Container100 Responsive100 TexAlLeft">
+						<p:panel toggleable="true" header="Segmentario:">
+							<div class="Container33 Responsive100 TexAlLeft">
+
+								<div class="Container30 Responsive100 TexAlLeft">
+									<p:outputLabel for="exploracionGeneral"
+										value="Exploración General:" />
+								</div>
+								<div class="Container20 Responsive100 TexAlLeft">
+									<p:inputTextarea id="exploracionGeneral" maxlength="255"
+										value="#{historiaClinicaDetalleController.examenFisico.exploracionGeneral}">
+										<p:ajax event="change" />
+									</p:inputTextarea>
+									<p:message for="exploracionGeneral" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container33 Responsive100 TexAlLeft">
+
+								<div class="Container30 Responsive100 TexAlLeft">
+									<p:outputLabel for="cabeza" value="Cabeza:" />
+								</div>
+								<div class="Container20 Responsive100 TexAlLeft">
+									<p:inputTextarea id="cabeza" maxlength="255"
+										value="#{historiaClinicaDetalleController.examenFisico.cabeza}">
+										<p:ajax event="change" />
+									</p:inputTextarea>
+									<p:message for="cabeza" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container33 Responsive100 TexAlLeft">
+
+								<div class="Container30 Responsive100 TexAlLeft">
+									<p:outputLabel for="cuello" value="Cuello:" />
+								</div>
+								<div class="Container20 Responsive100 TexAlLeft">
+									<p:inputTextarea id="cuello" maxlength="255"
+										value="#{historiaClinicaDetalleController.examenFisico.cuello}">
+										<p:ajax event="change" />
+									</p:inputTextarea>
+									<p:message for="cuello" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container33 Responsive100 TexAlLeft">
+
+								<div class="Container30 Responsive100 TexAlLeft">
+									<p:outputLabel for="torax" value="Torax:" />
+								</div>
+								<div class="Container20 Responsive100 TexAlLeft">
+									<p:inputTextarea id="torax" maxlength="255"
+										value="#{historiaClinicaDetalleController.examenFisico.torax}">
+										<p:ajax event="change" />
+									</p:inputTextarea>
+									<p:message for="torax" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container33 Responsive100 TexAlLeft">
+
+								<div class="Container30 Responsive100 TexAlLeft">
+									<p:outputLabel for="abdomen" value="Abdomen:" />
+								</div>
+								<div class="Container20 Responsive100 TexAlLeft">
+									<p:inputTextarea id="abdomen" maxlength="255"
+										value="#{historiaClinicaDetalleController.examenFisico.abdomen}">
+										<p:ajax event="change" />
+									</p:inputTextarea>
+									<p:message for="abdomen" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container33 Responsive100 TexAlLeft">
+
+								<div class="Container30 Responsive100 TexAlLeft">
+									<p:outputLabel for="miembros" value="Miembros:" />
+								</div>
+								<div class="Container20 Responsive100 TexAlLeft">
+									<p:inputTextarea id="miembros" maxlength="255"
+										value="#{historiaClinicaDetalleController.examenFisico.miembros}">
+										<p:ajax event="change" />
+									</p:inputTextarea>
+									<p:message for="miembros" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container33 Responsive100 TexAlLeft">
+
+								<div class="Container30 Responsive100 TexAlLeft">
+									<p:outputLabel for="genitales" value="Genitales:" />
+								</div>
+								<div class="Container20 Responsive100 TexAlLeft">
+									<p:inputTextarea id="genitales" maxlength="255"
+										value="#{historiaClinicaDetalleController.examenFisico.genitales}">
+										<p:ajax event="change" />
+									</p:inputTextarea>
+									<p:message for="genitales" display="tooltip" />
+								</div>
+							</div>
+						</p:panel>
+					</div>
+
+					<div class="Container40 Responsive100 TexAlLeft">
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+								styleClass="Fs14 White OrangeButton"
+								oncomplete="PF('dlgExamenFisico').hide()">
+							</p:commandButton>
+						</div>
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-check" value="Guardar"
+								styleClass="Fs14 White GreenButton" update="formDlg001,form001"
+								actionListener="#{historiaClinicaDetalleController.registrarExamenFisico}">
+							</p:commandButton>
+						</div>
+					</div>
+
+				</h:form>
+			</p:dialog>
+			<!-- END DIALOG -->
+		</div>
+
+	</div>
+
+
+</ui:composition>

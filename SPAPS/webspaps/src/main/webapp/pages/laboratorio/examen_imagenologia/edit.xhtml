@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Container100 NoIndent Flex FlexWrap">
+			<div class="Container40 Responsive100 Flex">
+				<div class="Card">
+					<div class="CardBigTopic">INFORMACIÓN EXAMEN</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="nombreEspecialidad" value="Descripcion" />
+						</div>
+						<div class="Container60 Responsive50 TexAlRight">
+							<p:inputText id="nombreEspecialidad" required="true"
+								value="#{labExamenImagController.labExamen.descripcion}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="nombreEspecialidad" display="tooltip" />
+						</div>
+
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="grupoExamenID" value="Grupo Examen" />
+						</div>
+						<div class="Container60 Responsive50 TexAlRight">
+							<p:autoComplete id="grupoExamenID" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{labExamenImagController.selectedGrupoExamen.descripcion}"
+								completeMethod="#{labExamenImagController.completeGrupoExamen}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Escriba Grupo Examen" maxResults="10"
+								dropdown="true">
+								<p:ajax event="itemSelect" update="grupoExamenID"
+									listener="#{labExamenImagController.onRowSelectGrupoExamenClick}" />
+								<p:column>
+									<h:outputText value="#{_var.id}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+						</div>
+
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="visualizar" value="Mostrar Panel" />
+						</div>
+						<div class="Container60 Responsive50">
+							<p:inputSwitch id="visualizar" offLabel="No" onLabel="Si"
+								value="#{labExamenImagController.labExamen.visualizar}">
+								<p:ajax event="change" update="visualizar" />
+							</p:inputSwitch>
+							<p:message for="visualizar" display="tooltip" />
+						</div>
+
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="estados" value="Estado" />
+						</div>
+						<div class="Container60 Responsive50">
+							<p:selectOneMenu id="estados" style=""
+								value="#{labExamenImagController.labExamen.estado}">
+								<p:ajax event="valueChange" update="estados" />
+								<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+								<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+							</p:selectOneMenu>
+							<p:message for="estados" display="tooltip" />
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="Container60 Responsive100 Flex">
+				<div class="Card">
+					<div class="CardBigTopic Container90 Responsive100 TexAlLeft">DETALLE
+						EXAMEN</div>
+					<div class="CardBigTopic Container10 Responsive100 TexAlRight"
+						style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+						<p:commandButton icon="fa fa-plus"
+							styleClass="Fs14 White GreenButton" immediate="true"
+							actionListener="#{labExamenImagController.actionNuevoDetalleExamen()}" />
+					</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+
+						<h:form id="formDocumentos">
+
+							<p:dataTable id="documentos" var="car"
+								value="#{labExamenImagController.listExamenDetalles}"
+								reflow="true">
+
+								<f:facet name="header">
+										Detalle
+									</f:facet>
+
+
+
+								<p:column width="40%" headerText="Descripcion">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{car.descripcion}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{car.descripcion}" style="width:100%"
+												label="Year" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column width="40%" headerText="Parametros">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{car.parametros}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{car.parametros}" style="width:100%"
+												label="Year" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column width="20%" headerText="Acción">
+
+									<p:commandButton icon="fa fa-edit"
+										styleClass="Fs14 White BlueButton" immediate="true"
+										actionListener="#{labExamenImagController.actionMdificarDetalle(car)}" />
+									<p:commandButton icon="fa fa-trash-o"
+										styleClass="Fs14 White RedButton" update="documentos"
+										actionListener="#{labExamenImagController.onRowDeleteDetalle(car)}">
+										<p:confirm header="¿ESTA SEGURO DE ELIMINAR ESTA DETALLE?"
+											message="Tenga en cuenta que será eliminado definitivamente del sistema."
+											icon="ui-icon-alert" />
+									</p:commandButton>
+								</p:column>
+
+
+							</p:dataTable>
+						</h:form>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

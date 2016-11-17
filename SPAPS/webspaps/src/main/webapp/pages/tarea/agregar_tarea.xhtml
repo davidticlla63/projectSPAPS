@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Gestion de Tareas</title>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TexAlLeft">
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001" listener="#{tareaController.initNew()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								styleClass="Fs14 White GreenButton" value="Registrar">
+								<p:ajax update="form001"
+									listener="#{gestionTareaController.registrar()}" />
+							</p:commandButton>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment>
+
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<div class="CardBigTopic">INFORMACIÓN DE TAREA</div>
+								<div class="SeparatorFull"></div>
+								<div class="Container100 ui-fluid">
+									<p:focus for="mensajeTarea" />
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="mensajeTarea" value="Mensaje:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputTextarea id="mensajeTarea" required="true"
+												value="#{gestionTareaController.tarea.mensaje}">
+												<p:ajax event="change" />
+											</p:inputTextarea>
+											<p:message for="mensajeTarea" display="tooltip" />
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="fecha" value="Fecha:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:calendar id="fecha" required="true" timeZone="GMT-4"
+												value="#{gestionTareaController.tarea.fechaPlazo}"
+												pattern="dd/MM/yyyy HH:mm" mask="true" lang="es">
+												<p:ajax event="change" update="fecha" />
+												<p:ajax event="dateSelect" update="fecha" />
+											</p:calendar>
+											<p:message for="fecha" display="tooltip" />
+										</div>
+
+										<div class="Container40 Responsive100 TexAlLeft">
+											<p:outputLabel for="tipoTarea" value="Tipo de Tarea:" />
+										</div>
+										<div class="Container60 Responsive100 TexAlLeft">
+											<p:autoComplete id="tipoTarea"
+												value="#{gestionTareaController.tarea.tipoTarea}"
+												completeMethod="#{gestionTareaController.onCompleteTipoTarea}"
+												converter="tipoTareaConverter" minQueryLength="1"
+												forceSelection="true" var="_var" itemLabel="#{_var.nombre}"
+												itemValue="#{_var}"
+												placeholder="Escriba el criterio de busqueda"
+												maxResults="10" dropdown="true">
+												<p:ajax event="itemSelect" immediate="true"
+													update="tipoTarea"
+													listener="#{gestionTareaController.onSelectTipoTareaClick}" />
+												<p:column>
+													<h:outputText value="#{_var.nombre}" />
+												</p:column>
+											</p:autoComplete>
+											<p:message for="tipoTarea" display="tooltip" />
+										</div>
+
+										<div class="Container40 Responsive100 TexAlLeft">
+											<p:outputLabel for="medico" value="Medico Auditor:" />
+										</div>
+										<div class="Container60 Responsive100 TexAlLeft">
+											<p:autoComplete id="medico" required="true"
+												requiredMessage="El medico auditor es un campo obligatorio."
+												value="#{gestionTareaController.tarea.personal}"
+												completeMethod="#{gestionTareaController.onCompletePersonal}"
+												converter="personalConverter" minQueryLength="1"
+												forceSelection="true" var="_var"
+												itemLabel="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}"
+												itemValue="#{_var}"
+												placeholder="Escriba el nombre del medico" maxResults="10"
+												dropdown="true">
+												<p:ajax event="itemSelect" immediate="true" update="medico"
+													listener="#{gestionTareaController.onSelectPersonalClick}" />
+												<p:column>
+													<h:outputText
+														value="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}" />
+												</p:column>
+											</p:autoComplete>
+											<p:message for="medico" display="tooltip" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

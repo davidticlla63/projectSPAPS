@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/maps.js" library="olympos-layout" />
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container75 Responsive100 TexAlLeft">
+						<p:commandButton type="button" icon="fa fa-plus"
+							rendered="#{paisController.crear}"
+							styleClass="Fs14 White GreenButton" value="Nuevo Pais">
+							<p:ajax update="form001"
+								listener="#{paisController.actionNuevo()}" />
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-arrow-left"
+							rendered="#{paisController.seleccionado or paisController.registrar}"
+							value="Cancelar" styleClass="Fs14 White OrangeButton">
+							<p:ajax update="form001"
+								listener="#{paisController.actionCancelar()}" />
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{paisController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001" actionListener="#{paisController.registrar()}">
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-edit"
+							rendered="#{paisController.seleccionado}" value="Modificar"
+							styleClass="Fs14 White BlueButton">
+							<p:ajax update="form001"
+								listener="#{paisController.actualizar()}" />
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							rendered="#{paisController.seleccionado}" value="Eliminar"
+							styleClass="Fs14 White RedButton">
+							<p:ajax update="form001" listener="#{paisController.eliminar()}" />
+						</p:commandButton>
+					</div>
+					<div class="Container25 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="."
+								url="#{request.contextPath}/dashboard.xhtml" />
+							<p:menuitem value="Seguridad"
+								url="#{request.contextPath}/pages/security/user.xhtml" />
+							<p:menuitem value="Pais"
+								url="#{request.contextPath}/pages/security/user.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:fragment
+					rendered="#{paisController.seleccionado or paisController.registrar}">
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">INFORMACIÓN DE PAIS</div>
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<div
+									class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{paisController.crear}">
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">LISTADO DE PAIS DEL SISTEMA</div>
+							<div class="SeparatorFull"></div>
+							<p:growl id="messages" showDetail="true" />
+
+							<h:panelGrid columnClasses="value">
+								<h3 style="margin-top: 0">Editable Schedule</h3>
+								<p:schedule id="schedule" value="#{citaController.eventModel}"
+									widgetVar="myschedule" timeZone="GMT+2">
+
+									<p:ajax event="dateSelect"
+										listener="#{citaController.onDateSelect}"
+										update="eventDetails" oncomplete="PF('eventDialog').show();" />
+									<p:ajax event="eventSelect"
+										listener="#{citaController.onEventSelect}"
+										update="eventDetails" oncomplete="PF('eventDialog').show();" />
+									<p:ajax event="eventMove"
+										listener="#{citaController.onEventMove}" update="messages" />
+									<p:ajax event="eventResize"
+										listener="#{citaController.onEventResize}" update="messages" />
+
+								</p:schedule>
+
+								<h3>Locale Support ( Example: Turkish )</h3>
+								<p:schedule id="scheduleLocale"
+									value="#{citaController.eventModel}" locale="tr" />
+
+								<h3>Lazy Schedule</h3>
+								<p:schedule value="#{citaController.lazyEventModel}" />
+							</h:panelGrid>
+							
+							<p:dialog widgetVar="eventDialog" header="Event Details"
+								showEffect="clip" hideEffect="clip">
+								<h:panelGrid id="eventDetails" columns="2">
+									<p:outputLabel for="title" value="Titles:" />
+									<p:inputText id="title" value="#{citaController.event.title}"
+										required="true" />
+
+									<p:outputLabel for="from" value="From:" />
+									<p:calendar id="from" value="#{citaController.event.startDate}"
+										timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+
+									<p:outputLabel for="to" value="To:" />
+									<p:calendar id="to" value="#{citaController.event.endDate}"
+										timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+
+									<p:outputLabel for="allDay" value="All Day:" />
+									<h:selectBooleanCheckbox id="allDay"
+										value="#{citaController.event.allDay}" />
+
+									<p:commandButton type="reset" value="Reset" />
+									<p:commandButton id="addButton" value="Save"
+										actionListener="#{citaController.addEvent}"
+										oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+								</h:panelGrid>
+							</p:dialog>
+						</div>
+					</div>
+				</ui:fragment>
+			</div>
+			<p:growl id="growl" showDetail="true" />
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

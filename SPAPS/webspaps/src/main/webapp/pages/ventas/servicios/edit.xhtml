@@ -1,0 +1,280 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Container100 NoIndent Flex FlexWrap">
+			<div class="Container40 Responsive100 Flex">
+				<div class="Card">
+					<div class="CardBigTopic">INFORMACIÓN DE SERVICIO</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="nombreEspecialidad" value="Descripcion" />
+						</div>
+						<div class="Container60 Responsive50 TexAlRight">
+							<p:inputText id="nombreEspecialidad" required="true"
+								value="#{ventaServiciosController.ventaServicios.descripcion}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="nombreEspecialidad" display="tooltip" />
+						</div>
+
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="tipoServiciosID" value="Tipo Servicios" />
+						</div>
+						<div class="Container60 Responsive50 TexAlRight">
+							<p:autoComplete id="tipoServiciosID" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{ventaServiciosController.selectedTipoServicios.descripcion}"
+								completeMethod="#{ventaServiciosController.completeTipoServicios}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Escriba Tipo Servicios" maxResults="10"
+								dropdown="true">
+								<p:ajax event="itemSelect" update="tipoServiciosID"
+									listener="#{ventaServiciosController.onRowSelectTipoServiciosClick}" />
+								<p:column>
+									<h:outputText value="#{_var.id}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+						</div>
+
+
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="grupoServiciosID" value="Grupo Servicios" />
+						</div>
+						<div class="Container60 Responsive50 TexAlRight">
+							<p:autoComplete id="grupoServiciosID" style="width: 100%"
+								inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+								value="#{ventaServiciosController.selectedGrupoServicios.descripcion}"
+								completeMethod="#{ventaServiciosController.completeGrupoServicios}"
+								minQueryLength="2" forceSelection="true" var="_var"
+								itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+								placeholder="Escriba Grupo Servicios" maxResults="10"
+								dropdown="true">
+								<p:ajax event="itemSelect" update="grupoServiciosID"
+									listener="#{ventaServiciosController.onRowSelectGrupoServiciosClick}" />
+								<p:column>
+									<h:outputText value="#{_var.id}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{_var.descripcion}" />
+								</p:column>
+							</p:autoComplete>
+						</div>
+
+
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="precio" value="Precio" />
+						</div>
+						<div class="Container60 Responsive50 TexAlRight">
+							<p:inputText id="precio" required="true"
+								value="#{ventaServiciosController.ventaServicios.precioVenta}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="precio" display="tooltip" />
+						</div>
+
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="precio1" value="Precio 1" />
+						</div>
+						<div class="Container60 Responsive50 TexAlRight">
+							<p:inputText id="precio1" required="true"
+								value="#{ventaServiciosController.ventaServicios.precioVenta2}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="precio1" display="tooltip" />
+						</div>
+						
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="precio2" value="Precio 2" />
+						</div>
+						<div class="Container60 Responsive50 TexAlRight">
+							<p:inputText id="precio2" required="true"
+								value="#{ventaServiciosController.ventaServicios.precioVenta2}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="precio2" display="tooltip" />
+						</div>
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="visualizar" value="Mostrar Panel" />
+						</div>
+						<div class="Container60 Responsive50">
+							<p:inputSwitch id="visualizar" offLabel="No" onLabel="Si"
+								value="#{ventaServiciosController.ventaServicios.visualizar}">
+								<p:ajax event="change" update="visualizar" />
+							</p:inputSwitch>
+							<p:message for="visualizar" display="tooltip" />
+						</div>
+
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="estados" value="Estado" />
+						</div>
+						<div class="Container60 Responsive50">
+							<p:selectOneMenu id="estados" style=""
+								value="#{ventaServiciosController.ventaServicios.estado}">
+								<p:ajax event="valueChange" update="estados" />
+								<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+								<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+							</p:selectOneMenu>
+							<p:message for="estados" display="tooltip" />
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="Container60 Responsive100 Flex">
+				<div class="Card">
+					<div class="CardBigTopic Container90 Responsive100 TexAlLeft"> PRECIOS PARA SEGURO</div>
+					<div class="CardBigTopic Container10 Responsive100 TexAlRight"
+						style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+						<p:commandButton icon="fa fa-plus"
+							styleClass="Fs14 White GreenButton" immediate="true"
+							actionListener="#{ventaServiciosController.actionNuevoServicioSeguros()}" />
+					</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+
+						<h:form id="formDocumentos1">
+
+							<p:dataTable id="documentos1" var="car"
+								value="#{ventaServiciosController.listServiciosSeguros}" reflow="true">
+
+								<f:facet name="header">
+										Precios por Seguros
+									</f:facet>
+
+
+								<p:column width="40%" headerText="Seguro">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{car.seguro.nombre}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{car.seguro.nombre}" style="width:100%"
+												label="Year" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column width="40%" headerText="Precio">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{car.precioVenta}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{car.precioVenta}" style="width:100%"
+												label="Year" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column width="20%" headerText="Acción">
+
+									<p:commandButton icon="fa fa-edit"
+										styleClass="Fs14 White BlueButton" immediate="true"
+										actionListener="#{ventaServiciosController.actionMdificarServicioSeguro(car)}" />
+									<p:commandButton icon="fa fa-trash-o"
+										styleClass="Fs14 White RedButton" update="documentos1"
+										actionListener="#{ventaServiciosController.onRowDeleteServicioSeguro(car)}">
+										<p:confirm header="¿ESTA SEGURO DE ELIMINAR ESTA DETALLE?"
+											message="Tenga en cuenta que será eliminado definitivamente del sistema."
+											icon="ui-icon-alert" />
+									</p:commandButton>
+								</p:column>								
+
+							</p:dataTable>
+						</h:form>
+					</div>
+
+				</div>
+				
+				<div class="Card">
+					<div class="CardBigTopic Container90 Responsive100 TexAlLeft">PRECIOS PARA EMPRESA</div>
+					<div class="CardBigTopic Container10 Responsive100 TexAlRight"
+						style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+						<p:commandButton icon="fa fa-plus"
+							styleClass="Fs14 White GreenButton" immediate="true"
+							actionListener="#{ventaServiciosController.actionNuevoServicioEmpresa()}" />
+					</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+
+						<h:form id="formDocumentos">
+
+							<p:dataTable id="documentos" var="car"
+								value="#{ventaServiciosController.listaServiciosEmpresas}" reflow="true">
+
+								<f:facet name="header">
+										Precios por Seguros
+									</f:facet>
+
+
+
+								<p:column width="40%" headerText="Empresa">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{car.empresa.descripcion}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{car.empresa.descripcion}" style="width:100%"
+												label="Year" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column width="40%" headerText="Precio">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{car.precioVenta}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{car.precioVenta}" style="width:100%"
+												label="Year" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column width="20%" headerText="Acción">
+
+									<p:commandButton icon="fa fa-edit"
+										styleClass="Fs14 White BlueButton" immediate="true"
+										actionListener="#{ventaServiciosController.actionMdificarServicioEmpresa(car)}" />
+									<p:commandButton icon="fa fa-trash-o"
+										styleClass="Fs14 White RedButton" update="documentos"
+										actionListener="#{ventaServiciosController.onRowDeleteServicioEmpresa(car)}">
+										<p:confirm header="¿ESTA SEGURO DE ELIMINAR ESTA DETALLE?"
+											message="Tenga en cuenta que será eliminado definitivamente del sistema."
+											icon="ui-icon-alert" />
+									</p:commandButton>
+								</p:column>								
+
+							</p:dataTable>
+						</h:form>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+
+</ui:composition>

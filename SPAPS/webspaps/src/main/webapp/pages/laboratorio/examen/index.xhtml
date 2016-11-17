@@ -1,0 +1,308 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+		<!-- IMPEDIR QUE EL USUARIO REGRESE A ESTA PAGINA -->
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<script type="text/javascript">
+			if(history.forward(1)){
+			    location.replace( history.forward(1) );
+			 }
+		</script>
+		<style type="text/css">
+.ui-datatable-reflow .ui-datatable-data .ui-expanded-row-content thead .ui-column-title
+	{
+	display: inline;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container75 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-plus"
+							rendered="#{labExamenController.crear}"
+							styleClass="Fs14 White GreenButton" value="Nueva Examen"
+							update="form001" immediate="true"
+							actionListener="#{labExamenController.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{labExamenController.seleccionado or labExamenController.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{labExamenController.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{labExamenController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001"
+							actionListener="#{labExamenController.registrar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{labExamenController.seleccionado}" value="Modificar"
+							styleClass="Fs14 White BlueButton" update="form001"
+							actionListener="#{labExamenController.actualizar()}">
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							rendered="#{labExamenController.seleccionado}" value="Eliminar"
+							styleClass="Fs14 White RedButton">
+							<p:ajax update="form001"
+								listener="#{labExamenController.eliminar()}" />
+						</p:commandButton>
+
+					</div>
+					<div class="Container25 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Parametros Laboratorio"
+								url="/pages/laboratorio/index.xhtml" />
+							<p:menuitem value="Examens"
+								url="/pages/laboratorio/examen/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{labExamenController.currentPage}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+		<p:dialog header="INFORMACION DETALLE EXAMEN" widgetVar="dlgDialog"
+			responsive="true" modal="true" resizable="false" closable="false">
+			<h:form id="formDlg001">
+				<p:panelGrid id="grid1" columns="3" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="nombre" value="Nombre" />
+					<p:inputText id="nombre" required="true"
+						value="#{labExamenController.newExamenDetalle.descripcion}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="nombre" display="tooltip" />
+
+
+
+					<p:outputLabel for="visualizar" value="Sub Titulo" />
+					<p:inputSwitch id="visualizar" offLabel="No" onLabel="Si"
+						value="#{labExamenController.newExamenDetalle.label}">
+						<p:ajax update=":formDlg001" />
+					</p:inputSwitch>
+					<p:message for="visualizar" display="tooltip" />
+
+					<p:outputLabel for="detalle"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						value="Tiene Detalle" />
+					<p:inputSwitch id="detalle"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						offLabel="No" onLabel="Si"
+						value="#{labExamenController.newExamenDetalle.valores}">
+						<p:ajax update=":formDlg001" />
+					</p:inputSwitch>
+					<p:message for="detalle"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						display="tooltip" />
+
+					<p:outputLabel for="paramentro"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						value="Paramentro" />
+					<p:inputText id="paramentro"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						required="false"
+						value="#{labExamenController.newExamenDetalle.parametros}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="paramentro"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						display="tooltip" />
+
+					<p:outputLabel for="unidad"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						value="U. Medida" />
+					<p:inputText id="unidad"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						required="false"
+						value="#{labExamenController.newExamenDetalle.unidaMedida}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="unidad"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						display="tooltip" />
+
+
+					<p:outputLabel for="tipoparametro"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						value="Seleccion" />
+
+					<p:selectOneMenu id="tipoparametro"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						style="width: 100%" required="true"
+						value="#{labExamenController.newExamenDetalle.tipoParametro}">
+						<p:ajax event="change" update=":formDlg001" />
+						<f:selectItem itemValue="" itemLabel="Seleccione Uno" />
+						<f:selectItems
+							value="#{labExamenController.newExamenDetalle.getSeleccion()}"
+							var="v" itemLabel="#{v.label}" itemValue="#{v}" />
+					</p:selectOneMenu>
+					<p:message for="tipoparametro"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						display="tooltip" />
+
+					<p:outputLabel for="tipoValor"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						value="Tipo Valor" />
+					<p:selectOneMenu id="tipoValor"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						style="width: 100%" required="true"
+						value="#{labExamenController.newExamenDetalle.tipoValor}">
+						<p:ajax event="change" update=":formDlg001" />
+						<f:selectItem itemValue="" itemLabel="Seleccione Uno" />
+						<f:selectItems
+							value="#{labExamenController.newExamenDetalle.tipoValors}"
+							var="v" itemLabel="#{v.label}" itemValue="#{v}" />
+					</p:selectOneMenu>
+					<p:message for="tipoValor"
+						rendered="#{!labExamenController.newExamenDetalle.label}"
+						display="tooltip" />
+
+				</p:panelGrid>
+				<p:panelGrid id="grid2" columns="2" cellpadding="5" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+					<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+						styleClass="Fs14 White OrangeButton"
+						oncomplete="PF('dlgDialog').hide()">
+					</p:commandButton>
+					<p:commandButton icon="fa fa-check" value="Aceptar"
+						styleClass="Fs14 White GreenButton" update="formDlg001,form001"
+						actionListener="#{labExamenController.registrarOModificarDetalle()}">
+					</p:commandButton>
+				</p:panelGrid>
+
+			</h:form>
+		</p:dialog>
+
+
+		<p:dialog header="INFORMACION VALORES REF." widgetVar="dlgDialogRef"
+			responsive="true" modal="true" resizable="false" closable="false">
+			<h:form id="formDlg002">
+				<p:panelGrid id="grid1" columns="3" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="sexo" value="Sexo" />
+					<p:selectOneMenu id="sexo" style="width: 100%"
+						value="#{labExamenController.valoresRef.sexo}">
+						<p:ajax event="valueChange" update="sexo" />
+						<f:selectItem itemLabel="Femenino" itemValue="F" />
+						<f:selectItem itemLabel="Masculino" itemValue="M" />
+						<f:selectItem itemLabel="Ninguno" itemValue="N" />
+					</p:selectOneMenu>
+					<p:message for="sexo" display="tooltip" />
+
+					<p:outputLabel for="edad" value="Edad" />
+					<p:selectOneMenu id="edad" style="width: 100%"
+						value="#{labExamenController.valoresRef.edad}">
+						<p:ajax event="valueChange" update="edad" />
+						<f:selectItem itemLabel="Ninguno" itemValue="N" />
+						<f:selectItem itemLabel="Niño" itemValue="NIÑO" />
+						<f:selectItem itemLabel="Adulto" itemValue="ADULTO" />
+					</p:selectOneMenu>
+					<p:message for="edad" display="tooltip" />
+
+					<p:outputLabel for="ciudad" value="Ciudad" />
+					<p:selectOneMenu id="ciudad" style="width: 100%" required="true"
+						value="#{labExamenController.valoresRef.ciudad.id}">
+						<p:ajax event="valueChange" update="ciudad" />
+						<f:selectItem itemValue="" itemLabel="Seleccione Uno" />
+						<f:selectItems value="#{labExamenController.listCiudad}" var="ciu"
+							itemLabel="#{ciu.nombre}" itemValue="#{ciu.id}" />
+					</p:selectOneMenu>
+					<p:message for="ciudad" display="tooltip" />
+
+					<p:outputLabel for="paramentro" value="Paramentro" />
+					<p:inputTextarea id="paramentro" required="true"
+						value="#{labExamenController.valoresRef.parametros}">
+						<p:ajax event="change" />
+					</p:inputTextarea>
+					<p:message for="paramentro" display="tooltip" />
+
+				</p:panelGrid>
+				<p:panelGrid id="grid2" columns="2" cellpadding="5" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+					<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+						styleClass="Fs14 White OrangeButton"
+						oncomplete="PF('dlgDialogRef').hide()">
+					</p:commandButton>
+					<p:commandButton icon="fa fa-check" value="Aceptar"
+						styleClass="Fs14 White GreenButton" update="formDlg002,form001"
+						actionListener="#{labExamenController.registrarOModificarSubDetalle()}">
+					</p:commandButton>
+				</p:panelGrid>
+
+			</h:form>
+		</p:dialog>
+		<p:dialog header="INDICACIONES" widgetVar="dlgIndicaciones"
+			responsive="true" resizable="false" closable="false">
+			<h:form id="formDlg003">
+				<div class="Card">
+					<div class="CardBigTopic">INFORMACIÓN INDICACION</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+						<div class="Container100 Responsive100 NoIndent OvHidden ui-fluid">
+
+							<div
+								class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="nombreEspecialidad" value="Nombre" />
+							</div>
+							<div class="Container60 Responsive50 TexAlRight">
+								<p:inputTextarea id="nombreEspecialidad" required="true"
+									value="#{labIndicacionesController.labIndicaciones.descripcion}">
+									<p:ajax event="change" />
+								</p:inputTextarea>
+								<p:message for="nombreEspecialidad" display="tooltip" />
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+				<p:panelGrid id="grid2" columns="2" cellpadding="5" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+					<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+						styleClass="Fs14 White OrangeButton"
+						oncomplete="PF('dlgIndicaciones').hide()">
+					</p:commandButton>
+					<p:commandButton icon="fa fa-check" value="Aceptar"
+						styleClass="Fs14 White GreenButton" update="formDlg003"
+						oncomplete="PF('dlgIndicaciones').hide()"
+						actionListener="#{labIndicacionesController.registrar()}">
+					</p:commandButton>
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

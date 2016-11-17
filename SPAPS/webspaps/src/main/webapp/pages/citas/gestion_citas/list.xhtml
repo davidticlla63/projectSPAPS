@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<h3 style="margin-top: 0">HORARIOS</h3>
+				<ui:repeat var="var"
+					value="#{citas2Controller.personal.obtenerEspecialidadHorarios()}">
+					<div class="Container20 Responsive100 Flex">
+						<div class="Card BlueBack TexAlCenter">
+							<div class="EmptyBox5"></div>
+							<span class="FontLatoBlack Fs22 White DispBlock"><p:outputLabel
+									value="#{var.dias.label}" /></span>
+							<div class="EmptyBox10"></div>
+							<p:outputLabel value="#{var.turno.nombre}: " />
+							<p:outputLabel value="#{var.turno.horaEntrada}" />
+							#{' - '}
+							<p:outputLabel value="#{var.turno.horaSalida}" />
+						</div>
+					</div>
+				</ui:repeat>
+			</div>
+		</div>
+		<div class="Container100 Responsive100 Flex">
+
+			<div class="Card">
+
+				<p:growl id="messages" showDetail="true" />
+
+				<h:panelGrid columnClasses="value">
+					<h3 style="margin-top: 0">MI AGENDA MEDICA</h3>
+					<p:schedule id="schedule" value="#{citas2Controller.eventModel}"
+						widgetVar="myschedule" timeZone="GMT+2" view="agendaDay"
+						centerTemplate="agendaDay, agendaWeek, month" axisFormat="HH:mm"
+						aspectRatio="2" slotDuration="00:15:00" tooltip="true" locale="es">
+
+						<p:ajax event="dateSelect"
+							listener="#{citas2Controller.onDateSelect}" update="form001" />
+						<p:ajax event="eventSelect"
+							listener="#{citas2Controller.onEventSelect}" update="form001" />
+						<p:ajax event="eventMove"
+							listener="#{citas2Controller.onEventMove}" update="messages" />
+						<p:ajax event="eventResize"
+							listener="#{citas2Controller.onEventResize}" update="messages" />
+
+					</p:schedule>
+				</h:panelGrid>
+
+
+				<p:dialog header="Elegir Accion" widgetVar="eventDialog"
+					responsive="true" resizable="false" closable="false">
+					<h:panelGrid id="eventDetails" columns="3">
+						<p:outputLabel for="title" value="Motivo:" />
+						<p:inputText id="title" value="#{citas2Controller.event.title}"
+							disabled="true" required="true" />
+						<p:message for="title" display="tooltip" />
+
+						<p:outputLabel for="from" value="Desde:" />
+						<p:calendar id="from" value="#{citas2Controller.event.startDate}"
+							disabled="true" timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+						<p:message for="from" display="tooltip" />
+
+						<p:outputLabel for="to" value="Hasta:" />
+						<p:calendar id="to" value="#{citas2Controller.event.endDate}"
+							disabled="true" timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+						<p:message for="to" display="tooltip" />
+
+						<p:outputLabel for="medicoS" value="Medico:" />
+						<p:inputText id="medicoS" required="true" disabled="true"
+							value="#{citas2Controller.personal.nombre} #{citas2Controller.personal.apellidoPaterno} #{citas2Controller.personal.apellidoMaterno}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="medicoS" display="tooltip" />
+
+
+
+					</h:panelGrid>
+					<h:panelGrid columns="4">
+						<p:commandButton update="form001"
+							styleClass="Fs14 White OrangeButton"
+							oncomplete="PF('myschedule').update();PF('eventDialog').hide();"
+							actionListener="#{citas2Controller.actionCancelar()}"
+							value="Cancelar" />
+
+						<p:commandButton update="form001"
+							actionListener="#{citas2Controller.currentEdit()}" value="Editar" />
+
+
+						<p:commandButton value="Crear H.C."
+							styleClass="Fs14 White GreenButton"
+							actionListener="#{citas2Controller.redireccionar()}"
+							oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+
+						<p:commandButton value="Eliminar"
+							actionListener="#{citas2Controller.eliminar()}"
+							styleClass="Fs14 White RedButton" update="form001"
+							oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+					</h:panelGrid>
+				</p:dialog>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

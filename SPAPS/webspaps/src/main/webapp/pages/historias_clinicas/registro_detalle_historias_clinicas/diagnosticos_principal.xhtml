@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formDlg001">
+		<div class="Container100 Responsive100 TexAlLeft">
+
+			<p:focus for="tipo" />
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<div class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+					<p:outputLabel for="tipo"
+						value="Seleccione lo que desee registrar:" />
+				</div>
+				<div class="Container60 Responsive50">
+					<p:selectOneRadio id="tipo" style="" immediate="true"
+						value="#{historiaClinicaDetalleController.banderaDiagnostico}">
+						<p:ajax update="form001" />
+						<f:selectItem itemLabel="Diagnostico Presuntivo" itemValue="true" />
+						<f:selectItem itemLabel="Diagnostico" itemValue="false" />
+					</p:selectOneRadio>
+					<p:message for="tipo" display="tooltip" />
+				</div>
+			</div>
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<h:form id="diagnosticoPresuntivo"
+					rendered="#{historiaClinicaDetalleController.banderaDiagnostico}">
+					<ui:include
+						src="/pages/historias_clinicas/registro_detalle_historias_clinicas/diagnosticos_presuntivos.xhtml" />
+				</h:form>
+			</div>
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<h:form id="diagnostico"
+					rendered="#{!historiaClinicaDetalleController.banderaDiagnostico}">
+					<ui:include
+						src="/pages/historias_clinicas/registro_detalle_historias_clinicas/diagnosticos.xhtml" />
+				</h:form>
+			</div>
+
+		</div>
+
+		<ui:include src="/pages/reportes/dialogIndex.xhtml" />
+
+	</h:form>
+
+
+</ui:composition>

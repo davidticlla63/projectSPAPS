@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- BEGIN DIALOG -->
+	<div class="Container100 Responsive100 TexAlLeft"
+		onload="#{desgOrdenServicioController.nuevoEstudio()}">
+
+		<div class="Container100 Responsive100 TexAlLeft">
+			<p:panel toggleable="true" header="Examenes de Laboratorio"
+				rendered="#{desgOrdenServicioController.seeEstudio}">
+				<div class="Container100 Responsive100 TexAlLef">
+
+					<div class="Container100 ui-fluid">
+						<ui:repeat var="var"
+							value="#{desgOrdenServicioController.listaEDesgLabGrupo}">
+							<div class="Container25 Responsive100 NoIndent OvHidden ui-fluid">
+								<p:panel header="#{var.grupoExamen.descripcion}"
+									style="margin-bottom:20px">
+									<p:dataTable id="table" var="var1" value="#{var.listaExamen}"
+										rowKey="#{var1.id}"
+										emptyMessage="No se encontraron registros." reflow="true">
+
+										<p:column width="15%" headerText="Select">
+											<f:facet name="header">
+												<p:selectBooleanCheckbox immediate="true">
+													<p:ajax event="change" update="table"
+														listener="#{desgOrdenServicioController.checkBoxListenerExamen(component, var.grupoExamen)}" />
+												</p:selectBooleanCheckbox>
+											</f:facet>
+											<p:selectBooleanCheckbox id="check" immediate="true"
+												value="#{var1.examen.checker}">
+												<p:ajax event="change" update="form001" />
+											</p:selectBooleanCheckbox>
+
+										</p:column>
+										<p:column width="85%" headerText="Examen"
+											filterBy="#{var1.examen.descripcion}">
+											<h:outputText value="#{var1.examen.descripcion}" />
+										</p:column>
+
+									</p:dataTable>
+								</p:panel>
+							</div>
+						</ui:repeat>
+					</div>
+
+				</div>
+			</p:panel>
+		</div>
+
+		<div class="Container100 Responsive100 TexAlLef">
+			<p:panel header="Busqueda:"
+				rendered="#{desgOrdenServicioController.seeEstudio}">
+				<div class="Container100 ui-fluid">
+					<div class="Container60 Responsive100 NoIndent OvHidden ui-fluid">
+
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="busquedaLab" value="Criterio de Busqueda" />
+						</div>
+						<div class="Container60 Responsive50 TexAlRight">
+							<p:inputText id="busquedaLab"
+								value="#{desgOrdenServicioController.busqueda}">
+								<p:ajax event="keyup" update="examenes"
+									listener="#{desgOrdenServicioController.onKeyUpQueryExamenes}" />
+							</p:inputText>
+							<p:message for="busquedaLab" display="tooltip" />
+						</div>
+						<div
+							class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+							<p:outputLabel for="tipoExamen" value="Grupo de Examenes:" />
+						</div>
+						<div class="Container60 Responsive50">
+							<p:selectOneMenu id="tipoExamen" style=""
+								value="#{desgOrdenServicioController.grupoExamen.id}">
+								<p:ajax event="valueChange" update="tipoExamen,examenes"
+									listener="#{desgOrdenServicioController.onSelectTipoExamen}" />
+								<f:selectItem itemValue="" itemLabel="Selccione el grupo" />
+								<f:selectItems var="tipo"
+									value="#{desgOrdenServicioController.listaLabGrupo}"
+									itemLabel="#{tipo.descripcion}" itemValue="#{tipo.id}" />
+							</p:selectOneMenu>
+							<p:message for="tipoExamen" display="tooltip" />
+						</div>
+
+						<p:growl id="msg" showDetail="true" escape="false" />
+						<div class="Container100 Responsive100">
+							<p:pickList id="examenes"
+								value="#{desgOrdenServicioController.listaExamenModel}"
+								effect="bounce" showSourceControls="true"
+								showTargetControls="true" showSourceFilter="true"
+								showCheckbox="true" showTargetFilter="true"
+								filterMatchMode="contains" responsive="true"
+								converter="pickListConverter" var="var" itemValue="#{var}"
+								itemLabel="#{var.descripcion}">
+								<f:facet name="sourceCaption">Examenes Disponibles</f:facet>
+								<f:facet name="targetCaption">Examenes Seleccionados</f:facet>
+
+
+								<p:ajax event="transfer" update="msg" />
+								<p:ajax event="select" update="msg" />
+								<p:ajax event="unselect" update="msg" />
+								<p:ajax event="reorder" update="msg" />
+
+								<p:column style="width:10%">
+									<h:outputText styleClass="ui-theme ui-theme-#{var.id}" />
+								</p:column>
+
+								<p:column style="width:90%;">
+									<h:outputText value="#{var.descripcion}" />
+								</p:column>
+							</p:pickList>
+
+							<p:message for="examenes" display="tooltip" />
+						</div>
+					</div>
+
+				</div>
+			</p:panel>
+		</div>
+
+		<!-- END DIALOG -->
+	</div>
+
+</ui:composition>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Unidad Vecinal</title>
+		<f:event listener="#{unidadVecinalController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+				<!-- top buttons-->
+				<div class="Container100">
+
+					<div class="Card">
+						<div class="Container50 Responsive100 TextAlLeft">
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{unidadVecinalController.crear}"
+								styleClass="Fs14 White GreenButton" value="Nueva Unidad Vecinal">
+								<p:ajax update="form001"
+									listener="#{unidadVecinalController.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{unidadVecinalController.modificar or unidadVecinalController.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{unidadVecinalController.actionCancelar()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{unidadVecinalController.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar"
+								update="form001"
+								actionListener="#{unidadVecinalController.registrar()}">
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{unidadVecinalController.modificar}"
+								value="Modificar" styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{unidadVecinalController.actualizar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{unidadVecinalController.modificar}" value="Eliminar"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{unidadVecinalController.eliminar()}" />
+							</p:commandButton>
+
+
+						</div>
+
+
+					</div>
+				</div>
+
+				<!-- contenedor registro  -->
+				<div class="Container100">
+					<ui:fragment
+						rendered="#{unidadVecinalController.modificar or unidadVecinalController.registrar}">
+
+						<div class="Card">
+							<div class="Container40 Responsive100 NoIndent ui-fluid">
+								<p:panel id="basic" header="Registrar Unidad Vecinal"
+									footer="Unidad Vecinal" style="margin-bottom:20px">
+									<p:focus for="inputTextNumero" />
+									<h:panelGrid columns="2" cellpadding="1">
+										<div class="Container33 Responsive50 ui-fluid">Numero</div>
+										<div class="Container100 Responsive50">
+											<p:inputText id="inputTextNumero"
+												value="#{unidadVecinalController.unidadVecinal.numero}"
+												disabled="#{unidadVecinalController.unidadVecinal.estado =='SU'}"
+												style=" color: #555555; background-image: none;"
+												styleClass="input-sm form-control">
+												<p:ajax event="change" update="inputTextNumero" />
+											</p:inputText>
+										</div>
+
+										<div class="Container33 Responsive50 ui-fluid">Estado</div>
+										<div class="Container100 Responsive50">
+											<p:selectOneMenu id="estado" style="" appendTo="@this"
+												immediate="true" value="#{unidadVecinalController.estado}">
+												<f:selectItems
+													value="#{unidadVecinalController.listaEstado}" />
+												<f:ajax event="change" update="estado" />
+											</p:selectOneMenu>
+										</div>
+									</h:panelGrid>
+								</p:panel>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+
+
+				<!-- listado  -->
+				<div class="Container100">
+					<ui:fragment rendered="#{unidadVecinalController.crear}">
+						<div class="Card">
+							<div class="Container100 Responsive100 NoIndent ui-fluid">
+								<p:dataTable id="dataTableUnidadVecinal" var="item"
+									widgetVar="UnidadVecinalTable"
+									value="#{unidadVecinalController.listaUnidadVecinal}"
+									selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{unidadVecinalController.unidadVecinalSelected}"
+									rowKey="#{item.id}" reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{unidadVecinalController.onRowSelect}"
+										update="form001" />
+
+									<p:column width="8%" headerText="Identificador"
+										filterBy="#{item.id}">
+										<h:outputText value="#{item.id}" />
+									</p:column>
+									<p:column headerText="Numero" filterBy="#{item.numero}">
+										<h:outputText value="#{item.numero}" />
+									</p:column>
+									<p:column width="10%" headerText="Estado"
+										filterBy="#{item.estado}">
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado=='AC'}" value="Activo" /></span>
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado=='IN'}" value="Inactivo" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado=='RM'}" value="Eliminado" /></span>
+									</p:column>
+									<p:column width="10%" headerText="Usuario Registro"
+										filterBy="#{item.usuarioRegistro}">
+										<h:outputText value="#{item.usuarioRegistro}" />
+									</p:column>
+									<p:column width="10%" headerText="Fecha Registro"
+										filterBy="#{item.fechaRegistro}">
+										<h:outputText value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{unidadVecinalController.listaUnidadVecinal.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+		</h:form>
+		<!-- END GROWL -->
+	</ui:define>
+
+</ui:composition>

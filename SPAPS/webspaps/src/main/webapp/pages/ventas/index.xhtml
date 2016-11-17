@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<div class="Container100">
+			<div class="Card">
+				<div class="Container75 Responsive100 TexAlLeft"></div>
+				<div class="Container25 Responsive100 TexAlRight">
+					<p:breadCrumb>
+						<p:menuitem value="." url="/pages/dashboard.xhtml" />
+						<p:menuitem value="Parametros Laboratorio"
+							url="/pages/ventas/index.xhtml" />
+					</p:breadCrumb>
+				</div>
+			</div>
+		</div>
+		<div class="Container100">
+			<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+				onclick="location.href='#{request.contextPath}/pages/ventas/servicios/index.xhtml'">
+				<div class="Card OrangeBack TexAlCenter">
+					<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+					<div class="EmptyBox5"></div>
+					<span class="FontLatoBlack Fs22 White DispBlock">SERVICIOS</span>
+					<div class="EmptyBox10"></div>
+				</div>
+			</div>
+
+			<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+				onclick="location.href='#{request.contextPath}/pages/ventas/tipo_servicios/index.xhtml'">
+				<div class="Card GreenBack TexAlCenter">
+					<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+					<div class="EmptyBox5"></div>
+					<span class="FontLatoBlack Fs22 White DispBlock"> TIPO
+						SERVICIOS</span>
+					<div class="EmptyBox10"></div>
+				</div>
+			</div>
+
+
+			<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+				onclick="location.href='#{request.contextPath}/pages/ventas/grupo_servicios/index.xhtml'">
+				<div class="Card RedBack TexAlCenter">
+					<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+					<div class="EmptyBox5"></div>
+					<span class="FontLatoBlack Fs22 White DispBlock"> GRUPO
+						SERVICIOS</span>
+					<div class="EmptyBox10"></div>
+				</div>
+			</div>
+
+
+
+
+		</div>
+
+		<ui:include src="/pages/reportes/dialogIndex.xhtml" />
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,222 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">INFORMACIÓN EMPRESA</div>
+			<div class="SeparatorFull"></div>
+			<p:wizard flowListener="#{compania2Controller.onFlowProcess}"
+				backLabel="Atrás" nextLabel="Siguiente">
+				<p:tab id="empresa" title="Datos Empresa">
+					<p:panel header="Detalle Empresa y Representante">
+						<h:panelGrid id="grid1" columns="3" cellpadding="5">
+							<p:focus for="nombreEmpresa" />
+							<p:outputLabel for="nombreEmpresa" value="Nombre/Razón Social " />
+							<p:inputText id="nombreEmpresa" required="true"
+								value="#{compania2Controller.compania.nombre}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="nombreEmpresa" display="tooltip" />
+
+							<p:outputLabel for="descripcionEmpresa" value="Descripción " />
+							<p:inputText id="descripcionEmpresa" required="true"
+								value="#{compania2Controller.compania.descripcion}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="descripcionEmpresa" display="tooltip" />
+
+							<p:outputLabel for="direccionEmpresa" value="Dirección " />
+							<p:inputText id="direccionEmpresa" required="true"
+								value="#{compania2Controller.compania.direccion}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="direccionEmpresa" display="tooltip" />
+
+							<p:outputLabel for="telefonoEmpresa" value="Teléfono " />
+							<p:inputText id="telefonoEmpresa" required="true"
+								value="#{compania2Controller.compania.telefono}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="telefonoEmpresa" display="tooltip" />
+
+							<p:outputLabel for="nitEmpresa" value="Nit " />
+							<p:inputText id="nitEmpresa" required="true"
+								value="#{compania2Controller.compania.nit}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="nitEmpresa" display="tooltip" />
+
+							<p:outputLabel for="estados" value="Estado" />
+							<p:selectOneMenu id="estados" style=""
+								value="#{compania2Controller.compania.estado}">
+								<p:ajax event="valueChange" />
+								<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+								<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+							</p:selectOneMenu>
+							<p:message for="estados" display="tooltip" />
+						</h:panelGrid>
+
+						<div class="Container100 Responsive100 ">
+							<div class="CardBigTopic">Representante</div>
+							<div class="SeparatorFull"></div>
+						</div>
+
+						<h:panelGrid id="grid2" columns="3" cellpadding="5">
+							<p:outputLabel for="ciRepEmpresa" value="Cedula Identidad " />
+							<p:inputText id="ciRepEmpresa" required="true"
+								value="#{compania2Controller.compania.ciRepresentante}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="ciRepEmpresa" display="tooltip" />
+
+							<p:outputLabel for="nombreRepEmpresa" value="Nombre Completo" />
+							<p:inputText id="nombreRepEmpresa" required="true"
+								value="#{compania2Controller.compania.nombreRepresentante}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="nombreRepEmpresa" display="tooltip" />
+
+							<p:outputLabel for="telefonoRepEmpresa" value="Teléfono " />
+							<p:inputText id="telefonoRepEmpresa" required="true"
+								value="#{compania2Controller.compania.telefonoRepresentante}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="telefonoRepEmpresa" display="tooltip" />
+						</h:panelGrid>
+
+					</p:panel>
+				</p:tab>
+				<p:tab id="sucursal" title="Datos Sucursal">
+					<p:panel header="Detalle Sucursal Principal">
+						<h:panelGrid id="grid4" columns="3" cellpadding="5">
+							<p:focus for="nombreSucursal" />
+							<p:outputLabel for="nombreSucursal" value="Nombre " />
+							<p:inputText id="nombreSucursal" required="true"
+								value="#{compania2Controller.sucursal.nombre}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="nombreSucursal" display="tooltip" />
+
+							<p:outputLabel for="descripcionSucursal" value="Descripción " />
+							<p:inputTextarea id="descripcionSucursal" required="true"
+								value="#{compania2Controller.sucursal.descripcion}">
+								<p:ajax event="change" />
+							</p:inputTextarea>
+							<p:message for="descripcionSucursal" display="tooltip" />
+
+							<p:outputLabel for="direccionSucursal" value="Dirección " />
+							<p:inputText id="direccionSucursal" required="true"
+								value="#{compania2Controller.sucursal.direccion}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="direccionSucursal" display="tooltip" />
+
+							<p:outputLabel for="telefonoSucursal" value="Teléfono " />
+							<p:inputText id="telefonoSucursal" required="true"
+								value="#{compania2Controller.sucursal.telefono}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="telefonoSucursal" display="tooltip" />
+
+							<p:outputLabel for="estadosPais" value="Pais" />
+							<p:selectOneMenu id="estadosPais" style=""
+								value="#{compania2Controller.pais.id}">
+								<p:ajax event="valueChange" update="estadosCiudad"
+									listener="#{compania2Controller.selectedPais()}" />
+								<f:selectItems var="pais"
+									value="#{compania2Controller.listPais}"
+									itemLabel="#{pais.nombre}" itemValue="#{pais.id}" />
+							</p:selectOneMenu>
+							<p:message for="estadosPais" display="tooltip" />
+
+							<p:outputLabel for="estadosCiudad" value="Ciudad" />
+							<p:selectOneMenu id="estadosCiudad" style=""
+								value="#{compania2Controller.sucursal.ciudad.id}">
+								<p:ajax event="valueChange" />
+								<f:selectItems var="ciudad"
+									value="#{compania2Controller.pais.listCiudads}"
+									itemLabel="#{ciudad.nombre}" itemValue="#{ciudad.id}" />
+							</p:selectOneMenu>
+							<p:message for="estadosCiudad" display="tooltip" />
+
+
+							<p:outputLabel for="estadosSucursal" value="Estado" />
+							<p:selectOneMenu id="estadosSucursal" style=""
+								value="#{compania2Controller.sucursal.estado}">
+								<p:ajax event="valueChange" />
+								<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+								<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+							</p:selectOneMenu>
+							<p:message for="estadosSucursal" display="tooltip" />
+
+
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+				<p:tab id="usuario" title="Datos Usuario">
+					<p:panel header="Detalle Usuario Administrador">
+						<h:panelGrid id="grid5" columns="3" cellpadding="5">
+							<p:focus for="nombreUsuario" />
+							<p:outputLabel for="nombreUsuario" value="Nombre Completo" />
+							<p:inputText id="nombreUsuario" required="true"
+								value="#{compania2Controller.usuario.nombre}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="nombreUsuario" display="tooltip" />
+
+							<p:outputLabel for="emailUsuario" value="Correo Electrónico" />
+							<p:inputText id="emailUsuario" required="true"
+								value="#{compania2Controller.usuario.email}"
+								validatorMessage="Correo Electrónico no válido">
+								<p:ajax event="change" />
+								<f:validateRegex
+									pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							</p:inputText>
+							<p:message for="emailUsuario" display="tooltip" />
+
+							<p:outputLabel for="loginUsuario" value="Usuario " />
+							<p:inputText id="loginUsuario" required="true"
+								value="#{compania2Controller.usuario.login}">
+								<p:ajax event="change" />
+							</p:inputText>
+							<p:message for="loginUsuario" display="tooltip" />
+
+							<p:outputLabel for="password" value="Contraseña" />
+							<p:password id="password" redisplay="true"
+								value="#{compania2Controller.usuario.password}"
+								autocomplete="off" required="true"
+								onkeypress="return validateNoSpace(event)">
+								<p:ajax event="change" />
+							</p:password>
+							<p:message for="password" display="tooltip" />
+
+							<p:outputLabel for="repeatPassword" value="Repetir Contraseña" />
+							<p:password id="repeatPassword" redisplay="true"
+								value="#{compania2Controller.repeatPassword}" autocomplete="off"
+								required="true" onkeypress="return validateNoSpace(event)">
+								<p:ajax event="change" />
+							</p:password>
+							<p:message for="repeatPassword" display="tooltip" />
+
+							<p:outputLabel for="estadosUsuario" value="Estado" />
+							<p:selectOneMenu id="estadosUsuario" style=""
+								value="#{compania2Controller.usuario.estado}">
+								<p:ajax event="valueChange" />
+								<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+								<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+							</p:selectOneMenu>
+							<p:message for="estadosUsuario" display="tooltip" />
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+			</p:wizard>
+
+		</div>
+	</div>
+
+</ui:composition>

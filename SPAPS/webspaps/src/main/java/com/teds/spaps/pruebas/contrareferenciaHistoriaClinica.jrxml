@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-09-14T10:18:25 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contraferenciaHistoriaClinica" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="31a041e5-1c4f-40e8-9fe2-8f16c6c25355">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="postgresql-spaps_db"/>
+	<parameter name="ID_CONTRAREFERENCIA" class="java.lang.Integer"/>
+	<parameter name="LOGO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 
+	p.nombre AS nombre_medico,
+	p.apellido_paterno AS ap_medico,
+	p.apellido_materno AS am_medico,
+	e.nombre AS especialidad_receptor,
+	pa.nombre,
+	pa.apellido_paterno,
+	pa.apellido_materno,
+	pa.edad,
+	pa.sexo,
+	hc.codigo AS codigo_historia_clinica,
+	tr.conducta,
+	tr.consulta_externa,
+	tr.consulta_guardia,
+	tr.impresion_diagnostica,
+	tr.sala,
+	tr.fecha_modificacion,
+	tr.medicoemisor,
+	tr.especialidadmedicoemisor,
+	tr.usuario_registro,
+	sc.descripcion
+FROM contrareferencia tr,
+	paciente pa,
+	historia_clinica hc,
+	sucursal sc,
+	personal p,
+	especialidad e
+WHERE 
+	 tr.id_historia_clinica = hc.id 
+	 AND tr.id_medico_receptor = p.id
+	 AND p.id_especialidad = e.id
+	 AND hc.id_paciente = pa.id 
+	 AND tr.id_sucursal = sc.id 
+	 AND tr.id = $P{ID_CONTRAREFERENCIA}]]>
+	</queryString>
+	<field name="nombre_medico" class="java.lang.String"/>
+	<field name="ap_medico" class="java.lang.String"/>
+	<field name="am_medico" class="java.lang.String"/>
+	<field name="especialidad_receptor" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="apellido_paterno" class="java.lang.String"/>
+	<field name="apellido_materno" class="java.lang.String"/>
+	<field name="edad" class="java.lang.Integer"/>
+	<field name="sexo" class="java.lang.String"/>
+	<field name="codigo_historia_clinica" class="java.lang.String"/>
+	<field name="conducta" class="java.lang.String"/>
+	<field name="consulta_externa" class="java.lang.String"/>
+	<field name="consulta_guardia" class="java.lang.String"/>
+	<field name="impresion_diagnostica" class="java.lang.String"/>
+	<field name="sala" class="java.lang.String"/>
+	<field name="fecha_modificacion" class="java.sql.Timestamp"/>
+	<field name="medicoemisor" class="java.lang.String"/>
+	<field name="especialidadmedicoemisor" class="java.lang.String"/>
+	<field name="usuario_registro" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="96" splitType="Stretch">
+			<staticText>
+				<reportElement x="380" y="0" width="50" height="20" uuid="a7f9d217-76dc-432a-9d8a-cd41725d1d73"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="440" y="0" width="100" height="20" uuid="bcf15129-7a09-44fd-8798-ba0eeee54a80"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{usuario_registro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="380" y="20" width="50" height="20" uuid="ccfc4f14-1bc3-4555-a416-798279dad580"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="157" y="51" width="240" height="30" uuid="44a49d95-b18e-4f48-85aa-9b00e468129c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTRAREFERENCIA]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="440" y="20" width="100" height="20" uuid="6670c009-c75c-4175-8ce7-63a6677d43de"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="2" y="0" width="138" height="93" uuid="3e64bdd3-88cf-4df1-b076-356ace3e074b"/>
+				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="149" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="10" width="20" height="14" uuid="fc2f3709-846a-4e2c-b7bd-bba08850dba2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[De:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="40" width="20" height="14" uuid="3280f700-4415-4577-8600-d66e260e6f25"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[A:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="10" width="76" height="14" uuid="b60c822c-8ae3-443e-a917-4f4ffbfb98fa"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Especialidad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="40" width="76" height="14" uuid="150bba0e-f442-4cdc-8d3b-ca7509989c06"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Especialidad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="70" width="100" height="14" uuid="36228fb4-cb07-4b57-8839-533e54d41010"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos del Paciente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="100" width="108" height="14" uuid="574093ee-d9ad-4a36-a4f5-7450d95f3416"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre Completo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="120" y="100" width="100" height="14" uuid="11f37f2b-b8e3-48bd-bdf8-406f37ed9377"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="227" y="100" width="100" height="14" uuid="b03d46dd-0c30-4548-bbf5-edb77f9f07b8"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellido_paterno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="340" y="100" width="100" height="14" uuid="4ac4a331-115f-4332-bc6c-a0f8220afcdd"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellido_materno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="68" y="130" width="42" height="14" uuid="62dab475-876d-42f5-9343-828202c31fcf"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Edad:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="118" y="130" width="58" height="14" uuid="2e9b364f-51b7-4814-b3d9-d1fdb8524d50"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{edad}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="238" y="130" width="42" height="14" uuid="acd9727a-7d02-49ae-807d-6786e47469da"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sexo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement key="" x="290" y="130" width="120" height="14" uuid="eed6ca1e-dd01-4b2f-839b-282acbfd8d9f"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sexo}.equals("M") ? "Maculino" : "Femenino"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="-3" width="560" height="1" uuid="8bebc4f6-0b01-4388-be31-038f6f69d17f">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="2" y="60" width="560" height="1" uuid="ee8e1bdc-00bb-46f0-a4ad-7cb3fe0bd7ae">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="400" y="40" width="130" height="14" uuid="28d3871c-f0f5-41a8-9f40-722ce1e678d1"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{especialidad_receptor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="40" width="100" height="14" uuid="63c1e38f-76da-4de3-9c2f-5e1d2f0cd6b8"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_medico}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="40" width="100" height="14" uuid="e49be913-f9aa-49ce-86c8-fa4a5f6c7c1c"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ap_medico}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="232" y="40" width="78" height="14" uuid="3c733688-564a-4149-86b5-eb6475764d67"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{am_medico}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="10" width="280" height="14" uuid="1009be65-3f2d-429a-b6aa-1639cb012af4"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{medicoemisor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="10" width="130" height="14" uuid="92da49dc-9095-415e-89b7-bfe1a975b2f1"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{especialidadmedicoemisor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="5" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="2" width="560" height="1" uuid="0e54f420-e593-49a6-8a56-11d327fed960">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="391" splitType="Stretch">
+			<staticText>
+				<reportElement x="15" y="0" width="100" height="14" uuid="c06bbfac-cce1-4379-b717-63db97842cf2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consulta Externa:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="39" y="70" width="76" height="14" uuid="8d61823d-eca1-49e1-b618-42809a3ebaeb"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sala:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="150" width="106" height="14" uuid="6a92b9e5-7263-4072-9a7a-9834d3607ae4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consulta Guardia:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="230" width="120" height="14" uuid="30801f72-026e-4caa-bbc7-9b63d3581266"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Impresion Diagnostica:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="374" width="120" height="14" uuid="bbeefc9d-dc62-464f-b472-5140405ef585"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Firma y Sello del Medico]]></text>
+			</staticText>
+			<line>
+				<reportElement x="70" y="364" width="120" height="1" uuid="801726a3-217b-43b1-83b6-d207c5b87b09">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="330" y="374" width="120" height="14" uuid="3b9fc2da-3efa-490e-a38b-d565ee465b02"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="330" y="350" width="120" height="20" uuid="b39a4552-74f2-47c0-b5ad-382ea2ab5adc"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="30" width="100" height="30" uuid="bfb9c770-dea8-4011-97f2-20509b237150"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consulta_externa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="100" width="100" height="30" uuid="769f9269-ed2c-4c7f-a482-20b32f3bbb01"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sala}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="180" width="100" height="30" uuid="509f15ea-4d17-4843-be4a-67519a904d23"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consulta_guardia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="260" width="100" height="30" uuid="7c9ca6b6-4189-4786-8907-94d2db940c24"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{impresion_diagnostica}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

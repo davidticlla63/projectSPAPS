@@ -1,0 +1,240 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<style type="text/css">
+.column1 {
+	width: 25%;
+	height: auto
+}
+
+.column2 {
+	width: 50%;
+	height: auto
+}
+
+.column3 {
+	width: 20%;
+	height: auto
+}
+</style>
+	<!-- center boxes -->
+	<div class="Container100 ui-fluid">
+
+		<div class="Card">
+
+			<p:focus for="nombre" />
+			<div class="Container50 Responsive100 NoIndent OvHidden ui-fluid">
+				<div class="CardBigTopic">INFORMACIÓN COTIZACION</div>
+				<div class="EmptyBox20"></div>
+				<p:panelGrid id="grid" columns="3"
+					columnClasses="column1,column2,column3"
+					style="border:0px none; background-color:transparent; width: 100%;"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="console" value="Tipo Cliente" />
+					<p:selectOneRadio id="console"
+						value="#{cotizacionController.tipoCliente}">
+						<f:selectItem itemLabel="Particular" itemValue="par" />
+						<f:selectItem itemLabel="Empresa" itemValue="emp" />
+						<f:selectItem itemLabel="Seguro" itemValue="seg" />
+						<p:ajax event="change"
+							listener="#{cotizacionController.cargarOpciones()}"
+							update="form001" />
+					</p:selectOneRadio>
+					<p:message for="console" display="tooltip" />
+
+
+
+					<p:outputLabel for="nombre" value="Nombre "
+						style="color:gray;font-weight:bold"
+						rendered="#{cotizacionController.particular}" />
+					<p:inputText id="nombre" required="true"
+						value="#{cotizacionController.cotizacion.persona}"
+						rendered="#{cotizacionController.particular}" size="70">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="nombre" display="tooltip"
+						rendered="#{cotizacionController.particular}" />
+
+					<p:outputLabel for="pacienteSeguro" value="Paciente "
+						rendered="#{cotizacionController.seguro}" />
+					<p:autoComplete id="pacienteSeguro" required="true"
+						rendered="#{cotizacionController.seguro}"
+						value="#{cotizacionController.cotizacion.paciente}" var="theme"
+						itemLabel="#{theme.nombre}" itemValue="#{theme}"
+						completeMethod="#{cotizacionController.onCompletePaciente}"
+						converter="#{pacienteConverter}" forceSelection="true"
+						dropdown="true" placeholder="Paciente">
+					</p:autoComplete>
+					<p:message for="pacienteSeguro" display="tooltip"
+						rendered="#{cotizacionController.seguro}" />
+
+
+
+					<p:outputLabel for="seguro" value="Seguro "
+						rendered="#{cotizacionController.seguro}" />
+					<p:autoComplete id="seguro" required="true"
+						rendered="#{cotizacionController.seguro}"
+						value="#{cotizacionController.seguroSeleccionado}" var="theme"
+						itemLabel="#{theme.nombre}" itemValue="#{theme}"
+						completeMethod="#{cotizacionController.onCompleteSeguro}"
+						converter="#{seguroConverter}" forceSelection="true"
+						dropdown="true" placeholder="Seguro">
+						<p:ajax event="itemSelect"
+							listener="#{cotizacionController.cargarlistaPreciosSeguro()}" />
+					</p:autoComplete>
+					<p:message for="seguro" display="tooltip"
+						rendered="#{cotizacionController.seguro}" />
+
+
+
+					<p:outputLabel for="pacienteEmpresa" value="Paciente "
+						rendered="#{cotizacionController.empresa}" />
+					<p:autoComplete id="pacienteEmpresa" required="true"
+						rendered="#{cotizacionController.empresa}"
+						value="#{cotizacionController.cotizacion.paciente}" var="theme"
+						itemLabel="#{theme.nombre}" itemValue="#{theme}"
+						completeMethod="#{cotizacionController.onCompletePaciente}"
+						converter="#{pacienteConverter}" forceSelection="true"
+						dropdown="true" placeholder="Paciente">
+						<p:ajax event="itemSelect"
+							listener="#{cotizacionController.cargarlistaPreciosEmpresa()}" />
+					</p:autoComplete>
+					<p:message for="pacienteEmpresa" display="tooltip"
+						rendered="#{cotizacionController.empresa}" />
+
+
+
+
+					<p:outputLabel for="empresa" value="Empresa "
+						rendered="#{cotizacionController.empresa}" />
+					<p:autoComplete id="empresa" required="true"
+						rendered="#{cotizacionController.empresa}"
+						value="#{cotizacionController.empresaSeleccionada}" var="theme"
+						itemLabel="#{theme.descripcion}" itemValue="#{theme}"
+						completeMethod="#{cotizacionController.onCompleteEmpresa}"
+						converter="#{empresaConverter}" forceSelection="true"
+						dropdown="true" placeholder="Empresa">
+					</p:autoComplete>
+					<p:message for="empresa" display="tooltip"
+						rendered="#{cotizacionController.empresa}" />
+
+
+
+
+					<p:outputLabel for="observacion" value="Observación " />
+					<p:inputTextarea id="observacion" required="true" rows="3"
+						value="#{cotizacionController.cotizacion.observacion}">
+						<p:ajax event="change" />
+					</p:inputTextarea>
+					<p:message for="observacion" display="tooltip" />
+
+				</p:panelGrid>
+			</div>
+			<div class="Container50 Responsive100 NoIndent OvHidden ui-fluid">
+				<div class="CardBigTopic">EXAMENES DE LABORATORIO</div>
+				<div class="EmptyBox20"></div>
+				<p:panelGrid id="grid6" columns="3"
+					columnClasses="column1,column2,column3"
+					style="border:0px none; background-color:transparent; width: 100%;"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="servicios" value="Servicio " />
+					<p:autoComplete id="servicios" required="true"
+						value="#{cotizacionController.detalleCotizacion.servicio}"
+						var="theme" itemLabel="#{theme.descripcion}" itemValue="#{theme}"
+						completeMethod="#{cotizacionController.onCompleteServicio}"
+						converter="#{servicioConverter}" forceSelection="true"
+						dropdown="true" placeholder="Examen">
+						<p:ajax event="itemSelect" update="precios"
+							listener="#{cotizacionController.mostrarPrecios()}" />
+					</p:autoComplete>
+					<p:message for="precios" display="tooltip" />
+
+
+
+					<p:outputLabel for="precios" value="Precio " />
+					<p:inputText id="precios" required="true" readonly="true"
+						value="#{cotizacionController.detalleCotizacion.precioUnitario}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="precios" display="tooltip" />
+
+
+					<p:outputLabel for="cantidades" value="Cantidad "
+						style="color:gray;font-weight:bold" />
+					<p:inputText id="cantidades" required="true"
+						value="#{cotizacionController.detalleCotizacion.cantidad}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="cantidades" display="tooltip" />
+
+					<p:spacer></p:spacer>
+					<p:commandButton icon="fa fa-plus"
+						styleClass="Fs14 White GreenButton" immediate="true"
+						 value="Adicionar"
+						update="#{cotizacionController.idTablaProductos}, formDlgDetalleOrdenIngreso"
+						actionListener="#{cotizacionController.registrarOModificarDetalleVenta()}"
+						/>
+					<p:spacer></p:spacer>
+				</p:panelGrid>
+			</div>
+
+		</div>
+	</div>
+	<div class="Container100 ui-fluid">
+		<div class="Card">
+		
+
+
+			
+			<div class="Container100 ui-fluid">
+				<!-- DATATABLE -->
+				<p:dataTable id="singleDT2" var="var"
+					value="#{cotizacionController.cotizacion.listCotizacionDetalles}"
+					selection="#{cotizacionController.detalleCotizacion}"
+					rowKey="#{var.id}" 
+					emptyMessage="No se encontraron registros.">
+				
+
+					<p:column width="20%" headerText="Descripcion">
+						<h:outputText value="#{var.servicio.descripcion}" />
+					</p:column>
+
+					<p:column width="10%" headerText="Precio">
+						<h:outputText value="#{var.precioUnitario}" />
+					</p:column>
+
+					<p:column width="10%" headerText="Cantidad">
+						<h:outputText value="#{var.cantidad}" />
+					</p:column>
+
+					<p:column width="10%" headerText="Subtotal">
+						<h:outputText value="#{var.precioSubTotal}" />
+					</p:column>
+					<p:column width="12%" headerText="Acción">
+						<p:commandButton icon="fa fa-edit"
+							styleClass="Fs14 White BlueButton" immediate="true" />
+						<p:commandButton icon="fa fa-trash-o"
+							styleClass="Fs14 White RedButton"
+							update="singleDT2,formDlgDetalleOrdenIngreso"
+							actionListener="#{cotizacionController.eliminarDetalleVenta(var)}"
+							immediate="true">
+							<p:confirm header="¿ESTA SEGURO DE ELIMINAR ESTE SERVICIO?"
+								message="EL Servicio Sera Eliminado de la Nota de Venta"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</p:column>
+					<f:facet name="footer">
+						<h:outputText
+							value="#{cotizacionController.cotizacion.listCotizacionDetalles.size()} Registros en Total" />
+					</f:facet>
+				</p:dataTable>
+
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

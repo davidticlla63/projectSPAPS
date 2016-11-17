@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic">INFORMACIÓN DE BUSQUEDA</div>
+				<div class="SeparatorFull"></div>
+				<div class="Container100 ui-fluid">
+					<div
+						class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="especialidadID" value="Especialidad" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:autoComplete id="especialidadID" style="width: 100%"
+							inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+							value="#{agendaController.selectedEspecialidad.nombre}"
+							completeMethod="#{agendaController.completeEspecialidad}"
+							minQueryLength="2" forceSelection="true" var="_var"
+							itemLabel="#{_var}" itemValue="#{_var.nombre}"
+							placeholder="Escriba Especialidad" maxResults="10"
+							dropdown="true">
+							<p:ajax event="itemSelect" update="especialidadID,medicoID"
+								listener="#{agendaController.onRowSelectEspecialidadClick}" />
+							<p:column>
+								<h:outputText value="#{_var.id}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{_var.nombre}" />
+							</p:column>
+						</p:autoComplete>
+					</div>
+					<div
+						class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="medicoID" value="Medico" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:autoComplete id="medicoID" style="width: 100%"
+							inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+							value="#{agendaController.selectedMedico.nombre}"
+							completeMethod="#{agendaController.completeMedico}"
+							minQueryLength="2" forceSelection="true" var="_var"
+							itemLabel="#{_var}" itemValue="#{_var.nombre}"
+							placeholder="Escriba Medico" maxResults="10" dropdown="true">
+							<p:ajax event="itemSelect" update="medicoID"
+								listener="#{agendaController.onRowSelectMedicoClick}" />
+							<p:column>
+								<h:outputText value="#{_var.id}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{_var.nombre}" />
+							</p:column>
+						</p:autoComplete>
+					</div>
+					<div
+						class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="fechaID" value="Fecha" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:calendar id="fechaID" required="false" timeZone="GMT+2"
+							value="#{agendaController.fechaActual}"
+							pattern="dd/MM/yyyy HH:mm" mask="true" lang="en" />
+						<p:message for="fechaID" display="tooltip" />
+					</div>
+					<div class="Container10 Responsive50 TexAlRight">
+						<p:commandButton icon="fa fa-search"
+							value="Buscar"
+							styleClass="Fs14 White BlueButton" update="form001"
+							actionListener="#{agendaController.consulta()}">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+
+				<p:growl id="messages" showDetail="true" />
+
+				<h:panelGrid columnClasses="value">
+					<h3 style="margin-top: 0">AGENDA MEDICA</h3>
+
+
+					<p:schedule id="schedule" value="#{agendaController.eventModel}"
+						widgetVar="myschedule" timeZone="GMT+2" view="agendaDay"
+						centerTemplate="agendaDay, agendaWeek, month" locale="es" slotDuration="00:15:00">
+
+						<p:ajax event="dateSelect"
+							listener="#{agendaController.onDateSelect}" update="form001" />
+						<p:ajax event="eventSelect"
+							listener="#{agendaController.onEventSelect}" update="form001" />
+						<p:ajax event="eventMove"
+							listener="#{agendaController.onEventMove}" update="messages" />
+						<p:ajax event="eventResize"
+							listener="#{agendaController.onEventResize}" update="messages" />
+
+					</p:schedule>
+				</h:panelGrid>
+
+
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

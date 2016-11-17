@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<div class="Container100">
+			<div class="Card">
+				<div class="Container75 Responsive100 TexAlLeft"></div>
+				<div class="Container25 Responsive100 TexAlRight">
+					<p:breadCrumb>
+						<p:menuitem value="." url="/pages/dashboard.xhtml" />
+						<p:menuitem value="Parametros Laboratorio"
+							url="/pages/laboratorio/index.xhtml" />
+					</p:breadCrumb>
+				</div>
+			</div>
+		</div>
+		
+		<p:panel header="LABORATORIO" toggleable="true">
+			<div class="Container100 ui-fluid">
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/laboratorio/examen/index.xhtml'">
+					<div class="Card OrangeBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">EXAMENES</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/laboratorio/grupo_examen/index.xhtml'">
+					<div class="Card RedBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock"> GRUPO
+							EXAMENES</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/laboratorio/indicaciones/index.xhtml'">
+					<div class="Card GreenBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">INDICACIONES</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/laboratorio/etiquetas/index.xhtml'">
+					<div class="Card AquaBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">ETIQUETAS</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+			</div>
+		</p:panel>
+
+		<p:panel header="IMAGENOLOGIA" toggleable="true">
+			<div class="Container100 ui-fluid">
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/laboratorio/examen_imagenologia/index.xhtml'">
+					<div class="Card OrangeBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">EXAMENES</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/laboratorio/grupo_examen_imagenologia/index.xhtml'">
+					<div class="Card RedBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock"> GRUPO
+							EXAMENES</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+			</div>
+		</p:panel>
+
+		<ui:include src="/pages/reportes/dialogIndex.xhtml" />
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+		<h:outputScript name="js/calendar-localization.js" />
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container70 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-plus" value="Nuevo Comprobante"
+							rendered="#{comprobanteController.crear}"
+							styleClass="Fs14 White GreenButton" update="form001"
+							actionListener="#{comprobanteController.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+							rendered="#{comprobanteController.seleccionado or comprobanteController.registrar or comprobanteController.verReporte}"
+							styleClass="Fs14 White OrangeButton" immediate="true">
+							<p:ajax update="form001"
+								listener="#{comprobanteController.actionCancelar()}" />
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o" value="Registrar"
+							styleClass="Fs14 White GreenButton"
+							rendered="#{comprobanteController.registrar}" update="form001"
+							actionListener="#{comprobanteController.registrarComprobante()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit" value="Modificar"
+							styleClass="Fs14 White BlueButton"
+							rendered="#{comprobanteController.seleccionado}" update="form001"
+							actionListener="#{comprobanteController.actionModificar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-trash-o" value="Anular"
+							styleClass="Fs14 White RedButton"
+							rendered="#{comprobanteController.seleccionado}">
+							<p:confirm
+								header="Desea Anular Comprobante Nº #{comprobanteController.comprobante.correlativo}"
+								message="Se anulará definitivamente del sistema" />
+						</p:commandButton>
+
+						<p:commandButton id="buttonReporte" value="Imprimir"
+							rendered="#{comprobanteController.seleccionado}">
+						</p:commandButton>
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Contabilidad"
+								url="/pages/contabilidad/comprobante/index.xhtml" />
+							<p:menuitem value="Comprobante"
+								url="/pages/contabilidad/comprobante/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{comprobanteController.page}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+
+		<!-- VISTA PREVIA REPORTE -->
+		<p:dialog header="COMPROBANTE" widgetVar="dlgVistaPreviaComprobante"
+			modal="true" visible="#{not empty facesContext.maximumSeverity}"
+			resizable="false" position="center" width="750px">
+			<h:form id="formModalVistaPrevia">
+				<div class="row">
+					<div class="form-group ">
+						<div class="col-md-12">
+							<p:media player="pdf" rendered="true"
+								value="#{comprobanteController.urlComprobante}" width="750px"
+								height="480px" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<div class="col-md-4"></div>
+							<div class="col-md-4"></div>
+							<div class="col-md-4">
+								<p:commandButton value="Aceptar"
+									styleClass="Fs14 White GreenButton"
+									onclick="PF('dlgVistaPreviaComprobante').hide();" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</h:form>
+		</p:dialog>
+		<!-- END DIALOG -->
+
+		<!-- INCLUDE DIALOG AJUSTE -->
+		<ui:include src="/pages/contabilidad/comprobante/ajuste.xhtml" />
+
+	</ui:define>
+
+</ui:composition>

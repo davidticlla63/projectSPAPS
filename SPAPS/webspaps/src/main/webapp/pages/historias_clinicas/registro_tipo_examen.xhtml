@@ -1,0 +1,163 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/maps.js" library="olympos-layout" />
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container75 Responsive100 TexAlLeft">
+						<p:commandButton type="button" icon="fa fa-plus"
+							rendered="#{tipoExamenController.crear}"
+							styleClass="Fs14 White GreenButton" value="Nuevo TipoExamen">
+							<p:ajax update="form001"
+								listener="#{tipoExamenController.actionNuevo()}" />
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-arrow-left"
+							rendered="#{tipoExamenController.seleccionado or tipoExamenController.registrar}"
+							value="Cancelar" styleClass="Fs14 White OrangeButton">
+							<p:ajax update="form001"
+								listener="#{tipoExamenController.actionCancelar()}" />
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{tipoExamenController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar">
+							<p:ajax update="form001"
+								listener="#{tipoExamenController.registrar()}" />
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-edit"
+							rendered="#{tipoExamenController.seleccionado}" value="Modificar"
+							styleClass="Fs14 White BlueButton">
+							<p:ajax update="form001"
+								listener="#{tipoExamenController.actualizar()}" />
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							rendered="#{tipoExamenController.seleccionado}" value="Eliminar"
+							styleClass="Fs14 White RedButton">
+							<p:ajax update="form001"
+								listener="#{tipoExamenController.eliminar()}" />
+						</p:commandButton>
+					</div>
+					<div class="Container25 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="."
+								url="#{request.contextPath}/dashboard.xhtml" />
+							<p:menuitem value="Seguridad"
+								url="#{request.contextPath}/pages/security/user.xhtml" />
+							<p:menuitem value="TipoExamen"
+								url="#{request.contextPath}/pages/security/user.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:fragment
+					rendered="#{tipoExamenController.seleccionado or tipoExamenController.registrar}">
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">INFORMACIÓN DE PAIS</div>
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<div
+									class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+									<div
+										class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+										<p:outputLabel for="nombreTipoExamen" value="Nombre Completo" />
+									</div>
+									<div class="Container60 Responsive50 TexAlRight">
+										<p:inputText id="nombreTipoExamen" required="true"
+											value="#{tipoExamenController.tipoExamen.nombre}">
+											<p:ajax event="change" />
+										</p:inputText>
+										<p:message for="nombreTipoExamen" display="tooltip" />
+									</div>
+
+
+									<div
+										class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+										<p:outputLabel for="estados" value="Estado" />
+									</div>
+									<div class="Container60 Responsive50">
+										<p:selectOneMenu id="estados" style=""
+											value="#{tipoExamenController.tipoExamen.estado}">
+											<p:ajax event="valueChange" update="estados" />
+											<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+											<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+										</p:selectOneMenu>
+										<p:message for="estados" display="tooltip" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{tipoExamenController.crear}">
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">LISTADO DE PAIS DEL SISTEMA</div>
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<p:dataTable id="singleDT" var="var"
+									value="#{tipoExamenController.listaTipoExamen}"
+									selectionMode="single"
+									selection="#{tipoExamenController.tipoExamenSelected}"
+									rowKey="#{var.id}" rows="10" paginator="true"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="5,10,15"
+									emptyMessage="No se encontraron registros." reflow="true">
+									<f:facet name="header">
+                            			Seleccione un TipoExamen para ver su detalle
+                        			</f:facet>
+
+									<p:ajax update="form001" event="rowSelect"
+										listener="#{tipoExamenController.onRowSelect}" />
+
+									<p:column width="25%" headerText="Nombre Completo">
+										<h:outputText value="#{var.nombre}" />
+									</p:column>
+
+									<p:column width="12%" headerText="Estado"
+										style="text-align:center;">
+										<h:outputText value="#{var.estado}" />
+									</p:column>
+									<p:column width="12%" headerText="Fecha Registro"
+										style="text-align:center;">
+										<h:outputText value="#{var.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column width="12%" headerText="Registro">
+										<h:outputText value="#{var.usuarioRegistro}" />
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{tipoExamenController.listaTipoExamen.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</ui:fragment>
+			</div>
+			<p:growl id="growl" showDetail="true" />
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

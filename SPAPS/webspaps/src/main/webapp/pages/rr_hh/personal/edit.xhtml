@@ -1,0 +1,346 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container40 Responsive100 Flex">
+		<div class="Card">
+			<div class="CardBigTopic">INFORMACIÓN DE PERSONAL</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+				<div class="Container100 Responsive100 NoIndent OvHidden ui-fluid">
+					<p:focus for="nombrePersonal" />
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="codigo" value="Codigo" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="codigo" required="true" readonly="true"
+							value="#{personalController.personal.codigo}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="codigo" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="nombrePersonal" value="Nombres" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="nombrePersonal" required="true"
+							value="#{personalController.personal.nombre}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="nombrePersonal" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="paternoPersonal" value="Apellido Paterno" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="paternoPersonal" required="true"
+							value="#{personalController.personal.apellidoPaterno}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="paternoPersonal" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="maternoPersonal" value="Apellido Materno" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="maternoPersonal" required="true"
+							value="#{personalController.personal.apellidoMaterno}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="maternoPersonal" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+						<p:outputLabel for="sexo" value="Sexo" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:selectOneRadio id="sexo" immediate="true" required="true"
+							requiredMessage="Ingrese el sexo del Pesonal por favor."
+							value="#{personalController.personal.sexo}"
+							valueChangeListener="#{personalController.selectSexo}">
+							<f:selectItems value="#{personalController.personal.getSexos()}"
+								var="v" itemLabel="#{v.label}" itemValue="#{v}" />
+							<p:ajax update="sexo" />
+						</p:selectOneRadio>
+						<p:message for="sexo" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="direccionPersonal" value="Direccion" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="direccionPersonal" required="true"
+							value="#{personalController.personal.direccion}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="direccionPersonal" display="tooltip" />
+					</div>
+
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="telefonoPersonal" value="Telefono" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="telefonoPersonal" required="false"
+							value="#{personalController.personal.telefono}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="telefonoPersonal" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="email" value="Correo" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="email" required="false"
+							value="#{personalController.personal.email}">
+							<p:ajax event="change" />
+							<f:validateRegex
+								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+						</p:inputText>
+						<p:message for="email" display="tooltip" />
+					</div>
+
+
+
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="cargoID" value="Cargo" />
+					</div>
+					<div class="Container50 Responsive50 TexAlRight">
+						<p:autoComplete id="cargoID" style="width: 100%"
+							inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+							value="#{personalController.selectedCargo.descripcion}"
+							completeMethod="#{personalController.completeCargo}"
+							minQueryLength="2" forceSelection="true" var="_var"
+							itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+							placeholder="Escriba Cargo" maxResults="10" dropdown="true">
+							<p:ajax event="itemSelect" update="cargoID"
+								listener="#{personalController.onRowSelectCargoClick}" />
+							<p:column>
+								<h:outputText value="#{_var.id}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{_var.descripcion}" />
+							</p:column>
+						</p:autoComplete>
+					</div>
+					<div class="Container10 Responsive50 TexAlRight">
+						<h:outputLink 
+							target="_blank" value="#{request.contextPath}/pages/admision/registro_cargo.xhtml">
+							<span class="FontLatoBold Fs14 Blue DispBlock"><h:outputText
+									value="+" /></span>
+						</h:outputLink>
+
+					</div>
+
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="estados" value="Estado" />
+					</div>
+					<div class="Container60 Responsive50">
+						<p:selectOneMenu id="estados" style=""
+							value="#{personalController.personal.estado}">
+							<p:ajax event="valueChange" update="estados" />
+							<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+							<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+						</p:selectOneMenu>
+						<p:message for="estados" display="tooltip" />
+					</div>
+				</div>
+				<div class="Container100 Responsive100 NoIndent OvHidden ui-fluid">
+
+					<div class="Container40 Responsive50">
+						<p:outputLabel value="Foto Perfil" />
+					</div>
+					<div class="Container60 Responsive50">
+						<p:graphicImage id="fImageId"
+							value="#{dynamicResourceController.streamedContentImage}"
+							cache="false" width="150" height="150">
+							<f:param name="param" value="#{personalController.personal.id}" />
+						</p:graphicImage>
+						<p:fileUpload uploadLabel="Subir" cancelLabel="Cancelar"
+							fileUploadListener="#{dynamicResourceController.handleFileUpload}"
+							label="Subir" mode="advanced" skinSimple="true"
+							update="messages,fImageId" sizeLimit="10000000000" auto="true"
+							allowTypes="/(\.|\/)(gif|jpe?g|zip|png)$/" />
+
+						<p:growl id="messages" showDetail="true" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="Container60 Responsive100 Flex">
+
+		<div class="Container60 Responsive100 ui-fluid">
+			<div class="Card">
+				<div class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+					<p:outputLabel for="loginID" value="Ingreso Sistema" />
+				</div>
+				<div class="Container60 Responsive50 TexAlRight">
+					<p:selectBooleanCheckbox id="loginID"
+						value="#{personalController.personal.login}">
+						<p:ajax event="change" update="form001" />
+					</p:selectBooleanCheckbox>
+
+
+				</div>
+				<ui:fragment rendered="#{personalController.personal.login}">
+					<div class="CardBigTopic">INFORMACIÓN DE USUARIO</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+						<p:focus for="loginUsuario" />
+						<h:panelGrid id="grid" columns="2">
+
+
+							<p:outputLabel for="loginUsuario" value="Usuario" />
+							<p:inputText id="loginUsuario" required="true"
+								value="#{personalController.usuario.login}"
+								onkeypress="return validateNoSpace(event)">
+								<p:ajax event="change" />
+							</p:inputText>
+
+							<p:outputLabel for="password" value="Contraseña" />
+							<p:password id="password" redisplay="true"
+								value="#{personalController.usuario.password}"
+								autocomplete="off" required="true"
+								onkeypress="return validateNoSpace(event)">
+								<p:ajax event="change" />
+							</p:password>
+
+							<p:outputLabel for="repeatPassword" value="Repetir Contraseña" />
+							<p:password id="repeatPassword" redisplay="true"
+								value="#{personalController.repeatPassword}" autocomplete="off"
+								required="true" onkeypress="return validateNoSpace(event)">
+								<p:ajax event="change" />
+							</p:password>
+
+							<p:outputLabel for="roles1" value="Grupo Usuario" />
+							<p:selectOneMenu id="roles1" appendTo="@this"
+								value="#{personalController.usuario.rol.id}">
+								<p:ajax event="valueChange" update="roles1" />
+								<f:selectItems value="#{personalController.listRol}" var="item"
+									itemLabel="#{item.nombre}" itemValue="#{item.id}" />
+							</p:selectOneMenu>
+
+						</h:panelGrid>
+					</div>
+				</ui:fragment>
+			</div>
+			<div class="Card">
+				<div class="SeparatorFull"></div>
+				<div class="Container30 Responsive50 FontLatoBold Fs14 Black Opac80">
+					<p:outputLabel for="especialidadID" value="Especialidad" />
+				</div>
+				<div class="Container60 Responsive50 TexAlRight">
+					<p:autoComplete id="especialidadID" style="width: 100%"
+						inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+						value="#{personalController.selectedEspecialidad.nombre}"
+						completeMethod="#{personalController.completeEspecialidad}"
+						minQueryLength="2" forceSelection="true" var="_var"
+						itemLabel="#{_var}" itemValue="#{_var.nombre}"
+						placeholder="Escriba Especialidad" maxResults="10" dropdown="true">
+						<p:ajax event="itemSelect" update="especialidadID, cars1"
+							listener="#{personalController.onRowSelectEspecialidadClick}" />
+						<p:column>
+							<h:outputText value="#{_var.id}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{_var.nombre}" />
+						</p:column>
+					</p:autoComplete>
+
+				</div>
+				<div class="Container10 Responsive50 TexAlRight">
+					<p:commandButton icon="fa fa-plus"
+						styleClass="Fs14 White GreenButton" immediate="true"
+						update="formDlg001"
+						actionListener="#{especialidadController.actionNuevo()}"
+						oncomplete="PF('dlgEspecialidad').show()" />
+				</div>
+
+				<div class="Container100 Responsive100 Flex">
+					<div class="Card">
+						<div class="CardBigTopic">Lista de Especialidades</div>
+						<div class="SeparatorFull"></div>
+						<div class="Container100 ui-fluid">
+							<p:dataTable id="cars1" var="var"
+								value="#{personalController.listaPersonalEspecialidad}"
+								selectionMode="single"
+								selection="#{personalController.personalEspecialidadSelected}"
+								rowKey="#{var.correlativo}"
+								emptyMessage="No se encontraron registros." reflow="true">
+
+								<p:ajax update="form001" event="rowSelect"
+									listener="#{personalController.onRowSelectPersonalEspecialidad}" />
+
+								<p:column width="40%" headerText="Especialidad">
+									<h:outputText value="#{var.especialidad.nombre}" />
+								</p:column>
+								<p:column width="40%" headerText="Especialidad">
+									<p:inputSwitch offLabel="Inactivo" onLabel="Activo"
+										value="#{var.estado}">
+										<p:ajax event="change" update="cars1"
+											listener="#{personalController.desactivarItems(var)}" />
+									</p:inputSwitch>
+								</p:column>
+
+								<p:column width="20%">
+									<p:commandButton type="button" icon="fa fa-trash-o"
+										styleClass="Fs14 White RedButton">
+										<p:ajax
+											listener="#{personalController.onRowDeleteEspecialidad(var)}"
+											update="form001" />
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="Container40  Responsive100 ui-fluid">
+			<p:panel header="HORARIOS" toggleable="true">
+				<p:tree id="permisoTree" value="#{personalController.root}"
+					var="node"
+					selectionMode="#{personalController.selectionModeTreeNode}"
+					style="font-size: 13px !important; padding: 0 0 0 16px !important; width: 100%; font-family: sans-serif !important;"
+					selection="#{personalController.selectedNodes}">
+					<p:ajax event="select" update="form001"
+						listener="#{personalController.addHorario()}" />
+					<p:ajax event="unselect" update="form001" />
+
+					<p:treeNode expandedIcon="ui-icon-folder-open"
+						collapsedIcon="ui-icon-folder-collapsed">
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+
+					<p:treeNode type="1" icon="ui-icon-clock">
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+
+				</p:tree>
+			</p:panel>
+		</div>
+	</div>
+
+</ui:composition>

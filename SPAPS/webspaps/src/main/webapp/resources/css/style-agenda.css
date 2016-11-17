@@ -1,0 +1,19 @@
+a.no_atendido {
+	background: red !important;
+}
+
+a.atendido {
+	background: blue !important;
+}
+
+a.nuevo {
+	background: lime !important;
+}
+
+a.pendiente {
+	background: orange !important;
+}
+
+a.activo {
+	background: green !important;
+}

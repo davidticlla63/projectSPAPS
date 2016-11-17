@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<div class="Container100 Responsive100 TexAlLeft">
+		<p:dataTable id="documentos" var="car"
+			value="#{historiaClinicaDetalleController.listaDetalleOrden}"
+			reflow="true">
+
+			<f:facet name="header">
+							EXAMENES
+						</f:facet>
+
+
+			<p:column style="width:16px">
+				<p:rowToggler />
+			</p:column>
+
+			<p:column width="40%" headerText="Examen">
+				<h:outputText value="#{car.descripcion}" />
+			</p:column>
+
+			<p:column width="40%" headerText="Parametros">
+				<h:outputText value="#{car.parametros}" />
+			</p:column>
+
+			<p:rowExpansion>
+				<p:dataTable id="subDetalle" var="item"
+					value="#{car.listOrdenSubDetalle}" editable="true"
+					style="margin-bottom:20px; size:10px" reflow="true">
+
+					<f:facet name="header">
+									Parametros de Referencia
+								</f:facet>
+
+					<p:column width="20%" headerText="Estudio">
+						<h:outputText value="#{item.descripcion}" />
+					</p:column>
+					<p:column width="20%" headerText="Estado">
+						<span style="color: green"><h:outputText
+								rendered="#{item.estado=='AC'}" value="Nuevo" /></span>
+						<span style="color: red"><h:outputText
+								rendered="#{item.estado=='PR'}" value="Finalizado" /></span>
+					</p:column>
+					<p:column width="40%" headerText="Parametros">
+						<h:outputText value="#{item.parametros}" />
+					</p:column>
+					<p:column width="40%" headerText="Resultados">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{item.resultado}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{item.resultado}" style="width:100%"
+									label="Year" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column width="40%" headerText="Observacion">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{item.observacion}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{item.observacion}" style="width:100%"
+									label="Year" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:ajax event="rowEdit" immediate="true"
+						listener="#{historiaClinicaDetalleController.onRowEditP(item)}"
+						update="form001:formDlg001:documentos:0:subDetalle" />
+					<p:ajax event="rowEditCancel" immediate="true"
+						listener="#{historiaClinicaDetalleController.onRowDeleteP(item)}"
+						update="form001:formDlg001:documentos:0:subDetalle" />
+					<p:column style="width:32px">
+						<p:rowEditor />
+					</p:column>
+				</p:dataTable>
+			</p:rowExpansion>
+
+		</p:dataTable>
+	</div>
+
+</ui:composition>

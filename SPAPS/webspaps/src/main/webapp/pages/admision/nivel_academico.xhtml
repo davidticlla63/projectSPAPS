@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Nivel Academico</title>
+		<f:event listener="#{nivelAcademicoController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+				<!-- top buttons-->
+				<div class="Container100">
+
+					<div class="Card">
+						<div class="Container50 Responsive100 TextAlLeft">
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{nivelAcademicoController.crear}"
+								styleClass="Fs14 White GreenButton"
+								value="Nuevo Nivel Academico">
+								<p:ajax update="form001"
+									listener="#{nivelAcademicoController.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{nivelAcademicoController.modificar or nivelAcademicoController.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{nivelAcademicoController.actionCancelar()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{nivelAcademicoController.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar"
+								update="form001"
+								actionListener="#{nivelAcademicoController.registrar()}">
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{nivelAcademicoController.modificar}"
+								value="Modificar" styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{nivelAcademicoController.actualizar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{nivelAcademicoController.modificar}"
+								value="Eliminar" styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{nivelAcademicoController.eliminar()}" />
+							</p:commandButton>
+
+
+						</div>
+
+
+					</div>
+				</div>
+
+				<!-- contenedor registro  -->
+				<div class="Container100">
+					<ui:fragment
+						rendered="#{nivelAcademicoController.modificar or nivelAcademicoController.registrar}">
+						<p:focus for="inputTextDescripcion" />
+						<div class="Card">
+							<div class="Container40 Responsive100 NoIndent ui-fluid">
+								<p:panel id="basic" header="Registrar Nivel Academico"
+									footer="Estado Civil" style="margin-bottom:20px">
+									<h:panelGrid columns="2" cellpadding="1">
+										<div class="Container33 Responsive50 ui-fluid">Descripcion</div>
+										<div class="Container100 Responsive50">
+											<p:inputText id="inputTextDescripcion"
+												value="#{nivelAcademicoController.nivelAcademico.descripcion}"
+												disabled="#{nivelAcademicoController.nivelAcademico.estado =='SU'}"
+												style=" color: #555555; background-image: none;"
+												styleClass="input-sm form-control">
+												<p:ajax event="change" update="inputTextDescripcion" />
+											</p:inputText>
+										</div>
+
+
+										<div class="Container33 Responsive50 ui-fluid">Estado</div>
+										<div class="Container100 Responsive50">
+											<p:selectOneMenu id="estado" style="" appendTo="@this"
+												immediate="true" value="#{nivelAcademicoController.estado}">
+												<f:selectItems
+													value="#{nivelAcademicoController.listaEstado}" />
+												<f:ajax event="change" update="estado" />
+											</p:selectOneMenu>
+										</div>
+									</h:panelGrid>
+								</p:panel>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+
+
+				<!-- listado  -->
+				<div class="Container100">
+					<ui:fragment rendered="#{nivelAcademicoController.crear}">
+						<div class="Card">
+							<div class="Container100 Responsive100 NoIndent ui-fluid">
+								<p:dataTable id="dataTableNivelAcademico" var="item"
+									widgetVar="NivelAcademicoTable"
+									value="#{nivelAcademicoController.listaNivelAcademico}"
+									selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{nivelAcademicoController.nivelAcademicoSelected}"
+									rowKey="#{item.id}" reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{nivelAcademicoController.onRowSelect}"
+										update="form001" />
+
+									<p:column width="8%" headerText="Identificador"
+										filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" filterBy="#{item.id}">
+										<h:outputText value="#{item.id}" />
+									</p:column>
+									<p:column headerText="Descripcion"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.descripcion}">
+										<h:outputText value="#{item.descripcion}" />
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										headerText="Estado" style="text-align:center;"
+										filterBy="#{item.estado}">
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado=='AC'}" value="Activo" /></span>
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado=='IN'}" value="Inactivo" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado=='RM'}" value="Eliminado" /></span>
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" headerText="Usuario Registro"
+										filterBy="#{item.usuarioRegistro}">
+										<h:outputText value="#{item.usuarioRegistro}" />
+									</p:column>
+									<p:column width="10%" headerText="Fecha Registro"
+										style="text-align:center;"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.fechaRegistro}">
+										<h:outputText value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{nivelAcademicoController.listaNivelAcademico.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+		</h:form>
+		<!-- END GROWL -->
+	</ui:define>
+
+</ui:composition>

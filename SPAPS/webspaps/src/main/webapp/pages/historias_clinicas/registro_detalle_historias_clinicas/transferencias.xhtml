@@ -1,0 +1,192 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<div class="Container100 Responsive100 TexAlLeft"
+		onload="#{historiaClinicaDetalleController.resetTransferencia()}">
+		<h:form id="formTransferencia">
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="motivo" value="Motivo:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputTextarea id="motivo"
+						value="#{historiaClinicaDetalleController.transferencia.motivo}"
+						style="width:100%">
+						<p:ajax event="change" update="motivo" />
+					</p:inputTextarea>
+					<p:message for="motivo" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="tratamiento" value="Tratamiento:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputTextarea id="tratamiento"
+						value="#{historiaClinicaDetalleController.transferencia.tratamiento}"
+						style="width:100%">
+						<p:ajax event="change" update="tratamiento" />
+					</p:inputTextarea>
+					<p:message for="tratamiento" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="examenes" value="Examenes:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputTextarea id="examenes"
+						value="#{historiaClinicaDetalleController.transferencia.examenes}"
+						style="width:100%">
+						<p:ajax event="change" update="examenes" />
+					</p:inputTextarea>
+					<p:message for="examenes" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="impresionDiagnostica"
+						value="Impresion Diagnostica:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputTextarea id="impresionDiagnostica"
+						value="#{historiaClinicaDetalleController.transferencia.impresionDiagnostica}"
+						style="width:100%">
+						<p:ajax event="change" update="impresionDiagnostica" />
+					</p:inputTextarea>
+					<p:message for="impresionDiagnostica" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="especialidad" value="Especialidad:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:autoComplete id="especialidad"
+						value="#{historiaClinicaDetalleController.transferencia.especialidadMedicoReceptor}"
+						completeMethod="#{historiaClinicaDetalleController.completeEspecialidad}"
+						minQueryLength="2" forceSelection="true" var="_var"
+						itemLabel="#{_var}" itemValue="#{_var.nombre}"
+						placeholder="Escriba Especialidad" maxResults="10" dropdown="true">
+						<p:ajax event="itemSelect" update="especialidad"
+							listener="#{historiaClinicaDetalleController.onRowSelectEspecialidadClick}" />
+						<p:column>
+							<h:outputText value="#{_var.nombre}" />
+						</p:column>
+					</p:autoComplete>
+					<p:message for="especialidad" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container50 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:outputLabel for="medicoReceptor" value="Medico:" />
+				</div>
+				<div class="Container60 Responsive100 TexAlLeft">
+					<p:inputText id="medicoReceptor"
+						value="#{historiaClinicaDetalleController.transferencia.medicoReceptor}"
+						style="width:100%">
+						<p:ajax event="change" update="medicoReceptor" />
+					</p:inputText>
+					<p:message for="medicoReceptor" display="tooltip" />
+				</div>
+
+			</div>
+
+			<div class="Container60 Responsive100 TexAlLeft">
+
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:commandButton id="cancelar" icon="fa fa-arrow-left"
+						value="Cancelar" styleClass="Fs14 White OrangeButton">
+						<p:ajax update="form001"
+							listener="#{historiaClinicaDetalleController.cancelarTransferencia()}" />
+					</p:commandButton>
+				</div>
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:commandButton id="guardar" icon="fa fa-check" value="Guardar"
+						styleClass="Fs14 White GreenButton">
+						<p:ajax update="form001"
+							listener="#{historiaClinicaDetalleController.registrarTransferencia()}" />
+					</p:commandButton>
+				</div>
+				<div class="Container20 Responsive100 TexAlLeft">
+					<p:commandButton id="imprimir" icon="fa fa-check" value="Imprimir"
+						rendered="#{historiaClinicaDetalleController.modificar}"
+						styleClass="Fs14 White BlueButton">
+						<p:ajax update="form001"
+							listener="#{historiaClinicaDetalleController.imprimirTransferencia()}" />
+					</p:commandButton>
+				</div>
+			</div>
+
+			<!-- listado  -->
+			<div class="Container100 Responsive100 Flex">
+
+				<div class="Card">
+					<p:dataTable id="singleDT" var="item" widgetVar="DiagnosticoTable"
+						value="#{historiaClinicaDetalleController.listaTransferencias}"
+						selectionMode="single" scrollRows="10" scrollable="true"
+						liveScroll="true" scrollHeight="150"
+						selection="#{historiaClinicaDetalleController.transferenciaSelected}"
+						style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+						emptyMessage="No se encontraron Registros." rowKey="#{item.id}"
+						reflow="true">
+
+						<p:ajax event="rowSelect"
+							listener="#{historiaClinicaDetalleController.onRowSelectTransferencia}"
+							update="form001" />
+
+						<p:column headerText="Médico Solicitante"
+							filterBy="#{item.medicoEmisor}">
+							<h:outputText
+								value="#{item.medicoEmisor.nombre} #{item.medicoEmisor.apellidoPaterno} #{item.medicoEmisor.apellidoMaterno}" />
+						</p:column>
+						<p:column headerText="Médico Receptor"
+							filterBy="#{item.medicoReceptor}">
+							<h:outputText value="#{item.medicoReceptor}" />
+						</p:column>
+						<p:column width="10%" headerText="Fecha Registro"
+							filterBy="#{item.fechaRegistro}">
+							<h:outputText value="#{item.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column style="width:30px">
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="singleDT"
+									listener="#{historiaClinicaDetalleController.onRowDeleteTransferencia(item)}" />
+							</p:commandButton>
+						</p:column>
+						<f:facet name="footer">
+							<h:outputText
+								value="#{historiaClinicaDetalleController.listaTransferencias.size()} Registros en Total" />
+						</f:facet>
+					</p:dataTable>
+					<p:growl id="msgs2" showDetail="true" for="singleDT" />
+				</div>
+			</div>
+		</h:form>
+	</div>
+
+
+</ui:composition>

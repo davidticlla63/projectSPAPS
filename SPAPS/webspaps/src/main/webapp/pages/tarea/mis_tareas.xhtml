@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<!-- center boxes -->
+
+	<ui:define name="head">
+		<title>Mis Tareas</title>
+		<h:outputScript name="js/validator.js" library="mbr" />
+		<h:outputScript name="locale.js" library="js" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/resources/css/style-agenda.css" />
+		<f:event listener="#{misTareaController.initConversation}"
+			type="preRenderView"></f:event>
+		<style type="text/css">
+.fc-content {
+	padding: 2px;
+	padding-top: 2px;
+	padding-right: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+}
+
+.fc-time {
+	font-size: 1.20em;
+	white-space: nowrap;
+}
+
+.schedule-font {
+	font-size: 1.1em;
+}
+
+.fc-title {
+	font-size: 1.20em;
+	padding: 0;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="Container100 NoIndent Flex FlexWrap">
+			<h:form id="form001">
+				<div class="Container100 Responsive100 Flex">
+					<div class="Card">
+
+						<p:growl id="messages" showDetail="true" />
+
+						<h:panelGrid columnClasses="value">
+							<h3 style="margin-top: 0">MI AGENDA DE TAREAS</h3>
+							<p:schedule id="schedule" styleClass="schedule-font"
+								value="#{misTareaController.eventModel}" widgetVar="myschedule"
+								timeZone="GMT-4" view="agendaDay"
+								centerTemplate="agendaDay, agendaWeek, month" axisFormat="HH:mm"
+								aspectRatio="2" minTime="0:00" maxTime="24:00"
+								slotDuration="00:15:00" tooltip="true" locale="es">
+
+								<p:ajax event="dateSelect"
+									listener="#{misTareaController.onDateSelect}" update="form001" />
+								<p:ajax event="eventSelect"
+									listener="#{misTareaController.onEventSelect}" update="form001" />
+								<p:ajax event="eventMove"
+									listener="#{misTareaController.onEventMove}" update="messages" />
+								<p:ajax event="eventResize"
+									listener="#{misTareaController.onEventResize}"
+									update="messages" />
+
+							</p:schedule>
+						</h:panelGrid>
+					</div>
+				</div>
+
+				<div class="Container0 Responsive100 TexAlLeft">
+					<p:dialog id="dialog1" header="INFORMACION DE TAREA"
+						widgetVar="dlgTarea" responsive="true" modal="true"
+						resizable="false" closable="false" appendTo="@(content)"
+						showEffect="clip" hideEffect="clip" width="600px">
+						<h:form id="formDlg001">
+
+							<div class="Container100 Responsive100 TexAlLeft">
+								<div
+									class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+									<p:outputLabel
+										rendered="#{misTareaController.tarea.ordenServicio != null}"
+										for="codigo" value="Codigo de Orden:" />
+								</div>
+								<div class="Container60 Responsive50">
+									<p:inputText id="codigo" readonly="true"
+										rendered="#{misTareaController.tarea.ordenServicio != null}"
+										value="#{misTareaController.tarea.ordenServicio.codigo}">
+									</p:inputText>
+									<p:message for="codigo" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container100 Responsive100 TexAlLeft">
+								<div
+									class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+									<p:outputLabel
+										rendered="#{misTareaController.tarea.ordenServicio != null}"
+										for="cliente" value="Paciente:" />
+								</div>
+								<div class="Container60 Responsive50">
+									<p:inputText id="cliente"
+										rendered="#{misTareaController.tarea.ordenServicio != null}"
+										readonly="true"
+										value="#{misTareaController.tarea.ordenServicio.cliente.nombre} #{misTareaController.tarea.ordenServicio.cliente.apellidoPaterno} #{misTareaController.tarea.ordenServicio.cliente.apellidoMaterno}">
+									</p:inputText>
+									<p:message for="cliente" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container100 Responsive100 TexAlLeft">
+								<div
+									class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+									<p:outputLabel for="tipoTarea" value="Tipo de Tarea:" />
+								</div>
+								<div class="Container60 Responsive50">
+									<p:inputText id="tipoTarea" readonly="true"
+										value="#{misTareaController.tarea.tipoTarea.nombre}">
+									</p:inputText>
+									<p:message for="tipoTarea" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container100 Responsive100 TexAlLeft">
+								<div
+									class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+									<p:outputLabel for="fechaPlazo" value="Fecha Plazo:"
+										rendered="#{misTareaController.tarea.ordenServicio != null}" />
+								</div>
+								<div class="Container20 Responsive50 TexAlRight">
+									<p:calendar id="fechaPlazo" navigator="true" readonly="true"
+										rendered="#{misTareaController.tarea.ordenServicio != null}"
+										effect="fold"
+										value="#{misTareaController.tarea.ordenServicio.fechaPlazo}"
+										pattern="dd-MM-yyyy H:mm" mask="true">
+									</p:calendar>
+									<p:message for="fechaPlazo" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container100 Responsive100 TexAlLeft">
+								<div
+									class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+									<p:outputLabel for="mensaje" value="Mensaje:" />
+								</div>
+								<div class="Container60 Responsive50">
+									<p:inputTextarea id="mensaje" readonly="true"
+										value="#{misTareaController.tarea.mensaje}">
+									</p:inputTextarea>
+									<p:message for="mensaje" display="tooltip" />
+								</div>
+							</div>
+
+							<div class="Container50 Responsive100 TexAlLeft">
+
+								<div class="Container50 Responsive100 TexAlLeft">
+									<p:commandButton icon="fa fa-arrow-left" value="Cerrar"
+										styleClass="Fs14 White OrangeButton"
+										oncomplete="PF('dlgTarea').hide()">
+										<p:ajax update="form001"
+											listener="#{misTareaController.initNew()}" />
+									</p:commandButton>
+								</div>
+							</div>
+						</h:form>
+					</p:dialog>
+					<!-- END DIALOG -->
+				</div>
+
+			</h:form>
+		</div>
+	</ui:define>
+
+</ui:composition>

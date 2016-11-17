@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">INFORMACIÓN SUCURSAL</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+				<h:panelGrid id="grid4" columns="3" cellpadding="5">
+					<p:focus for="nombreSucursal" />
+					<p:outputLabel for="nombreSucursal" value="Nombre " />
+					<p:inputText id="nombreSucursal" required="true"
+						value="#{sucursalController.sucursal.nombre}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="nombreSucursal" display="tooltip" />
+
+					<p:outputLabel for="descripcionSucursal" value="Descripción " />
+					<p:inputTextarea id="descripcionSucursal"
+						value="#{sucursalController.sucursal.descripcion}">
+						<p:ajax event="change" />
+					</p:inputTextarea>
+					<p:message for="descripcionSucursal" display="tooltip" />
+
+					<p:outputLabel for="direccionSucursal" value="Dirección " />
+					<p:inputText id="direccionSucursal" required="true"
+						value="#{sucursalController.sucursal.direccion}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="direccionSucursal" display="tooltip" />
+
+					<p:outputLabel for="telefonoSucursal" value="Teléfono " />
+					<p:inputText id="telefonoSucursal" required="true"
+						value="#{sucursalController.sucursal.telefono}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="telefonoSucursal" display="tooltip" />
+
+					<p:outputLabel for="estadosPais" value="Pais" />
+					<p:selectOneMenu id="estadosPais" style=""
+						value="#{sucursalController.pais.id}">
+						<p:ajax event="valueChange" update="estadosCiudad"
+							listener="#{sucursalController.selectedPais()}" />
+						<f:selectItems var="pais"
+							value="#{sucursalController.listPais}"
+							itemLabel="#{pais.nombre}" itemValue="#{pais.id}" />
+					</p:selectOneMenu>
+					<p:message for="estadosPais" display="tooltip" />
+
+					<p:outputLabel for="estadosCiudad" value="Ciudad" />
+					<p:selectOneMenu id="estadosCiudad" style=""
+						value="#{sucursalController.sucursal.ciudad.id}">
+						<p:ajax event="valueChange" />
+						<f:selectItems var="ciudad"
+							value="#{sucursalController.pais.listCiudads}"
+							itemLabel="#{ciudad.nombre}" itemValue="#{ciudad.id}" />
+					</p:selectOneMenu>
+					<p:message for="estadosCiudad" display="tooltip" />
+
+
+					<p:outputLabel for="estadosSucursal" value="Estado" />
+					<p:selectOneMenu id="estadosSucursal" style=""
+						value="#{sucursalController.sucursal.estado}">
+						<p:ajax event="valueChange" />
+						<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+						<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+					</p:selectOneMenu>
+					<p:message for="estadosSucursal" display="tooltip" />
+
+
+				</h:panelGrid>
+			</div>
+
+		</div>
+	</div>
+
+</ui:composition>

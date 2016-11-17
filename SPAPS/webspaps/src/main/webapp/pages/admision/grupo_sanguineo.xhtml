@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Grupo Sanguineo</title>
+		<f:event listener="#{grupoSanguineoController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TextAlLeft">
+
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{grupoSanguineoController.crear}"
+								styleClass="Fs14 White GreenButton"
+								value="Nuevo Grupo Sanguineo">
+								<p:ajax update="form001"
+									listener="#{grupoSanguineoController.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{grupoSanguineoController.modificar or grupoSanguineoController.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{grupoSanguineoController.actionCancelar()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{grupoSanguineoController.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar"
+								update="form001"
+								actionListener="#{grupoSanguineoController.registrar()}">
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{grupoSanguineoController.modificar}"
+								value="Modificar" styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{grupoSanguineoController.actualizar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{grupoSanguineoController.modificar}"
+								value="Eliminar" styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{grupoSanguineoController.eliminar()}" />
+							</p:commandButton>
+
+						</div>
+
+						<div class="Container25 Responsive100 TexAlRight">
+							<p:breadCrumb>
+								<p:menuitem value="."
+									url="#{request.contextPath}/dashboard.xhtml" />
+								<p:menuitem value="Seguridad"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+								<p:menuitem value="Pais"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+							</p:breadCrumb>
+						</div>
+
+					</div>
+				</div>
+
+				<!-- contenedor registro  -->
+				<div class="Container100">
+					<ui:fragment
+						rendered="#{grupoSanguineoController.modificar or grupoSanguineoController.registrar}">
+
+						<div class="Card">
+							<div class="Container40 Responsive100 NoIndent ui-fluid">
+								<p:panel id="basic" header="Registrar Grupo Sanguineo"
+									footer="Grupo Sanguineo" style="margin-bottom:20px">
+									<h:panelGrid columns="2" cellpadding="1">
+										<div class="Container33 Responsive50 ui-fluid">Descripcion</div>
+										<div class="Container100 Responsive50">
+											<p:inputText id="inputTextDescripcion"
+												value="#{grupoSanguineoController.grupoSanguineo.descripcion}"
+												disabled="#{grupoSanguineoController.grupoSanguineo.estado =='SU'}"
+												style=" color: #555555; background-image: none;"
+												styleClass="input-sm form-control">
+												<p:ajax event="change" />
+											</p:inputText>
+										</div>
+
+
+										<div class="Container33 Responsive50 ui-fluid">Estado</div>
+										<div class="Container100 Responsive50">
+											<p:selectOneMenu id="estado" style="" appendTo="@this"
+												immediate="true" value="#{grupoSanguineoController.estado}">
+												<f:selectItems
+													value="#{grupoSanguineoController.listaEstado}" />
+												<f:ajax event="change" update=":formReg" />
+											</p:selectOneMenu>
+										</div>
+									</h:panelGrid>
+								</p:panel>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+
+
+				<!-- listado  -->
+				<div class="Container100">
+					<ui:fragment rendered="#{grupoSanguineoController.crear}">
+						<div class="Card">
+							<div class="Container100 Responsive100 NoIndent ui-fluid">
+								<p:dataTable id="dataTableGrupoSanguineo" var="item"
+									widgetVar="GrupoSanguineoTable"
+									value="#{grupoSanguineoController.listaGrupoSanguineo}"
+									selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{grupoSanguineoController.grupoSanguineoSelected}"
+									rowKey="#{item.id}" reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{grupoSanguineoController.onRowSelect}"
+										update=":form001" />
+
+									<p:column width="8%" headerText="Identificador"
+										filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" filterBy="#{item.id}">
+										<h:outputText value="#{item.id}" />
+									</p:column>
+									<p:column headerText="Descripcion"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.descripcion}">
+										<h:outputText value="#{item.descripcion}" />
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										headerText="Estado" style="text-align:center;"
+										filterBy="#{item.estado}">
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado=='AC'}" value="Activo" /></span>
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado=='IN'}" value="Inactivo" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado=='RM'}" value="Eliminado" /></span>
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" headerText="Usuario Registro"
+										filterBy="#{item.usuarioRegistro}">
+										<h:outputText value="#{item.usuarioRegistro}" />
+									</p:column>
+									<p:column width="10%" headerText="Fecha Registro"
+										style="text-align:center;"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.fechaRegistro}">
+										<h:outputText value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{grupoSanguineoController.listaGrupoSanguineo.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

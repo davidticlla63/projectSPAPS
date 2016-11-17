@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Examen Fisico</title>
+		<f:event listener="#{examenFisicoController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TexAlLeft">
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{examenFisicoController.crear}"
+								styleClass="Fs14 White GreenButton" value="Nuevo Examen Fisico">
+								<p:ajax update="form001"
+									listener="#{examenFisicoController.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{examenFisicoController.modificar or examenFisicoController.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{examenFisicoController.initNew()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{examenFisicoController.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar">
+								<p:ajax update="form001"
+									listener="#{examenFisicoController.registrar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{examenFisicoController.modificar}" value="Modificar"
+								styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{examenFisicoController.actualizar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{examenFisicoController.modificar}" value="Eliminar"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{examenFisicoController.eliminar()}" />
+							</p:commandButton>
+						</div>
+						<div class="Container25 Responsive100 TexAlRight">
+							<p:breadCrumb>
+								<p:menuitem value="."
+									url="#{request.contextPath}/dashboard.xhtml" />
+								<p:menuitem value="Seguridad"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+								<p:menuitem value="Pais"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+							</p:breadCrumb>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment
+						rendered="#{examenFisicoController.modificar or examenFisicoController.registrar}">
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<div class="Card">
+								<div class="CardBigTopic">INFORMACIÓN DE EXÁMEN FÍSICO</div>
+								<div class="SeparatorFull"></div>
+								<div class="Container100 Responsive100 TexAlLeftd">
+									<p:focus id="focus" for="tipoBusqueda" />
+
+									<div class="Container46 Responsive100 TexAlLeft">
+										<div class="Container10 Responsive100 TexAlLef">
+											<p:outputLabel for="tipoBusqueda" value="Buscar por:" />
+										</div>
+										<div class="Container70 Responsive100 TexAlLef">
+											<p:selectOneRadio id="tipoBusqueda" style="align:left;"
+												immediate="true"
+												value="#{examenFisicoController.tipoBusqueda}">
+												<p:ajax update="tipoBusqueda, busqueda" />
+												<f:selectItem itemLabel="Nombre de Paciente" itemValue="NP" />
+												<f:selectItem itemLabel="Codigo de Paciente" itemValue="CP" />
+												<f:selectItem itemLabel="Codigo de Historia Clinica"
+													itemValue="CH" />
+												<f:selectItem itemLabel="Documento de Identidad"
+													itemValue="DI" />
+											</p:selectOneRadio>
+											<p:message for="tipoBusqueda" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container70 Responsive100 TexAlLeft">
+										<div
+											class="Container20 Responsive100 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+											<p:outputLabel for="busqueda" value="Paciente:" />
+										</div>
+										<div class="Container5 Responsive100 TexAlRight">
+											<p:autoComplete id="busqueda" required="true"
+												requiredMessage="El paciente es un campo necesario para el registro."
+												value="#{examenFisicoController.paciente}"
+												completeMethod="#{examenFisicoController.onCompleteFind}"
+												converter="pacienteConverter" minQueryLength="1"
+												forceSelection="true" var="_var"
+												itemLabel="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}"
+												itemValue="#{_var}"
+												placeholder="Escriba el criterio de busqueda"
+												maxResults="10" dropdown="true">
+												<p:ajax event="itemSelect" immediate="true" update="form001"
+													listener="#{examenFisicoController.onSelectPacienteClick}" />
+												<p:column>
+													<h:outputText
+														value="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}" />
+												</p:column>
+											</p:autoComplete>
+											<p:message for="busqueda" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="peso" value="Peso(Kg.):" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="peso" symbol=" Kg." symbolPosition="s"
+												required="true" size="10"
+												requiredMessage="El campo peso es obligatorio para el cálculo del IMC."
+												value="#{examenFisicoController.examenFisico.peso}">
+												<f:validateLength minimum="1" />
+												<p:ajax event="blur"
+													update="peso, msgPeso, msgs1, imc, claseImc"
+													listener="#{examenFisicoController.calcularIMC}" />
+											</p:inputText>
+											<p:message id="msgPeso" for="peso" display="icon" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="altura" value="Altura(Mts.):" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="altura" symbol=" mts." symbolPosition="s"
+												required="true" size="10"
+												requiredMessage="El campo altura es obligatorio para el cálculo del IMC."
+												value="#{examenFisicoController.examenFisico.altura}">
+												<f:validateLength minimum="1" />
+												<p:ajax event="blur"
+													update="altura, msgAltura, imc, claseImc, msgs1"
+													listener="#{examenFisicoController.calcularIMC}" />
+											</p:inputText>
+											<p:message id="msgAltura" for="altura" display="icon" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="imc" value="Indice de Masa Corporal:" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="imc" readonly="true" size="10"
+												value="#{examenFisicoController.examenFisico.indiceMasaCorporal}">
+												<p:ajax event="change" update="imc" />
+											</p:inputText>
+											<p:message for="imc" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="claseImc" value="Clasificación IMC:" />
+										</div>
+										<div class="Container70 Responsive100 TexAlLeft">
+											<p:inputText id="claseImc" readonly="true"
+												value="#{examenFisicoController.examenFisico.clasificacionIndiceMasaCorporal}">
+												<p:ajax event="change" update="claseImc" />
+											</p:inputText>
+											<p:message for="claseImc" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="presionSistolica"
+												value="Presión Sistólica:" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="presionSistolica" required="true" size="10"
+												requiredMessage="El campo presión sistólica es obligatorio."
+												value="#{examenFisicoController.examenFisico.presionSistolica}">
+												<f:validateLength minimum="1" />
+												<p:ajax event="blur"
+													update="presionSistolica, msgs1, clasePA"
+													listener="#{examenFisicoController.calcularPA}" />
+											</p:inputText>
+											<p:message for="presionSistolica" display="icon" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="presionDiastolica"
+												value="Presión Diastólica:" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="presionDiastolica" required="true" size="10"
+												requiredMessage="El campo presión diastólica es obligatorio."
+												value="#{examenFisicoController.examenFisico.presionDiastolica}">
+												<f:validateLength minimum="1" />
+												<p:ajax event="blur"
+													update="presionDiastolica, msgPD, clasePA, msgs1"
+													listener="#{examenFisicoController.calcularPA}" />
+											</p:inputText>
+											<p:message id="msgPD" for="presionDiastolica" display="icon" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="clasePA"
+												value="Clasificación Presion Arterial:" />
+										</div>
+										<div class="Container70 Responsive100 TexAlLeft">
+											<p:inputText id="clasePA" readonly="true"
+												value="#{examenFisicoController.examenFisico.clasificacionPresionArterial}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="clasePA" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="pulso" value="Pulso:" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="pulso" size="10"
+												value="#{examenFisicoController.examenFisico.pulso}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="pulso" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="frecuenciaCardiaca"
+												value="Frecuencia Respiratoria:" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="frecuenciaCardiaca" size="10"
+												value="#{examenFisicoController.examenFisico.frecuenciaCardiaca}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="frecuenciaCardiaca" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="temperatura" value="Temperatura:" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="temperatura" size="10"
+												value="#{examenFisicoController.examenFisico.temperatura}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="temperatura" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="pb" value="Perimetro Bronquial:" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="pb" size="10"
+												value="#{examenFisicoController.examenFisico.pb}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="pb" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container33 Responsive100 TexAlLeft">
+
+										<div class="Container30 Responsive100 TexAlLeft">
+											<p:outputLabel for="pc" value="Perimetro Cefalico:" />
+										</div>
+										<div class="Container20 Responsive100 TexAlLeft">
+											<p:inputText id="pc" size="10"
+												value="#{examenFisicoController.examenFisico.pc}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="pc" display="tooltip" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</ui:fragment>
+				</div>
+
+
+				<!-- listado  -->
+				<ui:fragment rendered="#{examenFisicoController.crear}">
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<p:dataTable id="singleDT" var="item"
+								widgetVar="ExamenFisicoTable"
+								value="#{examenFisicoController.listaExamenFisico}"
+								selectionMode="single"
+								style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+								emptyMessage="No se encontraron Registros."
+								selection="#{examenFisicoController.examenFisico}"
+								rowKey="#{item.id}" reflow="true">
+
+								<p:ajax event="rowSelect"
+									listener="#{examenFisicoController.onRowSelect}"
+									update="form001" />
+
+								<p:column width="8%" headerText="Identificador"
+									filterStyle="width: 100%; height:25px;"
+									style="text-align:center;" filterBy="#{item.id}">
+									<h:outputText value="#{item.id}" />
+								</p:column>
+								<p:column width="10%" filterStyle="width: 100%; height:25px;"
+									style="text-align:center;" headerText="Usuario Registro"
+									filterBy="#{item.usuarioRegistro}">
+									<h:outputText value="#{item.usuarioRegistro}" />
+								</p:column>
+								<p:column width="10%" headerText="Fecha Registro"
+									style="text-align:center;"
+									filterStyle="width: 100%; height:25px;"
+									filterBy="#{item.fechaRegistro}">
+									<h:outputText value="#{item.fechaRegistro}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								<f:facet name="footer">
+									<h:outputText
+										value="#{examenFisicoController.listaExamenFisico.size()} Registros en Total" />
+								</f:facet>
+							</p:dataTable>
+						</div>
+					</div>
+				</ui:fragment>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

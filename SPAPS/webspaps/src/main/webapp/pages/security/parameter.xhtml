@@ -1,0 +1,206 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container70 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-plus"
+							rendered="#{testController.nuevo}"
+							styleClass="Fs14 White GreenButton" value="Nuevo Parametro"
+							update="form001" immediate="true"
+							actionListener="#{testController.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{testController.seleccionado or testController.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{testController.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{testController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001"
+							actionListener="#{testController.registrarParameter()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{testController.seleccionado}" value="Modificar"
+							styleClass="Fs14 White BlueButton" update="form001"
+							actionListener="#{testController.modificarParameter()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-trash-o"
+							rendered="#{testController.seleccionado}" value="Eliminar"
+							styleClass="Fs14 White RedButton"
+							oncomplete="PF('dlgEliminarUsuario').show()" />
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="."
+								url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Seguridad"
+								url="/pages/security/parameter.xhtml" />
+							<p:menuitem value="Usuario"
+								url="/pages/security/parameter.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:fragment
+					rendered="#{testController.seleccionado or testController.registrar}">
+					<div class="Container50 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">INFORMACIÓN DE PARAMETRO</div>
+							<div class="SeparatorFull"></div>
+
+							<h:panelGrid id="grid" columns="3" cellpadding="5">
+								<p:outputLabel for="key" value="Key" />
+								<p:inputText id="key" required="true"
+									value="#{testController.parameter.key}"
+									onkeypress="return validateNoSpace(event)">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="key" display="tooltip" />
+
+								<h:outputLabel for="descripcionID" value="Descripcion" />
+								<p:inputText id="descripcionID" required="true"
+									value="#{testController.parameter.descripcion}"
+									onkeypress="return validateNoSpace(event)">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="descripcionID" display="tooltip" />
+
+								<h:outputLabel value="Tipo Valor" for="monedaID" />
+								<p:selectOneRadio id="monedaID"
+									value="#{testController.tipoValor}">
+									<f:selectItem itemLabel="Numérico" itemValue="true" />
+									<f:selectItem itemLabel="Texto" itemValue="false" />
+									<p:ajax event="change" update="form001" />
+								</p:selectOneRadio>
+								<p:message for="monedaID" display="tooltip" />
+
+								<h:outputLabel for="valorNID" value="Valor Numérico"
+									rendered="#{testController.tipoValor}" />
+								<p:inputText id="valorNID"
+									rendered="#{testController.tipoValor}" onkeypress="return validateNoSpace(event)"
+									value="#{testController.valorN}" required="true">
+									<p:ajax event="change" />
+									<f:convertNumber pattern="#,##0.000" locale="en" />
+								</p:inputText>
+								<p:message for="valorNID" display="tooltip"
+									rendered="#{testController.tipoValor}" />
+
+								<h:outputLabel for="valorSID" value="Valor Texto"
+									rendered="#{!testController.tipoValor}" />
+								<p:inputText id="valorSID"
+									rendered="#{!testController.tipoValor}" onkeypress="return validateNoSpace(event)"
+									value="#{testController.valorT}" required="true">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="valorSID" display="tooltip"
+									rendered="#{!testController.tipoValor}" />
+
+							</h:panelGrid>
+
+						</div>
+					</div>
+					<div class="Container50 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">PARAMETROS DEL SISTEMA</div>
+							<div class="SeparatorFull"></div>
+							<p:tabView binding="#{testController.tabView}" />
+						</div>
+					</div>
+
+				</ui:fragment>
+				<ui:fragment rendered="#{testController.nuevo}">
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">LISTADO DE PARAMETROS</div>
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<p:dataTable id="singleDT" var="var"
+									value="#{testController.listParameter}" selectionMode="single"
+									selection="#{testController.parameter}" rowKey="#{var.id}"
+									rows="10" paginator="true"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="5,10,15"
+									emptyMessage="No se encontraron registros." reflow="true">
+									<f:facet name="header">
+                            			Seleccione un parametro para ver su detalle
+                        			</f:facet>
+
+									<p:ajax update="form001" event="rowSelect"
+										listener="#{testController.onRowSelect}" />
+
+									<p:column width="15%" headerText="Key">
+										<h:outputText value="#{var.key}" />
+									</p:column>
+									<p:column width="25%" headerText="Descripcion"
+										style="text-align:center;">
+										<h:outputText value="#{var.descripcion}" />
+									</p:column>
+									<p:column width="25%" headerText="Valor"
+										style="text-align:center;">
+										<h:outputText value="#{var.valor}" />
+									</p:column>
+									<p:column width="12%" headerText="Estado"
+										style="text-align:center;">
+										<span class="FontLatoBold Fs14 Green DispBlock"><h:outputText
+												rendered="#{var.estado=='AC'}" value="Activo" /></span>
+										<span class="FontLatoBold Fs14 Red DispBlock"><h:outputText
+												rendered="#{var.estado=='IN'}" value="Inactivo" /></span>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{testController.listParameter.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</ui:fragment>
+			</div>
+			<p:growl id="growl" showDetail="true" />
+		</h:form>
+
+		<!-- BEGIN DIALOG -->
+		<p:dialog header="ELIMINAR PARAMETRO" widgetVar="dlgEliminarUsuario"
+			responsive="true" modal="true" resizable="false" closable="false"
+			visible="#{not empty facesContext.maximumSeverity}">
+			<p:outputPanel id="carDetail" style="text-align:center;">
+				<strong>¿ESTA SEGURO DE ELIMINAR ESTE PARAMETRO ?</strong>
+				<br />
+				<p:commandButton icon="fa fa-close" value="No"
+					styleClass="Fs14 White RedButton"
+					oncomplete="PF('dlgEliminarUsuario').hide()">
+				</p:commandButton>
+
+				<p:commandButton icon="fa fa-check" value="SI"
+					styleClass="Fs14 White GreenButton" update="form001"
+					actionListener="#{testController.eliminarParameter()}">
+				</p:commandButton>
+			</p:outputPanel>
+		</p:dialog>
+		<!-- END DIALOG -->
+
+	</ui:define>
+
+</ui:composition>

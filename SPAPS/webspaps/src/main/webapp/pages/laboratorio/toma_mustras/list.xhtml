@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic">LISTADO DE PROGRAMACION</div>
+				<div class="SeparatorFull"></div>
+				<div class="Container100 Responsive100">
+					<div
+						class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="fechaInicio" value="Fecha Inicio" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:calendar id="fechaInicio" navigator="true" required="true"
+							requiredMessage="Ingrese la fecha de nacimiento del paciente por favor."
+							effect="fold" value="#{labProgramacionOrdenController.fechaInicio}"
+							pattern="dd-MM-yyyy" mask="true">
+							<p:ajax event="change" update="form001" />
+							<p:ajax event="dateSelect" update="form001" />
+						</p:calendar>
+						
+					</div>
+					<div
+						class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="fechaFin" value="Fecha Fin" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+					<p:calendar id="fechaFin" navigator="true" required="true"
+							requiredMessage="Ingrese la fecha de nacimiento del paciente por favor."
+							effect="fold" value="#{labProgramacionOrdenController.fechaFin}"
+							pattern="dd-MM-yyyy" mask="true">
+							<p:ajax event="change" update="form001" />
+							<p:ajax event="dateSelect" update="form001" />
+						</p:calendar>
+						
+					</div>
+					<div class="Container10 Responsive50 TexAlRight">
+						<p:commandButton type="button" icon="fa fa-search"
+							styleClass="Fs14 White GreenButton" value="Buscar">
+							<p:ajax update="form001"
+								listener="#{labProgramacionOrdenController.consulta()}" />
+						</p:commandButton>
+					</div>
+				</div>
+				<div class="Container100 ui-fluid">
+					<p:dataTable id="singleDT" var="var"
+						value="#{labProgramacionOrdenController.listaLabProgramacionOrden}"
+						selectionMode="single"
+						selection="#{labProgramacionOrdenController.labProgramacionOrdenSelected}"
+						rowKey="#{var.id}" emptyMessage="No se encontraron registros."
+						reflow="true">
+						<f:facet name="header">
+                        	Seleccione un Item para ingresar al sistema
+                        </f:facet>
+
+						<p:ajax update="form001" event="rowSelect"
+							listener="#{labProgramacionOrdenController.onRowSelect}" />
+
+						<p:column width="10%" headerText="Codigo"
+							filterStyle="width: 100%; height:25px;" style="text-align:left;"
+							filterBy="#{var.id}">
+							<h:outputText value="#{var.id}" />
+						</p:column>
+
+						<p:column width="10%" headerText="Observacion"
+							filterStyle="width: 100%; height:25px;" style="text-align:left;"
+							filterBy="#{var.observacion}">
+							<h:outputText value="#{var.observacion}" />
+						</p:column>
+						
+						<p:column width="15%" headerText="Paciente"
+							filterStyle="width: 100%; height:25px;" style="text-align:left;"
+							filterBy="#{var.paciente.nombre} ">
+							<h:outputText rendered="#{var.tipoOrden=='LABORATORIO'}"
+								value="#{var.orden.paciente.nombre} #{var.orden.paciente.apellidoPaterno} #{var.orden.paciente.apellidoMaterno}" />
+							<h:outputText rendered="#{var.tipoOrden=='IMAGENOLOGIA'}"
+								value="#{var.ordenImag.paciente.nombre} #{var.ordenImag.paciente.apellidoPaterno} #{var.ordenImag.paciente.apellidoMaterno}" />
+						</p:column>
+						<p:column width="15%" headerText="Medico"
+							filterStyle="width: 100%; height:25px;" style="text-align:left;"
+							filterBy="#{var.medico.nombre}">
+							<h:outputText
+								value="#{var.medico.nombre} #{var.medico.apellidoPaterno} #{var.medico.apellidoMaterno}" />
+						</p:column>
+
+						
+						<p:column width="10%" headerText="Tipo"
+							filterStyle="width: 100%; height:25px;" style="text-align:left;"
+							filterBy="#{var.tipoOrden}">
+							<h:outputText value="#{var.tipoOrden}" />
+						</p:column>
+						<p:column width="10%" headerText="Estado"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.estado}">
+														
+							<span class="FontLatoBold Fs14 Green DispBlock"><h:outputText
+									rendered="#{var.estado=='AC'}" value="Nuevo" /> </span>
+							<span class="FontLatoBold Fs14 Blue DispBlock"><h:outputText
+									rendered="#{var.estado=='PR'}" value="Procesada" /> </span>
+						</p:column>
+						<p:column width="10%" headerText="Fecha Registro"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.fechaRegistro}">
+							<h:outputText value="#{var.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column width="10%" headerText="Registro"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.usuarioRegistro}">
+							<h:outputText value="#{var.usuarioRegistro}" />
+						</p:column>
+
+						<f:facet name="footer">
+							<h:outputText
+								value="#{labProgramacionOrdenController.listaLabProgramacionOrden.size()} Registros en Total" />
+						</f:facet>
+					</p:dataTable>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/maps.js" library="olympos-layout" />
+	</ui:define>
+
+	<ui:define name="content">
+	<div class="Card">
+			<h:form enctype="multipart/form-data">
+
+				<!-- File Upload with  mode="advanced". multiple files can be uploaded. upload button  -->
+
+				<h:outputLabel for="fileIdPhoto" value="Subir Fotos:" />
+
+				<p:fileUpload id="fileIdPhoto" label="Elegir" uploadLabel="Subir"
+					cancelLabel="Cancelar"
+					fileUploadListener="#{fileUploadBean.handleFileUpload}"
+					mode="advanced" sequential="true" dragDropSupport="false"
+					multiple="true" update="messages, files" sizeLimit="10000000000"
+					fileLimit="5" allowTypes="/(\.|\/)(gif|jpe?g|zip|png)$/" />
+				<p:growl id="messages" showDetail="true" />
+				<p:separator />
+
+				<h3>Uploaded Files</h3>
+				<p:dataList id="files" value="#{fileUploadBean.listArchivos}"
+					var="file" itemType="disc">
+            #{file.fileName}
+         </p:dataList>
+
+				<!-- File Upload with  mode="simple". Only one file can be uploaded. upload using submit button -->
+
+				<h:outputLabel for="fileIdResume" value="Subir Foto:" />
+
+				<p:fileUpload id="fileIdResume" fileUploadListener="#{fileUploadBean.handleFileUpload}" label="Subir"
+					 mode="advanced" skinSimple="true" description="Resume" update="files" auto="true" />
+
+				<p:separator />
+			</h:form>
+		</div>
+
+		<h:form id="form001">
+			<p:growl id="messages" showDetail="true" />
+
+			<h:panelGrid columnClasses="value">
+				<h3 style="margin-top: 0">Editable Schedule</h3>
+
+
+				<h3>Lazy Schedule</h3>
+				<p:schedule value="#{scheduleView.lazyEventModel}" timeZone="GMT+2"
+					view="agendaDay">
+
+					<p:ajax event="dateSelect" listener="#{scheduleView.onDateSelect}"
+						update="eventDetails" oncomplete="PF('eventDialog').show();" />
+					<p:ajax event="eventSelect"
+						listener="#{scheduleView.onEventSelect}" update="eventDetails"
+						oncomplete="PF('eventDialog').show();" />
+					<p:ajax event="eventMove" listener="#{scheduleView.onEventMove}"
+						update="messages" />
+					<p:ajax event="eventResize"
+						listener="#{scheduleView.onEventResize}" update="messages" />
+				</p:schedule>
+			</h:panelGrid>
+
+			<p:dialog widgetVar="eventDialog" header="Event Details"
+				showEffect="clip" hideEffect="clip">
+				<h:panelGrid id="eventDetails" columns="2">
+					<p:outputLabel for="title" value="Titles:" />
+					<p:inputText id="title" value="#{scheduleView.event.title}"
+						required="true" />
+
+					<p:outputLabel for="from" value="From:" />
+					<p:calendar id="from" value="#{scheduleView.event.startDate}"
+						timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+
+					<p:outputLabel for="to" value="To:" />
+					<p:calendar id="to" value="#{scheduleView.event.endDate}"
+						timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+
+					<p:outputLabel for="allDay" value="All Day:" />
+					<h:selectBooleanCheckbox id="allDay"
+						value="#{scheduleView.event.allDay}" />
+
+					<p:commandButton type="reset" value="Reset"  update="form001"/>
+					<p:commandButton id="addButton" value="Save"
+						actionListener="#{scheduleView.addEvent}" update="form001"
+						oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+
+		<script type="text/javascript">
+    PrimeFaces.locales['tr'] = {
+        closeText: 'kapat',
+        prevText: 'geri',
+        nextText: 'ileri',
+        currentText: 'bugün',
+        monthNames: ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran',
+            'Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'],
+        monthNamesShort: ['Oca','Şub','Mar','Nis','May','Haz',
+            'Tem','Ağu','Eyl','Eki','Kas','Ara'],
+        dayNames: ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'],
+        dayNamesShort: ['Pz','Pt','Sa','Ça','Pe','Cu','Ct'],
+        dayNamesMin: ['Pz','Pt','Sa','Ça','Pe','Cu','Ct'],
+        weekHeader: 'Hf',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        month: 'Ay',
+        week: 'Hafta',
+        day: 'Gün',
+        allDayText : 'Tüm Gün'
+    };
+</script>
+		<style type="text/css">
+.value {
+	width: 1000px;
+}
+</style>
+
+	</ui:define>
+</ui:composition>

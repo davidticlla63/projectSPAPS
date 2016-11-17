@@ -1,0 +1,359 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="Container100 Responsive100 TexAlLeft"
+		onload="#{historiaClinicaDetalleController.resetEstudio()}">
+
+		<div class="Container100 Responsive100 TexAlLeft">
+			<div class="Container100 Responsive100 TexAlLeft">
+				<div class="Container100 Responsive100 TexAlLeft">
+					<p:commandButton icon="fa fa-check" value="Nuevo"
+						styleClass="Fs14 White GreenButton">
+						<p:ajax update="form001"
+							listener="#{historiaClinicaDetalleController.nuevoEstudio}" />
+					</p:commandButton>
+				</div>
+			</div>
+		</div>
+
+		<!-- BEGIN DIALOG -->
+		<div class="Container100 Responsive100 TexAlLeft">
+
+			<div class="Container60 Responsive100 TexAlLeft">
+
+				<div class="Container30 Responsive100 TexAlLeft">
+					<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+						rendered="#{historiaClinicaDetalleController.seeEstudio}"
+						styleClass="Fs14 White OrangeButton">
+						<p:ajax update="form001"
+							listener="#{historiaClinicaDetalleController.cancelarEstudio()}" />
+					</p:commandButton>
+				</div>
+				<div class="Container30 Responsive100 TexAlLeft">
+					<p:commandButton icon="fa fa-check" value="Guardar"
+						rendered="#{historiaClinicaDetalleController.seeEstudio}"
+						styleClass="Fs14 White GreenButton">
+						<p:ajax update="form001, singleOrdenLabDT"
+							listener="#{historiaClinicaDetalleController.registrarEstudio}" />
+					</p:commandButton>
+				</div>
+			</div>
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<div class="Container20 Responsive100 TexAlLeft">
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="comentario" value="Descripcion:"
+							rendered="#{historiaClinicaDetalleController.seeEstudio}" />
+					</div>
+					<div class="Container50 Responsive100 TexAlRight">
+						<p:inputTextarea id="comentario" style="width:400px"
+							rendered="#{historiaClinicaDetalleController.seeEstudio}"
+							value="#{historiaClinicaDetalleController.orden.descripcion}">
+							<p:ajax event="change" />
+						</p:inputTextarea>
+						<p:message for="comentario" display="tooltip" />
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100 Responsive100 Flex">
+				<div class="Card">
+
+					<div class="CardBigTopic Container100 Responsive10 TexAlRight"
+						style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+
+						<p:fileUpload uploadLabel="Foto" cancelLabel="Cancelar"
+							rendered="#{historiaClinicaDetalleController.seeEstudio}"
+							fileUploadListener="#{historiaClinicaDetalleController.handleFileUpload}"
+							label="Subir" mode="advanced" skinSimple="true"
+							update="messages, files" sizeLimit="10000000000" auto="true"
+							allowTypes="/(\.|\/)(gif|jpe?g|zip|png|doc|docx|xls|xlsx|pdf)$/" />
+						<p:growl id="messages" showDetail="true" />
+					</div>
+					<div class="Container100 ui-fluid">
+						<p:dataTable id="files" var="item"
+							rendered="#{historiaClinicaDetalleController.seeEstudio}"
+							value="#{historiaClinicaDetalleController.documentos}"
+							editable="true" style="margin-bottom:20px; size:10px"
+							reflow="true">
+
+							<f:facet name="header">
+								Lista de Adjuntos
+							</f:facet>
+
+							<p:column width="40%" headerText="Nombre">
+								<p:outputLabel value="#{item.nombreArchivo}" />
+								<p:media value="#{historiaClinicaDetalleController.content}"
+									width="80%" height="300px" player="pdf">
+									<f:param name="param" value="#{item.nombreArchivo}" />
+								</p:media>
+								<p:graphicImage id="img"
+									value="#{historiaClinicaDetalleController.content}"
+									cache="false" width="200" height="150">
+									<f:param name="param" value="#{item.nombreArchivo}" />
+								</p:graphicImage>
+							</p:column>
+							<p:column width="30%" headerText="Comentario">
+								<p:inputTextarea value="#{item.comentario}">
+									<p:ajax event="change" />
+								</p:inputTextarea>
+							</p:column>
+						</p:dataTable>
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<p:panel toggleable="true" header="Examenes"
+					rendered="#{historiaClinicaDetalleController.seeEstudio}">
+					<div class="Container100 Responsive100 TexAlLef">
+
+						<div class="Container100 ui-fluid">
+							<ui:repeat var="var"
+								value="#{historiaClinicaDetalleController.listEdOrdenLaboratorios}">
+								<div
+									class="Container25 Responsive100 NoIndent OvHidden ui-fluid">
+									<p:panel header="#{var.grupoExamen.descripcion}"
+										style="margin-bottom:20px">
+										<p:dataTable var="var1" value="#{var.listaExamen}"
+											rowKey="#{var1.id}"
+											emptyMessage="No se encontraron registros." reflow="true">
+
+
+											<p:column width="15%" headerText="Select"
+												filterStyle="width: 100%; height:25px;"
+												style="text-align:left;" filterBy="#{var1.descripcion}">
+												<p:selectBooleanCheckbox value="#{var1.checker}">
+													<p:ajax event="change" />
+												</p:selectBooleanCheckbox>
+
+											</p:column>
+											<p:column width="85%" headerText="Examen"
+												filterStyle="width: 100%; height:25px;"
+												style="text-align:left;" filterBy="#{var1.descripcion}">
+												<h:outputText value="#{var1.descripcion}" />
+											</p:column>
+
+										</p:dataTable>
+									</p:panel>
+								</div>
+							</ui:repeat>
+
+						</div>
+
+					</div>
+				</p:panel>
+			</div>
+
+			<div class="Container100 Responsive100 TexAlLef">
+				<p:panel header="Busqueda:"
+					rendered="#{historiaClinicaDetalleController.seeEstudio}">
+					<div class="Container100 ui-fluid">
+						<div class="Container60 Responsive100 NoIndent OvHidden ui-fluid">
+
+							<div
+								class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="busqueda" value="Criterio de Busqueda" />
+							</div>
+							<div class="Container60 Responsive50 TexAlRight">
+								<p:inputText id="busqueda"
+									value="#{historiaClinicaDetalleController.busqueda}">
+									<p:ajax event="keyup" update="examenes"
+										listener="#{historiaClinicaDetalleController.onKeyUpQueryExamenes}" />
+								</p:inputText>
+								<p:message for="busqueda" display="tooltip" />
+							</div>
+							<div
+								class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="tipoExamen" value="Tipo Examen" />
+							</div>
+							<div class="Container60 Responsive50">
+								<p:selectOneMenu id="tipoExamen" style=""
+									value="#{historiaClinicaDetalleController.grupoExamen.id}">
+									<p:ajax event="valueChange" update="tipoExamen,examenes"
+										listener="#{historiaClinicaDetalleController.onSelectTipoExamen}" />
+									<f:selectItem itemValue="" itemLabel="Selccione Uno" />
+									<f:selectItems var="tipo"
+										value="#{historiaClinicaDetalleController.listGrupoExamens}"
+										itemLabel="#{tipo.descripcion}" itemValue="#{tipo.id}" />
+								</p:selectOneMenu>
+								<p:message for="tipoExamen" display="tooltip" />
+							</div>
+
+							<p:growl id="msg" showDetail="true" escape="false" />
+							<div class="Container100 Responsive100">
+								<p:pickList id="examenes"
+									value="#{historiaClinicaDetalleController.listaExamenModel}"
+									effect="bounce" showSourceControls="true"
+									showTargetControls="true" showSourceFilter="true"
+									showCheckbox="true" showTargetFilter="true"
+									filterMatchMode="contains" responsive="true"
+									converter="pickListConverter" var="var" itemValue="#{var}"
+									itemLabel="#{var.descripcion}">
+									<f:facet name="sourceCaption">Examenes Disponibles</f:facet>
+									<f:facet name="targetCaption">Examenes Seleccionados</f:facet>
+
+
+									<p:ajax event="transfer"
+										listener="#{historiaClinicaDetalleController.onTransferExamen}"
+										update="msg" />
+									<p:ajax event="select"
+										listener="#{historiaClinicaDetalleController.onSelectExamen}"
+										update="msg" />
+									<p:ajax event="unselect"
+										listener="#{historiaClinicaDetalleController.onUnselectExamen}"
+										update="msg" />
+									<p:ajax event="reorder"
+										listener="#{historiaClinicaDetalleController.onReorderExamen}"
+										update="msg" />
+
+									<p:column style="width:10%">
+										<h:outputText styleClass="ui-theme ui-theme-#{var.id}" />
+									</p:column>
+
+									<p:column style="width:90%;">
+										<h:outputText value="#{var.descripcion}" />
+									</p:column>
+								</p:pickList>
+
+								<p:message for="examenes" display="tooltip" />
+							</div>
+						</div>
+
+					</div>
+				</p:panel>
+			</div>
+
+			<div class="Container100 Responsive100 Flex">
+				<div class="Card">
+					<div class="CardBigTopic"></div>
+					<div class="SeparatorFull"></div>
+
+					<div class="Container100 ui-fluid">
+
+						<p:dataTable id="singleOrdenLabDT" var="var"
+							widgetVar="ordenLabTable"
+							value="#{historiaClinicaDetalleController.listaLabOrden}"
+							selectionMode="single"
+							selection="#{historiaClinicaDetalleController.ordenSelected}"
+							style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+							emptyMessage="No se encontraron Registros." rowKey="#{var.id}"
+							reflow="true">
+
+							<f:facet name="header">
+							Ordenes de Laboratorio
+						</f:facet>
+
+							<p:column width="2%">
+								<p:rowToggler />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Codigo" />
+								</f:facet>
+								<h:outputText value="#{var.codigo}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Medico" />
+								</f:facet>
+								<h:outputText
+									value="#{var.medico.nombre} #{var.medico.apellidoPaterno} #{var.medico.apellidoMaterno} - #{var.medico.obtenerEspecialidadActiva().nombre}" />
+							</p:column>
+
+							<p:column width="10%" filterBy="#{var.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="Fecha Registro" />
+								</f:facet>
+								<h:outputText value="#{var.fechaRegistro}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width:55px" headerText="Imprimir">
+								<p:commandButton type="button" icon="ui-icon-print"
+									styleClass="Fs14 White BlueButton">
+									<p:ajax update="singleOrdenLabDT"
+										listener="#{historiaClinicaDetalleController.imprimirOrdenLab(var)}" />
+								</p:commandButton>
+							</p:column>
+
+							<p:rowExpansion>
+
+								<p:dataTable var="examenes" value="#{var.listOrdenDetalle}"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									rowKey="#{item.ordenLab.id}" reflow="true">
+
+									<f:facet name="header">
+									Examenes
+								</f:facet>
+
+									<p:column width="4%">
+										<p:rowToggler />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Examen" />
+										</f:facet>
+										<h:outputText value="#{examenes.descripcion}" />
+									</p:column>
+
+
+
+									<p:rowExpansion>
+
+										<p:dataTable var="resultados"
+											value="#{examenes.listOrdenSubDetalle}" reflow="true">
+
+											<f:facet name="header">
+																Resultados
+															</f:facet>
+
+											<p:column width="25%" headerText="Estudios"
+												filterBy="#{resultados.descripcion}">
+												<h:outputText value="#{resultados.descripcion}" />
+											</p:column>
+
+											<p:column width="25%" headerText="Valor de Referencia"
+												filterBy="#{resultados.parametros}">
+												<h:outputText
+													value="#{resultados.parametros} #{resultados.unidaMedida}" />
+											</p:column>
+
+											<p:column width="25%" headerText="Resultado"
+												filterBy="#{resultados.resultado}">
+												<h:outputText value="#{resultados.resultado}" />
+											</p:column>
+
+										</p:dataTable>
+
+									</p:rowExpansion>
+
+								</p:dataTable>
+
+							</p:rowExpansion>
+
+						</p:dataTable>
+
+					</div>
+
+				</div>
+			</div>
+
+			<!-- END DIALOG -->
+		</div>
+	</div>
+
+	<ui:include src="/pages/reportes/dialogIndex.xhtml" />
+
+</ui:composition>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<link rel="shortcut icon"
+		href="#{request.contextPath}/resources/spaps/image/spaps-ico.ico" />
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta content="Sistema Web SPAPS" name="description" />
+		<meta content="TEDS SRL" name="author" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>SPAPS | Sistema Web</title>
+	<ui:insert name="head" />
+</h:head>
+
+<h:body  styleClass="AquaBack">
+
+	<div class="Wid50 MarAuto">
+		<div class="Wid70 MarAuto WidAutoOnMobile TexAlCenter">
+
+			<div class="Wid70 MarAuto WidAutoOnMobile">
+				<div class="EmptyBox30"></div>
+				<div class="Container50 Responsive50"></div>
+
+				<div class="Container50 Responsive50"></div>
+				<div class="EmptyBox10 ShowOnMobile"></div>
+
+				<div class="EmptyBox30"></div>
+				<div class="Card ui-fluid ShadowEffect">
+					<br />
+					<center>
+						<h:graphicImage library="spaps" name="/image/logo-transp.png"
+							width="80%" />
+					</center>
+					<br />
+					<div class="Wid100 FontLatoRegular Blue Fs30">Inicio de
+						Sesión</div>
+					<h:form id="form001">
+						<p:growl id="growl" showDetail="true" />
+						<p:focus for="login" />
+						<div class="Container100">
+							<p:inputText id="login" placeholder="Usuario"
+								value="#{loginController.usuario.login}"
+								style="padding:15px !important;">
+								<p:ajax event="change" />
+							</p:inputText>
+						</div>
+						<div class="Container100">
+							<p:password placeholder="Contraseña"
+								value="#{loginController.usuario.password}"
+								style="padding:15px !important;">
+								<p:ajax event="change" />
+							</p:password>
+						</div>
+						<div class="Container100 TexAlLeft">
+							<div class="EmptyBox10"></div>
+							<!-- layout="responsive" -->
+							<p:selectManyCheckbox layout="responsive" columns="1">
+								<f:selectItem itemLabel="Recordar mi sesión"
+									itemValue="Remember Me" />
+							</p:selectManyCheckbox>
+						</div>
+						<div class="EmptyBox20"></div>
+						<div class="Container100">
+							<p:commandButton type="button" value="Ingresar"
+								styleClass="GreenButton">
+								<p:ajax update="growl" listener="#{loginController.login()}" />
+							</p:commandButton>
+						</div>
+						<p:hotkey bind="return"
+							actionListener="#{loginController.login()}" update="growl" />
+
+						<div class="EmptyBox10"></div>
+						<div class="Separator"></div>
+						<div class="EmptyBox10"></div>
+
+						<div class="EmptyBox10"></div>
+
+					</h:form>
+				</div>
+
+				<div class="EmptyBox20"></div>
+				<div class="Wid100 FontLatoRegular Fs12 TransparentWhite">
+					<i class="fa fa-copyright DispInlBlock"></i> TEDS 2016. Todos los
+					derechos reservados.
+				</div>
+				<div class="EmptyBox30"></div>
+			</div>
+		</div>
+	</div>
+
+	<style>
+.ui-button-text, .ui-button-text-only .ui-button-text {
+	padding: 15px !important;
+	transition: none !important;
+}
+</style>
+
+	<!-- AJAX STATUS -->
+	<ui:include src="/WEB-INF/template_ajax_status.xhtml" />
+
+	<h:outputStylesheet name="css/core-layout.css" library="olympos-layout" />
+	<h:outputStylesheet name="css/font-awesome.css"
+		library="olympos-layout" />
+	<h:outputStylesheet name="css/animate.css" library="olympos-layout" />
+	<h:outputStylesheet name="css/olympos-layout.css"
+		library="olympos-layout" />
+	<h:outputStylesheet name="css/olympos-font.css"
+		library="olympos-layout" />
+</h:body>
+
+</html>

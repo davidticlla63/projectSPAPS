@@ -1,0 +1,179 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+		<!-- IMPEDIR QUE EL USUARIO REGRESE A ESTA PAGINA -->
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<script type="text/javascript">
+			if(history.forward(1)){
+			    location.replace( history.forward(1) );
+			 }
+		</script>
+		<style type="text/css">
+.ui-datatable-reflow .ui-datatable-data .ui-expanded-row-content thead .ui-column-title
+	{
+	display: inline;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container75 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-plus"
+							rendered="#{labOrdenController.crear}"
+							styleClass="Fs14 White GreenButton" value="Nueva Orden"
+							update="form001" immediate="true"
+							actionListener="#{labOrdenController.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{labOrdenController.seleccionado or labOrdenController.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{labOrdenController.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{labOrdenController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001"
+							actionListener="#{labOrdenController.registrar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{labOrdenController.seleccionado=='true' and labOrdenController.aprovado=='false'}"
+							value="Modificar" styleClass="Fs14 White BlueButton"
+							update="form001"
+							actionListener="#{labOrdenController.actualizar()}">
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							rendered="#{labOrdenController.seleccionado=='true' and labOrdenController.aprovado=='false'}"
+							value="Eliminar" styleClass="Fs14 White RedButton">
+							<p:ajax update="form001"
+								listener="#{labOrdenController.eliminar()}" />
+						</p:commandButton>
+
+						<p:commandButton id="cerrarConsulta" type="button"
+							rendered="#{labOrdenController.seleccionado=='true' and labOrdenController.aprovado=='true'}"
+							icon="fa fa-trash-o" value="Programar Orden"
+							styleClass="Fs14 White GreenButton">
+							<p:ajax update="form001"
+								listener="#{labOrdenController.crearProgramacion()}" />
+						</p:commandButton>
+						
+						<p:commandButton icon="fa fa-print-o"
+							rendered="#{labOrdenController.seleccionado=='true'}"
+							value="Imprimir" styleClass="Fs14 White BlueButton"
+							update="form001"
+							actionListener="#{labOrdenController.armarUrl()}">
+						</p:commandButton>
+
+					</div>
+					<div class="Container25 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Tipo Examens"
+								url="/pages/laboratorio/grupo_examen/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{labOrdenController.currentPage}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+
+
+		<p:dialog header="PROGRAMAR TOMA MUESTRA" widgetVar="dlgDialog1"
+			responsive="true" resizable="false" closable="false">
+			<h:form id="formDlg001">
+				<p:panelGrid id="grid1" columns="3" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+
+
+					<p:outputLabel for="medico2ID" value="Medico" />
+					<p:autoComplete id="medico2ID" style="width: 100%" required="true"
+						inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+						value="#{labOrdenController.selectedMedicoProgamacion.nombre}"
+						completeMethod="#{labOrdenController.completeMedicoProgramadocion}"
+						minQueryLength="2" forceSelection="true" var="_var"
+						itemLabel="#{_var}"
+						itemValue="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}"
+						placeholder="Escriba Medico" maxResults="10" dropdown="true">
+						<p:ajax event="itemSelect" update="medico2ID, especialidad2ID"
+							listener="#{labOrdenController.onRowSelectMedicoProgramadocionClick}" />
+						<p:column>
+							<h:outputText value="#{_var.id}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{_var.nombre}" />
+						</p:column>
+					</p:autoComplete>
+					<p:message for="medico2ID" display="tooltip" />
+
+					<p:outputLabel for="especialidad2ID" value="Especialidad" />
+					<p:inputText id="especialidad2ID" readonly="true"
+						value="#{labOrdenController.selectedMedicoProgamacion.obtenerEspecialidadActiva().nombre}">
+					</p:inputText>
+					<p:message for="especialidad2ID" display="tooltip" />
+
+
+					<p:outputLabel for="fechaprogramacion" value="Fecha" />
+					<p:calendar id="fechaprogramacion" required="true"
+						value="#{labOrdenController.labProgramacionOrden.fecha}"
+						pattern="dd/MM/yyyy HH:mm" mask="true" lang="en">
+						<p:ajax event="change" />
+						<p:ajax event="dateSelect" />
+					</p:calendar>
+					<p:message for="fechaprogramacion" display="tooltip" />
+
+					<p:outputLabel for="observacion" value="Comentario" />
+					<p:inputTextarea id="observacion" required="false"
+						value="#{labOrdenController.labProgramacionOrden.observacion}">
+						<p:ajax event="change" />
+					</p:inputTextarea>
+					<p:message for="observacion" display="tooltip" />
+
+				</p:panelGrid>
+				<p:panelGrid id="grid2" columns="2" cellpadding="5" layout="grid"
+					style="border:0px !important; background:none;"
+					styleClass="ui-panelgrid-blank">
+					<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+						styleClass="Fs14 White OrangeButton"
+						oncomplete="PF('dlgDialog1').hide()">
+					</p:commandButton>
+					<p:commandButton icon="fa fa-check" value="Aceptar"
+						styleClass="Fs14 White GreenButton" update="formDlg001,form001"
+						actionListener="#{labOrdenController.programar()}">
+					</p:commandButton>
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+
+		<ui:include src="/pages/reportes/dialogIndex.xhtml" />
+	</ui:define>
+
+
+
+</ui:composition>

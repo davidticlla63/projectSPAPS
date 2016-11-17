@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+		<!-- IMPEDIR QUE EL USUARIO REGRESE A ESTA PAGINA -->
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<script type="text/javascript">
+			if(history.forward(1)){
+			    location.replace( history.forward(1) );
+			 }
+		</script>
+		<style type="text/css">
+.ui-datatable-reflow .ui-datatable-data .ui-expanded-row-content thead .ui-column-title
+	{
+	display: inline;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001" enctype="multipart/form-data">
+
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container75 Responsive100 TexAlLeft">
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{labOrdenResultadosImagController.seleccionado or labOrdenResultadosImagController.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{labOrdenResultadosImagController.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{labOrdenResultadosImagController.seleccionado}"
+							value="Guardar" styleClass="Fs14 White BlueButton"
+							update="form001"
+							actionListener="#{labOrdenResultadosImagController.actualizar()}">
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							rendered="#{labOrdenResultadosImagController.seleccionado}"
+							value="Eliminar" styleClass="Fs14 White RedButton">
+							<p:ajax update="form001"
+								listener="#{labOrdenResultadosImagController.eliminar()}" />
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-print-o"
+							rendered="#{labOrdenResultadosImagController.seleccionado}"
+							value="Imprimir" styleClass="Fs14 White BlueButton">
+							<p:ajax update="form001"
+								listener="#{labOrdenResultadosImagController.imprimir()}" />
+						</p:commandButton>
+
+					</div>
+					<div class="Container25 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Parametros Laboratorio"
+								url="/pages/laboratorio/index.xhtml" />
+							<p:menuitem value="Examens"
+								url="/pages/laboratorio/examen/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{labOrdenResultadosImagController.currentPage}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+		<ui:include  src="/pages/reportes/dialogIndex.xhtml" />
+
+	</ui:define>
+
+</ui:composition>

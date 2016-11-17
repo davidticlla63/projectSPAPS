@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="row">
+		<div class="Responsive100 Container20 ">
+			Cuenta
+			<p:autoComplete id="dialogAutoCompleteCuenta"
+				converter="planCuentaConverter"
+				value="#{comprobanteController.planCuenta}"
+				completeMethod="#{planCuentaController.onCompleteTextCuentaAuxiliar}"
+				minQueryLength="2" forceSelection="true" var="item"
+				itemLabel="#{item.descripcion}" itemValue="#{item}"
+				placeholder="Código o Nombre Cuenta" maxResults="10"
+				inputStyle="mbr-inputText">
+				<p:ajax event="itemSelect" update="form001"
+					listener="#{comprobanteController.onItemSelectCuenta}" />
+				<p:column>
+					<h:outputText value="#{item.codigoAuxiliar}" />
+				</p:column>
+
+				<p:column>
+					<h:outputText value="#{item.descripcion}" />
+				</p:column>
+			</p:autoComplete>
+			<p:contextMenu for="dialogAutoCompleteCuenta"
+				id="contextMenuPlanCuenta">
+				<p:menuitem value="PLAN CUENTA" icon="fa fa-file-text-o" />
+			</p:contextMenu>
+		</div>
+		<div class="Responsive100 Container20 ">
+			Glosa
+			<p:inputText id="glosaLineaContable"
+				value="#{comprobanteController.eDAsiento.glosa}"
+				style=" color: #555555; background-image: none; text-transform: uppercase; padding:5px 10px;"
+				styleClass="input-sm form-control">
+				<p:ajax event="change" />
+			</p:inputText>
+		</div>
+		<div class="Responsive100 Container20 ">
+			Debe
+			<p:contextMenu for="debe1" id="functionContextMenu1" rendered="false">
+				<p:menuitem
+					value="#{comprobanteController.listMontoNacional.get(0)}"
+					rendered="#{ comprobanteController.listMontoNacional.size()>0}" />
+			</p:contextMenu>
+			<p:inputText id="debe1"
+				rendered="#{comprobanteController.verificarTipoMoneda('NACIONAL')}"
+				value="#{comprobanteController.eDAsiento.debeNacional}"
+				readonly="false"
+				style=" color: #555555; background-image: none;padding:5px 10px;"
+				styleClass="input-sm form-control"
+				onkeypress="return validateOnlyNumber(event)">
+				<p:ajax event="change" />
+			</p:inputText>
+			<p:inputText id="debe2"
+				rendered="#{comprobanteController.verificarTipoMoneda('EXTRANJERA')}"
+				value="#{comprobanteController.eDAsiento.debeExtranjero}"
+				readonly="false"
+				style=" color: #555555; background-image: none;padding:5px 10px;"
+				styleClass="input-sm form-control"
+				onkeypress="return validateOnlyNumber(event)">
+				<p:ajax event="change" />
+			</p:inputText>
+		</div>
+		<div class="Responsive100 Container20 ">
+			Haber
+			<p:contextMenu for="haber1" id="functionContextMenu2"
+				rendered="false">
+				<p:menuitem
+					value="#{comprobanteController.listMontoNacional.get(0)}"
+					rendered="#{ comprobanteController.listMontoNacional.size()>0}" />
+			</p:contextMenu>
+			<p:inputText id="haber1"
+				rendered="#{comprobanteController.verificarTipoMoneda('NACIONAL')}"
+				value="#{comprobanteController.eDAsiento.haberNacional}"
+				readonly="false"
+				style=" color: #555555; background-image: none;padding:5px 10px;"
+				styleClass="input-sm form-control"
+				onkeypress="return validateOnlyNumber(event)">
+				<p:ajax event="change" update="form001" />
+			</p:inputText>
+			<p:inputText id="haber2"
+				rendered="#{comprobanteController.verificarTipoMoneda('EXTRANJERA')}"
+				value="#{comprobanteController.eDAsiento.haberExtranjero}"
+				readonly="false"
+				style=" color: #555555; background-image: none;padding:5px 10px;"
+				styleClass="input-sm form-control"
+				onkeypress="return validateOnlyNumber(event)">
+				<p:ajax event="change" update="form001" />
+			</p:inputText>
+		</div>
+
+		<div class="Responsive100 Container20 ">
+			#{"&#160;"}
+			
+			<p:splitButton id="buttonAgregar" value="Agregar Sin Factura" update="form001"
+				immediate="true"
+				actionListener="#{comprobanteController.agregarCuentaADetalle()}">
+				<p:menuitem value="Factura de Compra"  />
+				<p:menuitem value="Retención en Bienes"  />
+				<p:menuitem value="Retención en Servcios"  />
+				<p:menuitem value="Retención en Alquileres" />
+				<p:menuitem value="Retención en RC-IVA" />
+				<p:menuitem value="Remesas al Exterior" />
+				<p:menuitem value="Credito Fiscal No deducible" />
+				<p:menuitem value="Retención IUE-IT Ind. Exportador" />
+				<p:separator />
+				<p:menuitem value="Cancelar" />
+			</p:splitButton>
+		</div>
+	</div>
+</ui:composition>

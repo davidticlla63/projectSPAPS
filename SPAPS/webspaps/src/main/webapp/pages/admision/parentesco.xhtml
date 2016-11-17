@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container70 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-plus"
+							rendered="#{parentescoController.crear}"
+							styleClass="Fs14 White GreenButton" value="Nuevo Parentesco"
+							update="form001" immediate="true"
+							actionListener="#{parentescoController.cambiarAspecto()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{parentescoController.modificar or parentescoController.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{parentescoController.initNew()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{parentescoController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001"
+							actionListener="#{parentescoController.registrar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{parentescoController.modificar}" value="Modificar"
+							styleClass="Fs14 White BlueButton" update="form001"
+							actionListener="#{parentescoController.actualizar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-trash-o" update="form001"
+							rendered="#{parentescoController.modificar}" value="Eliminar"
+							styleClass="Fs14 White RedButton"
+							actionListener="#{parentescoController.eliminar()}" />
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/dashboard.xhtml" />
+							<p:menuitem value="Seguridad"
+								url="/pages/security/parentesco.xhtml" />
+							<p:menuitem value="Usuario"
+								url="/pages/security/parentesco.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:fragment
+					rendered="#{parentescoController.modificar or parentescoController.registrar}">
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">INFORMACIÓN DE PARENTESCO</div>
+							<div class="SeparatorFull"></div>
+
+							<h:panelGrid id="grid" columns="3" cellpadding="5">
+								<p:outputLabel for="descripcion" value="Descripcion" />
+								<p:inputText id="descripcion" required="true"
+									value="#{parentescoController.parentesco.descripcion}">
+									<p:ajax event="change" />
+								</p:inputText>
+								<p:message for="descripcion" display="tooltip" />
+
+								<p:outputLabel for="estados" value="Estado" />
+								<p:selectOneMenu id="estados" style=""
+									value="#{parentescoController.estado}">
+									<p:ajax event="valueChange" update="estados" />
+									<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+									<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+									<f:selectItem itemLabel="ELIMINADO" itemValue="RM" />
+								</p:selectOneMenu>
+								<p:message for="estados" display="tooltip" />
+							</h:panelGrid>
+
+						</div>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{parentescoController.crear}">
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">LISTADO DE PARENTESCOS DEL
+								SISTEMA</div>
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<p:dataTable id="singleDT" var="var"
+									value="#{parentescoController.listaParentesco}"
+									selectionMode="single"
+									selection="#{parentescoController.parentesco}"
+									rowKey="#{var.id}" rows="10" paginator="true"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="5,10,15"
+									emptyMessage="No se encontraron registros." reflow="true">
+									<f:facet name="header">
+                            			Seleccione un parentesco para su detalle
+                        			</f:facet>
+
+									<p:ajax update="form001" event="rowSelect"
+										listener="#{parentescoController.onRowSelect}" />
+
+									<p:column width="25%" headerText="Descripcion">
+										<h:outputText value="#{var.descripcion}" />
+									</p:column>
+									<p:column width="12%" headerText="Estado"
+										style="text-align:center;">
+										<span class="FontLatoBold Fs14 Green DispBlock"><h:outputText
+												rendered="#{var.estado=='AC'}" value="Activo" /></span>
+										<span class="FontLatoBold Fs14 Orange DispBlock"><h:outputText
+												rendered="#{var.estado=='IN'}" value="Inactivo" /></span>
+										<span class="FontLatoBold Fs14 Red DispBlock"><h:outputText
+												rendered="#{var.estado=='RM'}" value="Eliminado" /></span>
+									</p:column>
+									<p:column width="12%" headerText="Fecha Registro"
+										style="text-align:center;">
+										<h:outputText value="#{var.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column width="12%" headerText="Registro"
+										style="text-align:center;">
+										<h:outputText value="#{var.usuarioRegistro}" />
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{parentescoController.listaParentesco.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</ui:fragment>
+			</div>
+			<p:growl id="growl" showDetail="true" />
+		</h:form>
+	</ui:define>
+
+</ui:composition>

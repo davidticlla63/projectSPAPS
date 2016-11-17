@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">INFORMACIÓN GRUPO SERVICIO</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+				<div class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="nombreEspecialidad" value="Descripcion" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="nombreEspecialidad" required="true"
+							value="#{ventaGrupoServiciosController.ventaGrupoServicios.descripcion}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="nombreEspecialidad" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="cuentaIngresoID" value="Cuenta Ingreso" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:autoComplete id="cuentaIngresoID" style="width: 100%"
+							inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+							value="#{ventaGrupoServiciosController.ventaGrupoServicios.cuentaIngreso.descripcion}"
+							completeMethod="#{ventaGrupoServiciosController.completeCuentaIngreso}"
+							minQueryLength="2" forceSelection="true" var="_var"
+							itemLabel="#{_var}" itemValue="#{_var.descripcion}"
+							placeholder="Escriba Cuenta" maxResults="10" dropdown="true">
+							<p:ajax event="itemSelect" update="cuentaIngresoID"
+								listener="#{ventaGrupoServiciosController.onRowSelectCuentaClick}" />
+							<p:column>
+								<h:outputText value="#{_var.codigoAuxiliar}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{_var.descripcion}" />
+							</p:column>
+						</p:autoComplete>
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="estados" value="Estado" />
+					</div>
+					<div class="Container60 Responsive50">
+						<p:selectOneMenu id="estados" style=""
+							value="#{ventaGrupoServiciosController.ventaGrupoServicios.estado}">
+							<p:ajax event="valueChange" update="estados" />
+							<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+							<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+						</p:selectOneMenu>
+						<p:message for="estados" display="tooltip" />
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</ui:composition>

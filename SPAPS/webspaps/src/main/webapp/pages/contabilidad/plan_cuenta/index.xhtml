@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container70 Responsive100 TexAlLeft">
+						<p:commandButton id="buttonNuevaCuenta" icon="fa fa-plus" value="Nueva Cuenta"
+							styleClass="Fs14 White GreenButton"
+							rendered="#{planCuentaController.crear}" update="form001"
+							immediate="true"
+							actionListener="#{planCuentaController.actionNuevaCuentaNivel1()}">
+						</p:commandButton>
+						<p:commandButton id="buttonCancelar" icon="fa fa-arrow-left" value="Cancelar"
+							styleClass="Fs14 White OrangeButton"
+							rendered="#{planCuentaController.seleccionado or planCuentaController.registrar}"
+							update="form001" immediate="true"
+							actionListener="#{planCuentaController.loadDefault()}">
+						</p:commandButton>
+						<p:commandButton id="buttonRegistrar" icon="fa fa-floppy-o" value="Registrar"
+							styleClass="Fs14 White GreenButton"
+							rendered="#{planCuentaController.registrar}"
+							update="form001"
+							actionListener="#{planCuentaController.registrarPlanCuenta()}">
+						</p:commandButton>
+						<p:commandButton id="buttonAgregar" icon="fa fa-floppy-o" value="Agregar"
+							styleClass="Fs14 White GreenButton"
+							rendered="#{planCuentaController.seleccionado}"
+							update="form001" immediate="true"
+							actionListener="#{planCuentaController.actionNuevaSubCuenta()}">
+						</p:commandButton>
+						<p:commandButton id="buttonModificar" icon="fa fa-edit" value="Modificar"
+							rendered="#{planCuentaController.seleccionado}"
+							styleClass="Fs14 White BlueButton" update="form001"
+							actionListener="#{planCuentaController.modificarPlanCuenta()}">
+						</p:commandButton>
+						<p:commandButton id="buttonEliminar" icon="fa fa-trash-o" value="Eliminar"
+							styleClass="Fs14 White RedButton"
+							rendered="#{planCuentaController.seleccionado}"
+							update="form001"
+							actionListener="#{planCuentaController.deleteNode()}">
+							<p:confirm header="¿ESTA SEGURO DE ELIMINAR ESTA CUENTA ?"
+								message="Tenga en cuenta que será eliminado definitivamente del sistema."
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Contabilidad"
+								url="/pages/contabilidad/plan_cuenta/index.xhtml" />
+							<p:menuitem value="Plan Cuenta"
+								url="/pages/contabilidad/plan_cuenta/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{planCuentaController.page}" />
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

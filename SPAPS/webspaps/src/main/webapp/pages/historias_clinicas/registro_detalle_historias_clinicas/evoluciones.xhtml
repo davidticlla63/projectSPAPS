@@ -1,0 +1,173 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="Container100 Responsive100 TexAlLeft"
+		onload="#{historiaClinicaDetalleController.resetEvolucion()}">
+
+
+		<!-- BEGIN DIALOG -->
+		<div class="Container100 Responsive100 TexAlLeft">
+			<h:form id="formDlg001">
+				<p:focus for="evolucion" />
+
+				<div class="Container50 Responsive100 TexAlLeft">
+
+					<div class="Container20 Responsive100 TexAlLeft">
+						<p:outputLabel for="diagnosticoPresuntivo"
+							value="Diagnostico Presuntivo:" />
+					</div>
+					<div class="Container60 Responsive100 TexAlLeft">
+						<h:outputText id="diagnosticoPresuntivo"
+							value="#{historiaClinicaDetalleController.diagnosticoPresuntivo.descripcion}">
+						</h:outputText>
+					</div>
+
+				</div>
+
+				<div class="Container80 Responsive100 TexAlLeft">
+
+					<div class="Container20 Responsive100 TexAlLeft">
+						<p:outputLabel for="evolucion" value="Tratamiento:" />
+					</div>
+					<div class="Container100 Responsive100 Flex">
+						<div class="Card">
+							<div class="CardBigTopic">RECETA</div>
+							<div class="SeparatorFull"></div>
+							<div class="Container100 ui-fluid">
+								<p:dataTable id="cars1" var="item"
+									value="#{historiaClinicaDetalleController.listaUltimaReceta}"
+									selectionMode="single" rowKey="#{item.id}" rows="10"
+									emptyMessage="No se encontraron registros." reflow="true">
+
+									<p:column headerText="Nro de Receta" width="10%">
+										<h:outputText value="#{item.receta}" />
+									</p:column>
+
+									<p:column headerText="Medicamento" width="45%">
+										<h:outputText
+											value="#{item.medicamento.nombreGenerico} - #{item.medicamento.presentacion}" />
+									</p:column>
+
+									<p:column headerText="Medico" width="30%">
+										<h:outputText value="#{item.cantidad}" />
+									</p:column>
+
+									<p:column headerText="Fecha" width="15%">
+										<h:outputText value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="Container50 Responsive100 TexAlLeft">
+
+					<div class="Container20 Responsive100 TexAlLeft">
+						<p:outputLabel for="evolucion" value="Evolución:" />
+					</div>
+					<div class="Container60 Responsive100 TexAlLeft">
+						<p:inputTextarea id="evolucion"
+							value="#{historiaClinicaDetalleController.evolucion.evolucion}"
+							style="width:100%">
+							<p:ajax event="change" update="evolucion" />
+						</p:inputTextarea>
+						<p:message for="evolucion" display="tooltip" />
+					</div>
+
+				</div>
+
+				<div class="Container50 Responsive100 TexAlLeft">
+
+					<div class="Container20 Responsive100 TexAlLeft">
+						<p:outputLabel for="observacion" value="Observación:" />
+					</div>
+					<div class="Container60 Responsive100 TexAlLeft">
+						<p:inputTextarea id="observacion"
+							value="#{historiaClinicaDetalleController.evolucion.observacion}"
+							style="width:100%">
+							<p:ajax event="change" update="observacion" />
+						</p:inputTextarea>
+						<p:message for="observacion" display="tooltip" />
+					</div>
+
+				</div>
+
+				<div class="Container60 Responsive100 TexAlLeft">
+
+					<div class="Container20 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+							styleClass="Fs14 White OrangeButton">
+							<p:ajax update="form001"
+								listener="#{historiaClinicaDetalleController.cancelarEvolucion()}" />
+						</p:commandButton>
+					</div>
+					<div class="Container20 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-check" value="Guardar"
+							styleClass="Fs14 White GreenButton" update="form001"
+							actionListener="#{historiaClinicaDetalleController.registrarEvolucion}">
+						</p:commandButton>
+					</div>
+				</div>
+
+				<!-- listado  -->
+				<div class="Container100 Responsive100 Flex">
+
+					<div class="Card">
+						<p:dataTable id="singleDT" var="item" widgetVar="DiagnosticoTable"
+							value="#{historiaClinicaDetalleController.listaEvoluciones}"
+							selectionMode="single"
+							selection="#{historiaClinicaDetalleController.evolucionSelected}"
+							style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+							emptyMessage="No se encontraron Registros." rowKey="#{item.id}"
+							reflow="true">
+
+							<p:ajax event="rowSelect"
+								listener="#{historiaClinicaDetalleController.onRowSelectEvolucion}"
+								update="form001" />
+
+							<p:column headerText="Evolución" filterBy="#{item.evolucion}">
+								<h:outputText value="#{item.evolucion}" />
+							</p:column>
+							<p:column headerText="Observación" filterBy="#{item.observacion}">
+								<h:outputText value="#{item.observacion}" />
+							</p:column>
+							<p:column headerText="Médico" filterBy="#{item.medico.nombre}">
+								<h:outputText value="#{item.medico.nombre}" />
+							</p:column>
+							<p:column headerText="Fecha Registro"
+								filterBy="#{item.fechaRegistro}">
+								<h:outputText value="#{item.fechaRegistro}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column style="width:30px">
+								<p:commandButton type="button" icon="fa fa-trash-o"
+									styleClass="Fs14 White RedButton">
+									<p:ajax update="singleDT"
+										listener="#{historiaClinicaDetalleController.onRowDeleteEvolucion(item)}" />
+								</p:commandButton>
+							</p:column>
+							<f:facet name="footer">
+								<h:outputText
+									value="#{historiaClinicaDetalleController.listaEvoluciones.size()} Registros en Total" />
+							</f:facet>
+						</p:dataTable>
+						<p:growl id="msgs2" showDetail="true" for="singleDT" />
+					</div>
+				</div>
+
+			</h:form>
+			<!-- END DIALOG -->
+		</div>
+
+
+	</div>
+
+
+</ui:composition>

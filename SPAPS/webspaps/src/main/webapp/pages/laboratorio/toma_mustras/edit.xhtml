@@ -1,0 +1,180 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Container100 NoIndent Flex FlexWrap">
+			<div class="Container100 Responsive100 Flex">
+				<ui:fragment>
+					<div class="Container100">
+						<div class="Card">
+							<p:panel header="Datos Programacion" toggleable="true">
+								<div class="Container100 ui-fluid">
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="codigo" value="Codigo" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="codigo" readonly="true"
+												rendered="#{labProgramacionOrdenController.labProgramacionOrden.tipoOrden=='LABORATORIO'}"
+												value="#{labProgramacionOrdenController.labProgramacionOrden.orden.codigo}">
+											</p:inputText>
+											<p:inputText id="codigo1" readonly="true"
+												rendered="#{labProgramacionOrdenController.labProgramacionOrden.tipoOrden=='IMAGENOLOGIA'}"
+												value="#{labProgramacionOrdenController.labProgramacionOrden.ordenImag.codigo}">
+											</p:inputText>
+											<p:message for="codigo" display="tooltip" />
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="pacienteID" value="Paciente" />
+										</div>
+
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="pacienteID" readonly="true"
+												rendered="#{labProgramacionOrdenController.labProgramacionOrden.tipoOrden=='LABORATORIO'}"
+												value="#{labProgramacionOrdenController.labProgramacionOrden.orden.paciente.nombre} #{labProgramacionOrdenController.labProgramacionOrden.orden.paciente.apellidoPaterno} #{labProgramacionOrdenController.labProgramacionOrden.orden.paciente.apellidoMaterno}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:inputText id="pacienteeID" readonly="true"
+												rendered="#{labProgramacionOrdenController.labProgramacionOrden.tipoOrden=='IMAGENOLOGIA'}"
+												value="#{labProgramacionOrdenController.labProgramacionOrden.ordenImag.paciente.nombre} #{labProgramacionOrdenController.labProgramacionOrden.ordenImag.paciente.apellidoPaterno} #{labProgramacionOrdenController.labProgramacionOrden.ordenImag.paciente.apellidoMaterno}">
+												<p:ajax event="change" />
+											</p:inputText>
+										</div>
+
+
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="fechaID" value="Fecha" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:calendar id="fechaID" required="true" readonly="true"
+												value="#{labProgramacionOrdenController.labProgramacionOrden.fecha}"
+												pattern="dd/MM/yyyy HH:mm" mask="true" lang="en" />
+											<p:message for="fechaID" display="tooltip" />
+										</div>
+									</div>
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="medicoID" value="Medico" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="medicoID" readonly="true"
+												value="#{labProgramacionOrdenController.labProgramacionOrden.medico.nombre} #{labProgramacionOrdenController.labProgramacionOrden.medico.apellidoPaterno} #{labProgramacionOrdenController.labProgramacionOrden.medico.apellidoMaterno}">
+												<p:ajax event="change" />
+											</p:inputText>
+
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="especialidadID" value="Especialidad" />
+										</div>
+										<div class="Container60 Responsive50 TexAlLeft">
+											<p:inputText id="especialidadID" readonly="true"
+												value="#{labProgramacionOrdenController.labProgramacionOrden.especialidad}">
+											</p:inputText>
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="estados" value="Estado" />
+										</div>
+										<div class="Container60 Responsive50">
+											<p:selectOneMenu id="estados" style=""
+												value="#{labProgramacionOrdenController.labProgramacionOrden.estado}">
+												<p:ajax event="valueChange" update="estados" />
+												<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+												<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+											</p:selectOneMenu>
+											<p:message for="estados" display="tooltip" />
+										</div>
+									</div>
+								</div>
+							</p:panel>
+						</div>
+					</div>
+				</ui:fragment>
+
+			</div>
+
+			<div class="Container100 Responsive100 Flex">
+				<div class="Card">
+					<div class="CardBigTopic Container90 Responsive100 TexAlLeft">
+						MUESTRAS</div>
+					<div class="CardBigTopic Container10 Responsive100 TexAlRight"
+						style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+						<p:commandButton icon="fa fa-plus"
+							styleClass="Fs14 White GreenButton" immediate="true"
+							actionListener="#{labProgramacionOrdenController.actionNuevoMuestra()}" />
+					</div>
+					<div class="SeparatorFull"></div>
+					<div class="Container100 ui-fluid">
+
+						<p:dataTable var="car"
+							value="#{labProgramacionOrdenController.labProgramacionOrden.listMuestras}"
+							selection="#{labProgramacionOrdenController.selectedMuestra}"
+							selectionMode="single" rowKey="#{car.id}" reflow="true">
+
+							<f:facet name="header">
+										Lista de Muestras
+								</f:facet>
+
+							<p:ajax update="form001" event="rowSelect"
+								listener="#{labProgramacionOrdenController.onRowSelectMuestra}" />
+
+							<p:column width="5%" headerText="Id">
+								<h:outputText value="#{car.id}" />
+							</p:column>
+							<p:column width="20%" headerText="Tipo Muestra">
+								<h:outputText value="#{car.tipoMuestra}" />
+							</p:column>
+							<p:column width="20%" headerText="Recipientes">
+								<h:outputText value="#{car.codigoTubos}" />
+							</p:column>
+
+							<p:column width="20%" headerText="Encargado">
+								<h:outputText value="#{car.encargado}" />
+							</p:column>
+							<p:column width="25%" headerText="Fecha">
+								<h:outputText value="#{car.fechaRegistro}">
+									<f:convertDateTime pattern="dd/MM/yyy HH:mm" />
+								</h:outputText>
+							</p:column>
+							<p:column width="20%" headerText="Acción">
+
+								<p:commandButton icon="fa fa-edit"
+									styleClass="Fs14 White BlueButton" immediate="true"
+									actionListener="#{labProgramacionOrdenController.actionModificarMuetra(car)}" />
+								<p:commandButton icon="fa fa-trash-o"
+									styleClass="Fs14 White RedButton" update="form001"
+									actionListener="#{labProgramacionOrdenController.onRowDeleteMuestra(car)}">
+									<p:confirm header="¿ESTA SEGURO DE ELIMINAR ESTA DETALLE?"
+										message="Tenga en cuenta que será eliminado definitivamente del sistema."
+										icon="ui-icon-alert" />
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

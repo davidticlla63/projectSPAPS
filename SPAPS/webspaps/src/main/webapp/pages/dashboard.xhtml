@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Frecuencia</title>
+		<f:event listener="#{indiceController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="Container100" onload="#{indiceController.cargarIndice()}">
+			<div class="Card TexAlCenter">
+				<br /> <br /> <br /> <br />
+				<h1 class="BigTopic">Sistema Web</h1>
+				<br /> <br /> <br /> <br />
+				<h:graphicImage  name="/image/logo-spaps.jpg"
+					library="spaps" width="350px;" />
+				<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+				<h1 style="color: #F77B16; font-family: sans-serif;">Bienvenido
+					al Sistema</h1>
+
+			</div>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

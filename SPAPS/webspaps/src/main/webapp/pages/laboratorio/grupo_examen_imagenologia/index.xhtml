@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+		<!-- IMPEDIR QUE EL USUARIO REGRESE A ESTA PAGINA -->
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<script type="text/javascript">
+			if(history.forward(1)){
+			    location.replace( history.forward(1) );
+			 }
+		</script>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container70 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-plus"
+							rendered="#{labGrupoExamenImagController.crear}"
+							styleClass="Fs14 White GreenButton" value="Nueva Grupo Examen"
+							update="form001" immediate="true"
+							actionListener="#{labGrupoExamenImagController.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{labGrupoExamenImagController.seleccionado or labGrupoExamenImagController.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{labGrupoExamenImagController.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{labGrupoExamenImagController.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001"
+							actionListener="#{labGrupoExamenImagController.registrar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{labGrupoExamenImagController.seleccionado}"
+							value="Modificar" styleClass="Fs14 White BlueButton"
+							update="form001"
+							actionListener="#{labGrupoExamenImagController.actualizar()}">
+						</p:commandButton>
+
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							rendered="#{labGrupoExamenImagController.seleccionado}"
+							value="Eliminar" styleClass="Fs14 White RedButton">
+							<p:ajax update="form001"
+								listener="#{labGrupoExamenImagController.eliminar()}" />
+						</p:commandButton>
+
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Param. Lab."
+								url="/pages/laboratorio/index.xhtml" />
+							<p:menuitem value="Grupo Examen"
+								url="/pages/laboratorio/grupo_examen/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{labGrupoExamenImagController.currentPage}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

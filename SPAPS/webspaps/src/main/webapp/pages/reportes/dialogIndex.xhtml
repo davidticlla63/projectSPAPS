@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<p:dialog showEffect="explode" header="Reporte"
+		widgetVar="dlgVistaPrevia" resizable="true" modal="true"
+		position="top" width="800" styleClass="customDialog"
+		id="modalVistaPrevia">
+		<h:form id="formModalVistaPrevia">
+			<p:media player="pdf" rendered="true" value="#{sessionMain.url}"
+				width="750px" height="480px" />
+		</h:form>
+	</p:dialog>
+</ui:composition>

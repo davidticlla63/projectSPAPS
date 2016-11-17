@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic">LISTADO DE SUCURSAL</div>
+				<div class="SeparatorFull"></div>
+				<div class="Container100 ui-fluid">
+					<p:dataTable id="singleDT1" var="var"
+						value="#{sucursalController.listaSucursal}" selectionMode="single"
+						selection="#{sucursalController.sucursal}" rowKey="#{var.id}"
+						paginator="true" emptyMessage="No se encontraron registros."
+						reflow="true">
+						<f:facet name="header">
+							Seleccione una sucursal para ver su detalle.
+						</f:facet>
+						
+							<p:ajax update="form001" event="rowSelect"
+							listener="#{sucursalController.onRowSelect}" />
+
+						<p:column width="18%" headerText="Nombre">
+							<h:outputText value="#{var.nombre}" />
+						</p:column>
+						
+						<p:column width="18%" headerText="Descripción">
+							<h:outputText value="#{var.descripcion}" />
+						</p:column>
+						
+						<p:column width="18%" headerText="Direción">
+							<h:outputText value="#{var.direccion}" />
+						</p:column>
+						
+						<p:column width="18%" headerText="Teléfono">
+							<h:outputText value="#{var.telefono}" />
+						</p:column>
+
+						<p:column width="9%" headerText="Estado">
+							<p:outputLabel styleClass="FontLatoBold Green"
+								rendered="#{var.estado=='AC'}" value="Activo"></p:outputLabel>
+							<p:outputLabel styleClass="FontLatoBold Red"
+								rendered="#{var.estado=='IN'}" value="Inactivo"></p:outputLabel>
+						</p:column>
+						<p:column width="10%" headerText="Fecha Registro">
+							<h:outputText value="#{var.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<f:facet name="footer">
+							<h:outputText
+								value="#{sucursalController.listaSucursal.size()} Registros en Total" />
+						</f:facet>
+					</p:dataTable>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

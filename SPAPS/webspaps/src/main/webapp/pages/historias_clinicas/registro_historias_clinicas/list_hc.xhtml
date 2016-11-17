@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic">LISTADO DE PACIENTES</div>
+				<div class="SeparatorFull"></div>
+				<div class="Container100 ui-fluid">
+					<p:dataTable id="singleHC" var="var"
+						value="#{hojaMedicaListController.listaHistoriaClinica}"
+						selectionMode="single"
+						selection="#{hojaMedicaListController.historiaClinicaSelected}"
+						rowKey="#{var.id}" emptyMessage="No se encontraron registros."
+						reflow="true">
+						<f:facet name="header">
+                        	Seleccione una Historia Clinica para ingresar al sistema
+                        </f:facet>
+
+						<p:ajax update="form001" event="rowSelect"
+							listener="#{hojaMedicaListController.onRowSelect}" />
+
+						<p:column width="5%" headerText="Accion">
+							<p:commandButton icon="fa fa-file-text-o"
+								styleClass="Fs14 White OrangeButton" update="form001"
+								immediate="true"
+								actionListener="#{hojaMedicaListController.redireccionar(var)}">
+							</p:commandButton>
+						</p:column>
+						<p:column width="10%" headerText="Codigo HC"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.codigo}">
+							<h:outputText value="#{var.codigo}" />
+
+						</p:column>
+						<p:column width="25%" headerText="Nombre Paciente"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;"
+							filterBy="#{var.paciente.nombre} #{var.paciente.apellidoPaterno} #{var.paciente.apellidoMaterno}">
+							<h:outputText
+								value="#{var.paciente.nombre} #{var.paciente.apellidoPaterno} #{var.paciente.apellidoMaterno}" />
+
+						</p:column>
+
+						<p:column width="25%" headerText="Nombre Medico"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;"
+							filterBy="#{var.medico.nombre} #{var.medico.apellidoPaterno} #{var.medico.apellidoMaterno}">
+							<h:outputText
+								value="#{var.medico.nombre} #{var.medico.apellidoPaterno} #{var.medico.apellidoMaterno}" />
+
+						</p:column>
+
+						<p:column width="12%" headerText="Estado"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.estado}">
+							<h:outputText value="#{var.estado}" />
+						</p:column>
+						<p:column width="12%" headerText="Fecha Registro"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.fechaRegistro}">
+							<h:outputText value="#{var.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column width="12%" headerText="Registro"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.usuarioRegistro}">
+							<h:outputText value="#{var.usuarioRegistro}" />
+						</p:column>
+
+						<f:facet name="footer">
+							<h:outputText
+								value="#{hojaMedicaListController.listaHistoriaClinica.size()} Registros en Total" />
+						</f:facet>
+					</p:dataTable>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

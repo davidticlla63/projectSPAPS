@@ -1,0 +1,166 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container40 Responsive100 Flex">
+		<div class="Card">
+			<div class="CardBigTopic">INFORMACIÓN NOTA VENTA</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+			<p:focus for="console" />
+				<p:panelGrid id="grid"  columns="3" style="border:0px none; background-color:transparent;" layout="grid"  styleClass="ui-panelgrid ui-widget ui-panelgrid-blank" >
+					
+					<p:outputLabel for="console" value="Console:" />
+					<p:selectOneRadio id="console"
+						value="#{notaVentaController.tipoCliente}">
+						<f:selectItem itemLabel="Particular" itemValue="par" />
+						<f:selectItem itemLabel="Empresa" itemValue="emp" />
+						<f:selectItem itemLabel="Seguro" itemValue="seg" />
+						<p:ajax event="change"
+							listener="#{notaVentaController.cargarOpciones()}"
+							update="form001" />
+					</p:selectOneRadio>
+					<p:message for="console" display="tooltip" />
+
+					<p:outputLabel for="nombre" value="Nombre "
+						rendered="#{notaVentaController.particular}" />
+					<p:inputText id="nombre" required="true"
+						value="#{notaVentaController.notaVenta.persona}"
+						rendered="#{notaVentaController.particular}">
+						<p:ajax event="change" />
+					</p:inputText>
+					<p:message for="nombre" display="tooltip"
+						rendered="#{notaVentaController.particular}" />
+
+					<p:outputLabel for="pacienteSeguro" value="Paciente "
+						rendered="#{notaVentaController.seguro}" />
+					<p:autoComplete id="pacienteSeguro" required="true"
+						rendered="#{notaVentaController.seguro}"
+						value="#{notaVentaController.notaVenta.paciente}" var="theme"
+						itemLabel="#{theme.nombre}" itemValue="#{theme}"
+						completeMethod="#{notaVentaController.onCompletePaciente}"
+						converter="#{pacienteConverter}" forceSelection="true"
+						dropdown="true" placeholder="Paciente">
+
+					</p:autoComplete>
+					<p:message for="pacienteSeguro" display="tooltip"
+						rendered="#{notaVentaController.seguro}" />
+
+					<p:outputLabel for="seguro" value="Seguro "
+						rendered="#{notaVentaController.seguro}" />
+					<p:autoComplete id="seguro" required="true"
+						rendered="#{notaVentaController.seguro}"
+						value="#{notaVentaController.seguroSeleccionado}" var="theme"
+						itemLabel="#{theme.nombre}" itemValue="#{theme}"
+						completeMethod="#{notaVentaController.onCompleteSeguro}"
+						converter="#{seguroConverter}" forceSelection="true"
+						dropdown="true" placeholder="Seguro">
+						<p:ajax event="itemSelect"
+							listener="#{notaVentaController.cargarlistaPreciosSeguro()}" />
+					</p:autoComplete>
+					<p:message for="seguro" display="tooltip"
+						rendered="#{notaVentaController.seguro}" />
+
+					<p:outputLabel for="pacienteEmpresa" value="Paciente "
+						rendered="#{notaVentaController.empresa}" />
+					<p:autoComplete id="pacienteEmpresa" required="true"
+						rendered="#{notaVentaController.empresa}"
+						value="#{notaVentaController.notaVenta.paciente}" var="theme"
+						itemLabel="#{theme.nombre}" itemValue="#{theme}"
+						completeMethod="#{notaVentaController.onCompletePaciente}"
+						converter="#{pacienteConverter}" forceSelection="true"
+						dropdown="true" placeholder="Paciente">
+						<p:ajax event="itemSelect"
+							listener="#{notaVentaController.cargarlistaPreciosEmpresa()}" />
+					</p:autoComplete>
+					<p:message for="pacienteEmpresa" display="tooltip"
+						rendered="#{notaVentaController.empresa}" />
+
+					<p:outputLabel for="empresa" value="Empresa "
+						rendered="#{notaVentaController.empresa}" />
+					<p:autoComplete id="empresa" required="true"
+						rendered="#{notaVentaController.empresa}"
+						value="#{notaVentaController.empresaSeleccionada}" var="theme"
+						itemLabel="#{theme.descripcion}" itemValue="#{theme}"
+						completeMethod="#{notaVentaController.onCompleteEmpresa}"
+						converter="#{empresaConverter}" forceSelection="true"
+						dropdown="true" placeholder="Empresa">
+					</p:autoComplete>
+					<p:message for="empresa" display="tooltip"
+						rendered="#{notaVentaController.empresa}" />
+
+					<p:outputLabel for="observacion" value="Observación " />
+					<p:inputTextarea id="observacion" required="true" rows="3"
+						value="#{notaVentaController.notaVenta.observacion}">
+						<p:ajax event="change" />
+					</p:inputTextarea>
+					<p:message for="observacion" display="tooltip" />
+
+				</p:panelGrid>
+			</div>
+		</div>
+	</div>
+	<div class="Container60 Responsive100 Flex">
+		<div class="Card">
+			<div class="CardBigTopic Container90 Responsive100 TexAlLeft">
+				DETALLE SERVICIOS AGREGADOS</div>
+			<div class="CardBigTopic Container10 Responsive100 TexAlRight">
+				<p:commandButton icon="fa fa-plus"
+					styleClass="Fs14 White GreenButton" immediate="true"
+					update="formDlgDetalleOrdenIngreso"
+					actionListener="#{notaVentaController.nuevoDetalleVenta()}" />
+			</div>
+
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+				<!-- DATATABLE -->
+				<p:dataTable id="singleDT2" var="var"
+					value="#{notaVentaController.notaVenta.listaDetalles}"
+					selection="#{notaVentaController.detalleNotaVenta}"
+					rowKey="#{var.id}" paginator="true"
+					emptyMessage="No se encontraron registros.">
+					<f:facet name="header">
+					La Nota de Venta debe tener por lo menos 1 Servicio Ingresado
+					</f:facet>
+
+					<p:column width="20%" headerText="Descripcion">
+						<h:outputText value="#{var.servicio.descripcion}" />
+					</p:column>
+
+					<p:column width="10%" headerText="Precio">
+						<h:outputText value="#{var.precioUnitario}" />
+					</p:column>
+
+					<p:column width="10%" headerText="Cantidad">
+						<h:outputText value="#{var.cantidad}" />
+					</p:column>
+
+					<p:column width="10%" headerText="Subtotal">
+						<h:outputText value="#{var.precioSubTotal}" />
+					</p:column>
+					<p:column width="12%" headerText="Acción">
+						<p:commandButton icon="fa fa-edit"
+							styleClass="Fs14 White BlueButton" immediate="true" />
+						<p:commandButton icon="fa fa-trash-o"
+							styleClass="Fs14 White RedButton"
+							update="singleDT2,formDlgDetalleOrdenIngreso"
+							actionListener="#{notaVentaController.eliminarDetalleVenta(var)}"
+							immediate="true">
+							<p:confirm header="¿ESTA SEGURO DE ELIMINAR ESTE SERVICIO?"
+								message="EL Servicio Sera Eliminado de la Nota de Venta"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</p:column>
+					<f:facet name="footer">
+						<h:outputText
+							value="#{notaVentaController.notaVenta.listaDetalles.size()} Registros en Total" />
+					</f:facet>
+				</p:dataTable>
+
+			</div>
+		</div>
+	</div>
+</ui:composition>

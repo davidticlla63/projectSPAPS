@@ -1,0 +1,184 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container70 Responsive100 TexAlLeft">
+
+						<p:commandButton icon="fa fa-arrow-left"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true">
+						</p:commandButton>
+
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Ventas" url="/pages/ventas/param/index.xhtml" />
+							<p:menuitem value="Parametrizaión Venta"
+								url="/pages/ventas/param/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{configuracionVentaController.page}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+		
+			<!-- PLAN DE CUENTA -->
+		<p:dialog header="SELECCION PLAN DE CUENTA" widgetVar="dlgPlanCuenta"
+			modal="true" visible="#{not empty facesContext.maximumSeverity}"
+			resizable="false" position="center" width="60%">
+			<h:form id="form">
+				<div class="row"></div>
+				<br />
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group ">
+							<div class="col-md-2">
+								<div class="form-group">
+									<p:outputLabel value=" Buscar Cuenta"></p:outputLabel>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<h:inputText value="#{planCuentaController.filterByCuenta}"
+										style=" color: #555555; background-image: none;"
+										styleClass="input-sm form-control">
+										<f:ajax />
+									</h:inputText>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<p:commandLink id="buttonBuscarCuenta"
+										style="height:25px; width:30px; padding-top: 3px;"
+										styleClass="btn btn-default btn-block">
+										<span class="btn-label"><i class="icon-magnifier"></i></span>
+										<p:ajax update="form"
+											listener="#{planCuentaController.buscarCuentasByFilter()}" />
+									</p:commandLink>
+								</div>
+							</div>
+							<div class="col-md-5"></div>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group ">
+							<div class="col-md-12">
+								<div class="form-group ">
+									<ui:fragment
+										rendered="#{ planCuentaController.mostrarTableBusqueda}">
+										<p:treeTable id="treeTablePlanCuenta" scrollable="true"
+											value="#{planCuentaController.root}" var="node"
+											selectionMode="single" scrollHeight="250" scrollWidth="100%"
+											emptyMessage="No se encontraron Cuentas."
+											selection="#{configuracionVentaController.selectedNode}"
+											style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;">
+											<p:ajax event="select"
+												listener="#{planCuentaController.onNodeSelect}" />
+											<p:column headerText="Código" width="15%">
+												<ui:fragment rendered="#{node.clase == 'CONTROL'}">
+													<h:outputText value="#{node.codigo}" />
+												</ui:fragment>
+												<ui:fragment rendered="#{node.clase != 'CONTROL'}">
+													<h:outputText value="#{node.codigo}" style="color:#5B9BE1;" />
+												</ui:fragment>
+											</p:column>
+											<p:column headerText="Cuenta">
+												<ui:fragment rendered="#{node.clase == 'CONTROL'}">
+													<h:outputText value="#{node.cuenta}" />
+												</ui:fragment>
+												<ui:fragment rendered="#{node.clase != 'CONTROL'}">
+													<h:outputText value="#{node.cuenta}"
+														style="color:#5B9BE1; " />
+												</ui:fragment>
+											</p:column>
+
+										</p:treeTable>
+									</ui:fragment>
+									<ui:fragment
+										rendered="#{ ! planCuentaController.mostrarTableBusqueda}">
+										<p:dataTable id="dataTableQuery" var="item" scrollable="true"
+											widgetVar="queryTable" selectionMode="single"
+											scrollHeight="250" scrollWidth="100%"
+											value="#{planCuentaController.listPlanCuentaCoincidencias}"
+											style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+											emptyMessage="No se encontraron Cuentas"
+											selection="#{configuracionContableController.planCuenta}"
+											rowKey="#{item.id}" reflow="true">
+
+											<p:ajax event="rowSelect"
+												listener="#{planCuentaController.onRowSelectPlanCuenta}" />
+
+											<p:column headerText="Código" style="text-align:center;">
+												<h:outputText value="#{item.codigo}"
+													style="text-align:center; color:#5B9BE1;" />
+											</p:column>
+
+											<p:column headerText="Cuenta">
+												<h:outputText value="#{item.descripcion}"
+													style="text-align:center; color:#5B9BE1;" />
+											</p:column>
+
+											<p:column headerText="Moneda">
+												<h:outputText value="#{item.monedaEmpresa.moneda.nombre}"
+													style="text-align:center; color:#5B9BE1;" />
+											</p:column>
+
+										</p:dataTable>
+									</ui:fragment>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-md-8"></div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<p:commandLink id="buttonOcultarPlanCuenta" value="&#160; Atras"
+								styleClass="btn btn-warning ion-minus-circled btn-block"
+								style="height:31px; padding:center"
+								onclick="PF('dlgPlanCuenta').hide()">
+							</p:commandLink>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<p:commandLink id="buttonAceptar" value="&#160; Aceptar"
+							onclick="PF('dlgPlanCuenta').hide();" style="height:31px;"
+							styleClass="btn btn-primary ion-checkmark btn-block">
+							<p:ajax update="form001"
+								listener="#{configuracionVentaController.cargarSeleccionCuenta()}" />
+						</p:commandLink>
+					</div>
+				</div>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

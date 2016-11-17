@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="Container100 Responsive100 TexAlLeft"
+		onload="#{historiaClinicaDetalleController.resetMotivo()}">
+
+		<div class="Container100 Responsive100 TexAlLeft">
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<p:commandButton type="button" icon="fa fa-plus"
+					styleClass="Fs14 White GreenButton" value="Nuevo Motivo">
+					<p:ajax update="form001"
+						listener="#{historiaClinicaDetalleController.actionNuevoMotivo()}" />
+				</p:commandButton>
+			</div>
+
+		</div>
+
+
+		<!-- listado  -->
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<p:dataTable id="singleDT" var="item" widgetVar="MotivoTable"
+					value="#{historiaClinicaDetalleController.listaMotivos}"
+					selectionMode="single" scrollRows="10" scrollable="true"
+					liveScroll="true" scrollHeight="150"
+					selection="#{historiaClinicaDetalleController.motivoSelected}"
+					style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+					emptyMessage="No se encontraron Registros." rowKey="#{item.id}"
+					reflow="true">
+
+					<p:ajax event="rowSelect"
+						listener="#{historiaClinicaDetalleController.onRowSelectMotivos()}"
+						update="form001" />
+
+					<p:column headerText="Motivo" filterBy="#{item.descripcion}"
+						width="40%">
+						<h:outputText value="#{item.descripcion}" />
+					</p:column>
+
+					<p:column width="40%" headerText="Médico"
+						filterBy="#{item.medico.nombre}">
+						<h:outputText
+							value="#{item.medico.nombre} #{item.medico.apellidoPaterno} #{item.medico.apellidoMaterno} - #{item.medico.obtenerEspecialidadActiva().nombre}" />
+					</p:column>
+
+					<p:column width="20%" headerText="Fecha Registro"
+						filterBy="#{item.fechaRegistro}">
+						<h:outputText value="#{item.fechaRegistro}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+					<p:column style="width:30px">
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							styleClass="Fs14 White RedButton">
+							<p:ajax update="singleDT"
+								listener="#{historiaClinicaDetalleController.onRowDeleteMotivo(item)}" />
+						</p:commandButton>
+					</p:column>
+					<f:facet name="footer">
+						<h:outputText
+							value="#{historiaClinicaDetalleController.listaMotivos.size()} Registros en Total" />
+					</f:facet>
+				</p:dataTable>
+			</div>
+		</div>
+
+		<!-- BEGIN DIALOG -->
+		<div class="Container100 Responsive100 TexAlLeft">
+			<p:dialog header="INFORMACION DE MOTIVOS" widgetVar="dlgMotivo"
+				width="600px" responsive="true" modal="true" resizable="false"
+				closable="false">
+				<h:form id="formDlg001">
+					<p:focus for="descripcion" />
+					<div class="Container100 Responsive100 TexAlLeft">
+
+						<div class="Container20 Responsive100 TexAlLeft">
+							<p:outputLabel for="descripcion" value="Descripcion:" />
+						</div>
+					</div>
+
+					<div class="Container100 Responsive100 TexAlLeft">
+						<div class="Container100 Responsive100 TexAlLeft">
+							<p:inputTextarea id="descripcion" maxlength="100"
+								autoResize="true" style="width:500px"
+								value="#{historiaClinicaDetalleController.motivo.descripcion}">
+								<p:ajax event="change" />
+							</p:inputTextarea>
+							<p:message for="descripcion" display="tooltip" />
+						</div>
+					</div>
+
+					<div class="Container60 Responsive100 TexAlLeft">
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+								styleClass="Fs14 White OrangeButton"
+								oncomplete="PF('dlgMotivo').hide()">
+							</p:commandButton>
+						</div>
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-check" value="Guardar"
+								styleClass="Fs14 White GreenButton" update="formDlg001,form001"
+								actionListener="#{historiaClinicaDetalleController.registrarMotivo}">
+							</p:commandButton>
+						</div>
+					</div>
+
+				</h:form>
+			</p:dialog>
+		</div>
+		<!-- END DIALOG -->
+	</div>
+
+
+</ui:composition>

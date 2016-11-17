@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();" 
+		timeout="#{ 899999 }" />
+	<!-- TIME  14:59.9 min = 899999 | 5 seg=5000 -->
+
+	<p:dialog header="#{messages.SessionExpired}" widgetVar="sessionTimeOutDialog"
+		modal="true" fixedCenter="true" closable="false" width="35%"
+		visible="false">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<div class="col-md-12">
+						<h:outputText
+							value="#{messages.SessionExpired}" />
+							<!-- , tiempo de inactividad 15 minutos. -->
+					</div>
+				</div>
+				
+				<br/>
+				
+				<div class="form-group">
+					<div class="col-md-6"></div>
+					<div class="col-md-6">
+						<p:commandButton id="confirmBackToLogin"
+							value="#{messages.ButtonSessionExpired}"
+							onclick="window.location='#{facesContext.externalContext.requestContextPath}/logoutServlet';">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</p:dialog>
+
+</ui:composition>

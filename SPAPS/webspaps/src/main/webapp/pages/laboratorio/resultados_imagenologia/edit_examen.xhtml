@@ -1,0 +1,263 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Container100 NoIndent Flex FlexWrap">
+			<div class="Container100 Responsive100 Flex">
+				<ui:fragment>
+					<div class="Container100">
+						<div class="Card">
+							<p:panel header="Datos Orden Imagenologia" toggleable="true">
+
+								<div class="Container100 ui-fluid">
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="codigo" value="Codigo" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="codigo" readonly="true"
+												value="#{labOrdenResultadosImagController.labOrden.codigo}">
+											</p:inputText>
+											<p:message for="codigo" display="tooltip" />
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="pacienteID" value="Paciente" />
+										</div>
+
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="pacienteID" readonly="true"
+												value="#{labOrdenResultadosImagController.labOrden.paciente.nombre} #{labOrdenResultadosImagController.labOrden.paciente.apellidoPaterno} #{labOrdenResultadosImagController.labOrden.paciente.apellidoMaterno}">
+												<p:ajax event="change" />
+											</p:inputText>
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="medicoID" value="Medico" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="medicoID" readonly="true"
+												value="#{labOrdenResultadosImagController.labOrden.medico.nombre} #{labOrdenResultadosImagController.labOrden.medico.apellidoPaterno} #{labOrdenResultadosImagController.labOrden.medico.apellidoMaterno}">
+												<p:ajax event="change" />
+											</p:inputText>
+
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="especialidadID" value="Especialidad" />
+										</div>
+										<div class="Container60 Responsive50 TexAlLeft">
+											<p:inputText id="especialidadID" readonly="true"
+												value="#{labOrdenResultadosImagController.labOrden.especialidad}">
+											</p:inputText>
+										</div>
+
+
+									</div>
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="fechaID" value="Fecha" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:calendar id="fechaID" required="true"
+												value="#{labOrdenResultadosImagController.labOrden.fecha}"
+												pattern="dd/MM/yyyy HH:mm" mask="true" lang="en" />
+											<p:message for="fechaID" display="tooltip" />
+										</div>
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="comentario" value="Descripcion" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputTextarea id="comentario"
+												value="#{labOrdenResultadosImagController.labOrden.descripcion}">
+												<p:ajax event="change" />
+											</p:inputTextarea>
+											<p:message for="comentario" display="tooltip" />
+										</div>
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="lugar" value="Sucursal" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="lugar" readonly="true"
+												value="#{labOrdenResultadosImagController.labOrden.sucursal.nombre} #{labOrdenResultadosImagController.labOrden.sucursal.ciudad.nombre}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="lugar" display="tooltip" />
+										</div>
+
+									</div>
+								</div>
+							</p:panel>
+
+						</div>
+					</div>
+				</ui:fragment>
+
+			</div>
+
+			<div class="Container100 Responsive100 Flex">
+				<div class="Card">
+
+					<div class="Container100 ui-fluid">
+
+						<div class="Container100 Responsive100 NoIndent OvHidden ui-fluid">
+
+							<div
+								class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="descripcion" value="Examen" />
+							</div>
+							<div class="Container20 Responsive50 TexAlRight">
+								<p:inputText id="descripcion" readonly="true"
+									value="#{labOrdenResultadosImagController.newExamenDetalle.descripcion}">
+								</p:inputText>
+								<p:message for="descripcion" display="tooltip" />
+							</div>
+							<div
+								class="Container10 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="observacion" value="Observacion" />
+							</div>
+							<div class="Container20 Responsive50 TexAlRight">
+								<p:inputTextarea id="observacion"
+									value="#{labOrdenResultadosImagController.newExamenDetalle.observacion}">
+									<p:ajax event="change" />
+								</p:inputTextarea>
+								<p:message for="observacion" display="tooltip" />
+							</div>
+
+						</div>
+					</div>
+					<div class="Container100 ui-fluid">
+
+						<p:dataTable var="item" id="resultadoID"
+							value="#{labOrdenResultadosImagController.newExamenDetalle.listOrdenSubDetalle}"
+							editable="true" style="margin-bottom:20px; size:10px"
+							reflow="true">
+
+							<f:facet name="header">
+										Lista de Resultados
+									</f:facet>
+
+							<p:column width="20%" headerText="Nombre">
+								<h:outputText value="#{item.descripcion}" />
+							</p:column>
+							<p:column width="20%" headerText="Parametros">
+								<h:outputText value="#{item.parametros}" />#{'  '}
+								<h:outputText value="#{item.unidaMedida}" />
+							</p:column>
+							<p:column width="10%" headerText="Resultados">
+								<p:inputText value="#{item.resultado}"
+									style="text-align: right;">
+									<p:ajax event="change" update="resultadoID" />
+								</p:inputText>
+							</p:column>
+							<p:column width="20%" headerText="Observacion">
+								<p:inputText value="#{item.observacion}">
+									<p:ajax event="change" update="resultadoID" />
+								</p:inputText>
+							</p:column>
+							<p:column width="10%" headerText="Estado">
+								<span class="FontLatoBold Fs14 Green DispBlock"> <h:outputText
+										rendered="#{item.completado=='false'}" value="Nuevo" />
+								</span>
+								<span class="FontLatoBold Fs14 Blue DispBlock"> <h:outputText
+										rendered="#{item.completado=='true'}" value="Completado" />
+								</span>
+							</p:column>
+							<f:facet name="footer">
+								<p:progressBar 
+									value="#{labOrdenResultadosImagController.newExamenDetalle.porcentaje}"
+									labelTemplate="#{labOrdenResultadosImagController.newExamenDetalle.porcentaje}%"
+									displayOnly="true" />
+							</f:facet>
+						</p:dataTable>
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="Container100 Responsive100 Flex">
+				<div class="Card">
+
+					<div class="CardBigTopic Container100 Responsive10 TexAlRight"
+						style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+
+						<p:fileUpload uploadLabel="Foto" cancelLabel="Cancelar"
+							fileUploadListener="#{fileUploadBean.handleFileUpload}"
+							label="Subir" mode="advanced" skinSimple="true"
+							update="messages, files" sizeLimit="10000000000" auto="true"
+							allowTypes="/(\.|\/)(gif|jpe?g|zip|png)$/" />
+						<p:growl id="messages" showDetail="true" />
+					</div>
+					<div class="Container100 ui-fluid">
+						<p:dataTable id="files" var="item"
+							value="#{fileUploadBean.listArchivos}" editable="true"
+							style="margin-bottom:20px; size:10px" reflow="true">
+
+							<f:facet name="header">
+										Lista de Archivos
+									</f:facet>
+
+							<p:column width="20%" headerText="Nombre">
+
+								<p:graphicImage id="img" rendered="#{!item.enviado}"
+									value="#{fileUploadBean.content}" cache="false" width="50"
+									height="50">
+									<f:param name="param" value="#{item.id}" />
+								</p:graphicImage>
+								<p:graphicImage rendered="#{item.enviado}" value="#{item.path}"
+									cache="false" width="50" height="50">
+								</p:graphicImage>
+							</p:column>
+							<p:column width="20%" headerText="Archivo">
+								<h:outputText value="#{item.nombre}" />
+							</p:column>
+							<p:column width="20%" headerText="Fecha">
+								<h:outputText value="#{item.fecha}"
+									converter="javax.faces.DateTime" />
+							</p:column>
+							<p:column width="20%" headerText="Enviado">
+								<h:outputText rendered="#{!item.enviado}" value="No" />
+								<h:outputText rendered="#{item.enviado}" value="Si" />
+							</p:column>
+							<p:column width="20%" headerText="Comentario">
+								<p:inputTextarea value="#{item.comentario}">
+									<p:ajax event="change" />
+								</p:inputTextarea>
+							</p:column>
+							<p:column width="10%" headerText="Acción">
+								<p:commandButton rendered="#{!item.enviado}"
+									icon="fa fa-trash-o" styleClass="Fs14 White RedButton"
+									update="form001"
+									actionListener="#{fileUploadBean.removeItem(item)}">
+									<p:confirm header="¿ESTA SEGURO DE ELIMINAR FOTO?"
+										message="Tenga en cuenta que será eliminado definitivamente del sistema."
+										icon="ui-icon-alert" />
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

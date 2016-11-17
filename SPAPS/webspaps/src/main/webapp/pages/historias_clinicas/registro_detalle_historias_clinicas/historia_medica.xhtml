@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>HistoriaMedica</title>
+		<style type="text/css">
+.ui-datatable-reflow .ui-datatable-data .ui-expanded-row-content thead .ui-column-title
+	{
+	display: inline;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+
+			<div class="Container100">
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment>
+						<div class="Container100">
+							<div class="Card">
+								<p:panel toggleable="true" header="Datos Generales:">
+									<div class="Container100 ui-fluid">
+										<div
+											class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="codigo" value="Codigo" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<p:inputText id="codigo" readonly="true"
+													value="#{historiaClinicaDetalleController.historiaMedica.codigo}">
+												</p:inputText>
+												<p:message for="codigo" display="tooltip" />
+											</div>
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="pacienteID" value="Paciente" />
+											</div>
+											<div class="Container60 Responsive50 TexAlLeft">
+												<p:inputText id="pacienteID" readonly="true"
+													value="#{historiaClinicaDetalleController.historiaMedica.paciente.nombre} #{historiaClinicaDetalleController.historiaMedica.paciente.apellidoPaterno} #{historiaClinicaDetalleController.historiaMedica.paciente.apellidoMaterno}">
+
+												</p:inputText>
+
+											</div>
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="fechaNacimientoID"
+													value="Fecha Nacimiento" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<p:calendar id="fechaNacimientoID" required="false"
+													readonly="true" placeholder="29/01/2016"
+													value="#{historiaClinicaDetalleController.historiaMedica.paciente.fechaNacimiento}"
+													pattern="dd/MM/yyyy" mask="true" lang="en" />
+												<p:message for="fechaNacimientoID" display="tooltip" />
+											</div>
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="edadID" value="Edad" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<p:inputText id="edadID" readonly="true"
+													value="#{historiaClinicaDetalleController.historiaMedica.paciente.edad}">
+												</p:inputText>
+												<p:message for="edadID" display="tooltip" />
+											</div>
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="sexo" value="Sexo:" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<span><h:outputText id="sexo"
+														rendered="#{historiaClinicaDetalleController.historiaMedica.paciente.sexo == 'MASCULINO'}"
+														value="Masculino" /></span> <span><h:outputText
+														rendered="#{historiaClinicaDetalleController.historiaMedica.paciente.sexo == 'FEMENINO'}"
+														value="Femenino" /></span>
+											</div>
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="estadoCivil" value="Estado Civil:" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<p:inputText id="estadoCivil" readonly="true"
+													value="#{historiaClinicaDetalleController.historiaMedica.paciente.estadoCivil.descripcion}">
+												</p:inputText>
+												<p:message for="edadID" display="tooltip" />
+											</div>
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="comentario" value="Comentario" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<p:inputTextarea id="comentario" required="true"
+													readonly="true"
+													value="#{historiaClinicaDetalleController.historiaMedica.descripcion}">
+													<p:ajax event="change" />
+												</p:inputTextarea>
+												<p:message for="comentario" display="tooltip" />
+											</div>
+
+										</div>
+										<div
+											class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="medicoID" value="Medico" />
+											</div>
+											<div class="Container60 Responsive50 TexAlLeft">
+												<p:inputText id="medicoID" readonly="true"
+													value="#{historiaClinicaDetalleController.historiaMedica.medico.nombre} #{historiaClinicaDetalleController.historiaMedica.medico.apellidoPaterno} #{historiaClinicaDetalleController.historiaMedica.medico.apellidoMaterno}">
+
+												</p:inputText>
+											</div>
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="especialidadID" value="Especialidad" />
+											</div>
+											<div class="Container60 Responsive50 TexAlLeft">
+												<p:inputText id="especialidadID" readonly="true"
+													value="#{historiaClinicaDetalleController.historiaMedica.medico.obtenerEspecialidadActiva().nombre}">
+
+												</p:inputText>
+											</div>
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="fechaID" value="Fecha Apertura:" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<p:calendar id="fechaID" required="false"
+													value="#{historiaClinicaDetalleController.historiaMedica.fechaApertura}"
+													pattern="dd/MM/yyyy HH:mm" mask="true" lang="en" />
+												<p:message for="fechaID" display="tooltip" />
+											</div>
+
+
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="lugar" value="Lugar" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<p:inputText id="lugar" readonly="true"
+													value="#{historiaClinicaDetalleController.historiaMedica.lugar}">
+													<p:ajax event="change" />
+												</p:inputText>
+												<p:message for="lugar" display="tooltip" />
+											</div>
+
+
+											<div
+												class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+												<p:outputLabel for="cerrarConsulta" value="" />
+											</div>
+											<div class="Container60 Responsive50">
+												<p:commandButton id="cerrarConsulta" type="button"
+													icon="fa fa-trash-o" value="Cerrar Consulta"
+													styleClass="Fs14 White RedButton">
+													<p:ajax update="form001"
+														listener="#{historiaClinicaDetalleController.cerrarConsulta()}" />
+												</p:commandButton>
+												<p:message for="cerrarConsulta" display="tooltip" />
+											</div>
+										</div>
+									</div>
+								</p:panel>
+
+							</div>
+						</div>
+					</ui:fragment>
+
+					<ui:fragment>
+
+						<div class="Container100 Responsive100 Flex">
+
+							<p:selectOneButton
+								value="#{historiaClinicaDetalleController.pagina}">
+								<p:ajax event="change" update="form001"
+									listener="#{historiaClinicaDetalleController.onSelectPagina}" />
+								<f:selectItem itemLabel="Antecedentes" itemValue="antecedentes" />
+								<f:selectItem itemLabel="Motivos de Consulta"
+									itemValue="motivos" />
+								<f:selectItem itemLabel="Enfermedad Actual"
+									itemValue="enfermedades" />
+								<f:selectItem itemLabel="Examen Fisico"
+									itemValue="examen_fisico_medico" />
+								<f:selectItem itemLabel="Diagnostico"
+									itemValue="diagnosticos_principal" />
+								<f:selectItem itemLabel="Examenes"
+									itemValue="estudios_principal" />
+								<f:selectItem itemLabel="Prescripcion" itemValue="indicaciones" />
+								<f:selectItem itemLabel="Referencia"
+									itemValue="transferencias_principal" />
+								<f:selectItem itemLabel="Evolucion" itemValue="evoluciones" />
+							</p:selectOneButton>
+
+						</div>
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<ui:include
+								src="#{historiaClinicaDetalleController.currentPage1}" />
+						</div>
+
+					</ui:fragment>
+
+
+
+				</div>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

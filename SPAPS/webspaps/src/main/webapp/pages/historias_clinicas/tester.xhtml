@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Tester File</title>
+		<f:event listener="#{tester1Controller.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TexAlLeft">
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{tester1Controller.crear}"
+								styleClass="Fs14 White GreenButton" value="Nuevo Motivo">
+								<p:ajax update="form001"
+									listener="#{tester1Controller.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{tester1Controller.modificar or tester1Controller.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{tester1Controller.initNew()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{tester1Controller.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar">
+								<p:ajax update="form001"
+									actionListener="#{tester1Controller.add()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{tester1Controller.modificar}" value="Modificar"
+								styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{tester1Controller.modificar}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{tester1Controller.modificar}" value="Eliminar"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{tester1Controller.eliminar()}" />
+							</p:commandButton>
+						</div>
+						<div class="Container25 Responsive100 TexAlRight">
+							<p:breadCrumb>
+								<p:menuitem value="."
+									url="#{request.contextPath}/dashboard.xhtml" />
+								<p:menuitem value="Seguridad"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+								<p:menuitem value="Pais"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+							</p:breadCrumb>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment
+						rendered="#{tester1Controller.modificar or tester1Controller.registrar}">
+
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<div class="CardBigTopic">INFORMACIÓN DE BARRIO</div>
+								<div class="SeparatorFull"></div>
+								<div class="Container100 ui-fluid">
+									<p:focus for="nombre" />
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="nombre" value="Nombre" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="nombre" required="true"
+												value="#{tester1Controller.testerFile.nombre}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="nombre" display="tooltip" />
+										</div>
+
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="file" value="Archivo" />
+										</div>
+										<div class="Container60 Responsive50">
+											<p:fileUpload id="file" value="#{tester1Controller.file}"
+												mode="single" update="file" dragDropSupport="true"
+												sizeLimit="0" allowTypes="/(\.|\/)(pdf|doc?x|xls|png)$/" />
+
+											<p:message for="file" display="tooltip" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</ui:fragment>
+
+
+					<!-- listado  -->
+					<ui:fragment rendered="#{tester1Controller.crear}">
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<p:dataTable id="singleDT" var="item" widgetVar="MotivoTable"
+									value="#{tester1Controller.listaTesterFile}"
+									selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{tester1Controller.testerFile}" rowKey="#{item.id}"
+									reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{tester1Controller.onRowSelect}" update="form001" />
+
+									<p:column width="8%" headerText="Identificador"
+										filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" filterBy="#{item.id}">
+										<h:outputText value="#{item.id}" />
+									</p:column>
+									<p:column headerText="nombre"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.nombre}">
+										<h:outputText value="#{item.nombre}" />
+									</p:column>
+
+									<f:facet name="footer">
+										<h:outputText
+											value="#{tester1Controller.listaTesterFile.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

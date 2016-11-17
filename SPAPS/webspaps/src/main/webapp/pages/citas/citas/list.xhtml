@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic">LISTADO DE CITAS</div>
+				<div class="SeparatorFull"></div>
+				<div class="Container100 ui-fluid">
+					<p:dataTable id="singleDT" var="var"
+						value="#{citasController.listaCita}" selectionMode="single"
+						selection="#{citasController.citaSelected}" rowKey="#{var.id}"
+						emptyMessage="No se encontraron registros." reflow="true">
+						<f:facet name="header">
+                        	Seleccione una cita para ingresar al sistema
+                        </f:facet>
+
+						<p:ajax update="form001" event="rowSelect"
+							listener="#{citasController.onRowSelect}" />
+
+						<p:column width="25%" headerText="Nombre Completo"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.individuo.nombre}">
+							<h:outputText
+								value="#{var.individuo.nombre} #{var.individuo.apellidoPaterno} #{var.individuo.apellidoMaterno}" />
+						</p:column>
+
+						<p:column width="12%" headerText="Tipo Atencion"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.estadoAtencion}">
+							<h:outputText value="#{var.estadoAtencion}" />
+						</p:column>
+						<p:column width="12%" headerText="Hora"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.hora}">
+							<p:outputLabel  value="#{var.hora}" >
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</p:outputLabel>
+						</p:column>
+						<p:column width="12%" headerText="Medico"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.personal.nombre}">
+							<h:outputText 
+								value="#{var.personal.nombre} #{var.personal.apellidoPaterno} #{var.personal.apellidoMaterno}" />
+						</p:column>
+
+						<p:column width="12%" headerText="Especialidad"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;"
+							filterBy="#{var.personal.obtenerEspecialidadActiva().nombre}">
+							<h:outputText
+								value="#{var.personal.obtenerEspecialidadActiva().nombre}" />
+						</p:column>
+						<p:column width="12%" headerText="Fecha Registro"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.fechaRegistro}">
+							<h:outputText value="#{var.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column width="12%" headerText="Registro"
+							filterStyle="width: 100%; height:25px;"
+							style="text-align:center;" filterBy="#{var.usuarioRegistro}">
+							<h:outputText value="#{var.usuarioRegistro}" />
+						</p:column>
+
+						<f:facet name="footer">
+							<h:outputText
+								value="#{citasController.listaCita.size()} Registros en Total" />
+						</f:facet>
+					</p:dataTable>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

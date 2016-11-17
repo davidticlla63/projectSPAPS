@@ -1,0 +1,301 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formDlg001">
+		<div class="Container100 Responsive100 TexAlLeft"
+			onload="#{historiaClinicaDetalleController.resetIndicacion()}">
+
+
+			<!-- BEGIN DIALOG -->
+			<div class="Container100 Responsive100 TexAlLeft">
+
+				<p:focus for="busquedaSucursal" />
+
+				<div class="Container60 Responsive100 TexAlLeft">
+
+					<div class="Container20 Responsive100 TexAlLeft">
+						<p:outputLabel for="receta" value="Nro de Receta:" />
+					</div>
+					<div class="Container10 Responsive100 TexAlLeft">
+						<p:inputText id="receta" readonly="true"
+							value="#{historiaClinicaDetalleController.receta}"
+							style="width:100%">
+							<p:ajax event="change" update="receta" />
+						</p:inputText>
+						<p:message for="receta" display="tooltip" />
+					</div>
+
+				</div>
+
+				<div class="Container60 Responsive100 TexAlLeft">
+					<div class="Container20 Responsive100 TexAlLef">
+						<p:outputLabel for="busquedaSucursal" value="Sucursal:" />
+					</div>
+					<div class="Container40 Responsive100 TexAlLef">
+						<p:selectOneMenu id="busquedaSucursal"
+							value="#{historiaClinicaDetalleController.sucursalSelected.nombre}">
+							<f:selectItem itemLabel="Seleccione la sucursal" />
+							<f:selectItems
+								value="#{historiaClinicaDetalleController.listaSucursales}" />
+							<p:ajax event="change"
+								listener="#{historiaClinicaDetalleController.onSelectSucursal}"
+								update="busquedaSucursal" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+
+				<div class="Container60 Responsive100 TexAlLeft">
+					<div class="Container20 Responsive100 TexAlLef">
+						<p:outputLabel for="tipoBusqueda" value="Buscar por:" />
+					</div>
+					<div class="Container40 Responsive100 TexAlLef">
+						<p:selectOneRadio id="tipoBusqueda" style="" immediate="true"
+							value="#{historiaClinicaDetalleController.tipoBusqueda}">
+							<p:ajax update="tipoBusqueda" />
+							<f:selectItem itemLabel="Nombre Genérico" itemValue="true" />
+							<f:selectItem itemLabel="Nombre Comercial" itemValue="false" />
+						</p:selectOneRadio>
+						<p:message for="tipoBusqueda" display="tooltip" />
+					</div>
+				</div>
+
+				<div class="Container100 Responsive100 TexAlLeft">
+
+					<div class="Container40 Responsive100 TexAlLeft">
+						<div class="Container30 Responsive100 TexAlLef">
+							<p:outputLabel for="medicamento" value="Medicamento:" />
+						</div>
+						<div class="Container20 Responsive100 TexAlLef">
+							<p:autoComplete id="medicamento"
+								value="#{historiaClinicaDetalleController.query}"
+								completeMethod="#{historiaClinicaDetalleController.onCompleteMedicamento}"
+								minQueryLength="1" forceSelection="true" var="_var"
+								itemLabel="#{_var}"
+								itemValue="#{_var.nombreGenerico} - #{_var.presentacion}"
+								placeholder="Escriba el medicamento" maxResults="10"
+								dropdown="true">
+								<p:ajax event="itemSelect" update="medicamento"
+									listener="#{historiaClinicaDetalleController.onSelectMedicamentoClick}" />
+								<p:column>
+									<h:outputText
+										value="#{_var.nombreGenerico} - #{_var.presentacion}" />
+								</p:column>
+							</p:autoComplete>
+							<p:message for="medicamento" display="tooltip" />
+						</div>
+						<div class="Container40 Responsive100 TexAlRight" align="right">
+							<p:commandButton icon="fa fa-plus"
+								styleClass="Fs12 White GreenButton"
+								oncomplete="PF('dlgMedicamentoNuevo').show()" update="form001">
+							</p:commandButton>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="Container100 Responsive100 TextAlLeft">
+
+					<div class="Container40 Responsive100 TexAlLeft">
+						<div class="Container30 Responsive100 TexAlLeft">
+							<p:outputLabel for="cantidad" value="Cantidad:" />
+						</div>
+						<div class="Container20 Responsive100 TexAlLeft">
+							<p:inputText id="cantidad"
+								value="#{historiaClinicaDetalleController.detalleMedicamento.cantidad}"
+								style="width:100%">
+								<p:ajax event="change" update="cantidad" />
+							</p:inputText>
+							<p:message for="cantidad" display="tooltip" />
+						</div>
+					</div>
+
+					<div class="Container50 Responsive100 TexAlLeft">
+						<div class="Container30 Responsive100 TexAlLeft">
+							<p:outputLabel for="administracion" value="Administracion:" />
+						</div>
+						<div class="Container70 Responsive100 ui-fluid TexAlLeft">
+							<p:inputTextarea id="administracion"
+								value="#{historiaClinicaDetalleController.detalleMedicamento.administracion}"
+								style="width:100%">
+								<p:ajax event="change" update="administracion" />
+							</p:inputTextarea>
+							<p:message for="administracion" display="tooltip" />
+						</div>
+					</div>
+
+				</div>
+
+				<div class="Container60 Responsive100 TexAlLeft">
+
+					<div class="Container20 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+							styleClass="Fs14 White OrangeButton">
+							<p:ajax update="form001"
+								listener="#{historiaClinicaDetalleController.cancelarIndicacion()}" />
+						</p:commandButton>
+					</div>
+					<div class="Container20 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-check" value="Adicionar"
+							styleClass="Fs14 White GreenButton">
+							<p:ajax update="form001"
+								listener="#{historiaClinicaDetalleController.registrarMedicamento()}" />
+						</p:commandButton>
+					</div>
+					<div class="Container60 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-check" value="Guardar e Imprimir"
+							styleClass="Fs14 White GreenButton">
+							<p:ajax update="form001"
+								listener="#{historiaClinicaDetalleController.imprimir()}" />
+						</p:commandButton>
+					</div>
+				</div>
+
+				<!-- listado  -->
+				<div class="Container100 Responsive100 Flex">
+
+					<div class="Card">
+						<p:dataTable id="singleDT" var="item" widgetVar="DiagnosticoTable"
+							value="#{historiaClinicaDetalleController.listaDetalleMedicamentos}"
+							selectionMode="single" scrollRows="10" scrollable="true"
+							liveScroll="true" scrollHeight="150"
+							selection="#{historiaClinicaDetalleController.detalleMedicamentoSelected}"
+							style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+							emptyMessage="No se encontraron Registros." rowKey="#{item.id}"
+							reflow="true">
+
+
+							<p:ajax event="rowSelect"
+								listener="#{historiaClinicaDetalleController.onRowSelectMedicamento}"
+								update="form001" />
+
+							<p:column headerText="Nro de Receta" filterBy="#{item.receta}">
+								<h:outputText value="#{item.receta}" />
+							</p:column>
+
+							<p:column headerText="Medicamento"
+								filterBy="#{item.medicamento.nombreGenerico}">
+								<h:outputText
+									value="#{item.medicamento.nombreGenerico} - #{item.medicamento.presentacion}" />
+							</p:column>
+
+							<p:column headerText="Medico" filterBy="#{item.medico.nombre}">
+								<h:outputText
+									value="#{item.medico.nombre} #{item.medico.apellidoPaterno} #{item.medico.apellidoMaterno} - #{item.medico.obtenerEspecialidadActiva().nombre}" />
+							</p:column>
+
+							<p:column headerText="Fecha" filterBy="#{item.fechaRegistro}">
+								<h:outputText value="#{item.fechaRegistro}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width:30px">
+								<p:commandButton type="button" icon="fa fa-trash-o"
+									styleClass="Fs14 White RedButton">
+									<p:ajax update="singleDT"
+										listener="#{historiaClinicaDetalleController.onRowDeleteMedicamento(item)}" />
+								</p:commandButton>
+							</p:column>
+
+							<f:facet name="footer">
+								<h:outputText
+									value="#{historiaClinicaDetalleController.listaDetalleMedicamentos.size()} Registros en Total" />
+							</f:facet>
+						</p:dataTable>
+						<p:growl id="msgs2" showDetail="true" for="singleDT" />
+					</div>
+				</div>
+
+
+
+				<!-- END DIALOG -->
+			</div>
+
+			<div class="Container0 Responsive100 TexAlLeft">
+				<p:dialog id="dialog2" header="REGISTRO DE MEDICAMENTO"
+					widgetVar="dlgMedicamentoNuevo" responsive="true" modal="true"
+					resizable="false" closable="false" appendTo="@(content)"
+					showEffect="clip" hideEffect="clip" width="600px">
+					<h:form id="formDlg003">
+						<p:focus for="nombreGenerico" />
+
+						<div class="Container80 Responsive100 TexAlLeft">
+
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:outputLabel for="nombreGenerico" value="Nombre Generico:" />
+							</div>
+							<div class="Container80 Responsive100 TexAlLeft">
+								<p:inputText id="nombreGenerico"
+									value="#{historiaClinicaDetalleController.medicamento.nombreGenerico}"
+									style="width:100%">
+									<p:ajax event="change" update="nombreGenerico" />
+								</p:inputText>
+								<p:message for="nombreGenerico" display="tooltip" />
+							</div>
+
+						</div>
+
+						<div class="Container80 Responsive100 TexAlLeft">
+
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:outputLabel for="nombreComercial" value="Nombre Comercial:" />
+							</div>
+							<div class="Container80 Responsive100 TexAlLeft">
+								<p:inputText id="nombreComercial"
+									value="#{historiaClinicaDetalleController.medicamento.nombreComercial}"
+									style="width:100%">
+									<p:ajax event="change" update="nombreComercial" />
+								</p:inputText>
+								<p:message for="nombreComercial" display="tooltip" />
+							</div>
+
+						</div>
+
+						<div class="Container80 Responsive100 TexAlLeft">
+
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:outputLabel for="presentacion" value="Presentacion:" />
+							</div>
+							<div class="Container80 Responsive100 TexAlLeft">
+								<p:inputText id="presentacion"
+									value="#{historiaClinicaDetalleController.medicamento.presentacion}"
+									style="width:100%">
+									<p:ajax event="change" update="presentacion" />
+								</p:inputText>
+								<p:message for="presentacion" display="tooltip" />
+							</div>
+
+						</div>
+
+						<div class="Container50 Responsive100 TexAlLeft">
+
+							<div class="Container50 Responsive100 TexAlLeft">
+								<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+									styleClass="Fs14 White OrangeButton"
+									oncomplete="PF('dlgMedicamentoNuevo').hide()">
+								</p:commandButton>
+							</div>
+							<div class="Container50 Responsive100 TexAlLeft">
+								<p:commandButton icon="fa fa-check" value="Guardar"
+									styleClass="Fs14 White GreenButton">
+									<p:ajax update="form001:formDlg001:medicamento"
+										listener="#{historiaClinicaDetalleController.registrarMedicamentoNuevo()}" />
+								</p:commandButton>
+							</div>
+						</div>
+
+					</h:form>
+				</p:dialog>
+				<!-- END DIALOG -->
+			</div>
+
+		</div>
+
+		<ui:include src="/pages/reportes/dialogIndex.xhtml" />
+
+	</h:form>
+
+</ui:composition>

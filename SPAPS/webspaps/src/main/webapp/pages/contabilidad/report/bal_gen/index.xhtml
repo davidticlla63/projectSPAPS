@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+		<h:outputScript name="js/calendar-localization.js" />
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container70 Responsive100 TexAlLeft">
+					
+						<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+							styleClass="Fs14 White OrangeButton" immediate="true">
+						</p:commandButton>
+						
+						<p:commandButton icon="fa icon-play43" value="Generar Consulta"
+							styleClass="Fs14 White GreenButton"
+							update="form001"
+							actionListener="#{balanceGeneralController.generarConsulta()}">
+						</p:commandButton>
+
+						<p:commandButton id="buttonReporte" value="Imprimir"
+							rendered="false">
+						</p:commandButton>
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Contabilidad"
+								url="/pages/contabilidad/report/bal_gen/index.xhtml" />
+							<p:menuitem value="Balance General"
+								url="/pages/contabilidad/report/bal_gen/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{balanceGeneralController.page}" />
+			</div>
+			
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

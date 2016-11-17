@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="Container100 Responsive100 TexAlLeft"
+		onload="#{historiaClinicaDetalleController.resetEnfermedad()}">
+
+		<div class="Container100 Responsive100 TexAlLeft">
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<p:commandButton type="button" icon="fa fa-plus"
+					styleClass="Fs14 White GreenButton" value="Nueva Enfermedad">
+					<p:ajax update="form001"
+						listener="#{historiaClinicaDetalleController.actionNuevoEnfermedad()}" />
+				</p:commandButton>
+			</div>
+
+		</div>
+
+
+		<!-- listado  -->
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<p:dataTable id="singleDT" var="item" widgetVar="MotivoTable"
+					value="#{historiaClinicaDetalleController.listaEnfermedades}"
+					selectionMode="single"
+					selection="#{historiaClinicaDetalleController.enfermedadSelected}"
+					style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+					emptyMessage="No se encontraron Registros." rowKey="#{item.id}"
+					reflow="true">
+
+					<p:ajax event="rowSelect"
+						listener="#{historiaClinicaDetalleController.onRowSelectEnfermedades()}"
+						update="form001" />
+
+					<p:column headerText="Enfermedad" filterBy="#{item.nombre}"
+						width="40%">
+						<h:outputText value="#{item.nombre}" />
+					</p:column>
+
+					<p:column width="40%" headerText="Médico"
+						filterBy="#{item.medico.nombre}">
+						<h:outputText
+							value="#{item.medico.nombre} #{item.medico.apellidoPaterno} #{item.medico.apellidoMaterno} - #{item.medico.obtenerEspecialidadActiva().nombre}" />
+					</p:column>
+
+					<p:column width="20%" headerText="Fecha Registro"
+						filterBy="#{item.fechaRegistro}">
+						<h:outputText value="#{item.fechaRegistro}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:30px">
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							styleClass="Fs14 White RedButton">
+							<p:ajax update="singleDT"
+								listener="#{historiaClinicaDetalleController.onRowDeleteEnfermedad(item)}" />
+						</p:commandButton>
+					</p:column>
+
+					<f:facet name="footer">
+						<h:outputText
+							value="#{historiaClinicaDetalleController.listaEnfermedades.size()} Registros en Total" />
+					</f:facet>
+				</p:dataTable>
+			</div>
+		</div>
+
+		<div class="Container10 Responsive100 TexAlLeft">
+
+			<!-- BEGIN DIALOG -->
+			<p:dialog header="INFORMACION DE ENFERMEDADES"
+				widgetVar="dlgEnfermedad" responsive="true" modal="true"
+				width="600px" resizable="false" closable="false">
+				<h:form id="formDlg001">
+					<p:focus for="nombre" />
+					<div class="Container100 Responsive100 TexAlLeft">
+
+						<div class="Container20 Responsive100 TexAlLeft">
+							<p:outputLabel for="nombre" value="Nombre:" />
+						</div>
+					</div>
+
+					<div class="Container100 Responsive100 TexAlLeft">
+						<div class="Container100 Responsive100 TexAlLeft">
+							<p:inputTextarea id="nombre" style="width:500px"
+								autoResize="true"
+								value="#{historiaClinicaDetalleController.enfermedad.nombre}">
+								<p:ajax event="change" />
+							</p:inputTextarea>
+							<p:message for="nombre" display="tooltip" />
+						</div>
+
+					</div>
+
+					<div class="Container60 Responsive100 TexAlLeft">
+
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+								styleClass="Fs14 White OrangeButton"
+								oncomplete="PF('dlgEnfermedad').hide()">
+							</p:commandButton>
+						</div>
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-check" value="Guardar"
+								styleClass="Fs14 White GreenButton" update="formDlg001,form001"
+								actionListener="#{historiaClinicaDetalleController.registrarEnfermedad}">
+							</p:commandButton>
+						</div>
+
+					</div>
+
+				</h:form>
+			</p:dialog>
+			<!-- END DIALOG -->
+		</div>
+
+	</div>
+
+
+</ui:composition>

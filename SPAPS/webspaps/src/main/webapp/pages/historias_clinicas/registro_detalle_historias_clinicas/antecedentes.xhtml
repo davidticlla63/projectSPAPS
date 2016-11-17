@@ -1,0 +1,303 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="Container100 Responsive100 TexAlLeft"
+		onload="#{historiaClinicaDetalleController.resetAntecedente()}">
+
+		<div class="Container100 Responsive100 TexAlLeft">
+
+			<div class="Container100 Responsive100 TexAlLeft">
+				<p:commandButton type="button" icon="fa fa-plus"
+					styleClass="Fs14 White GreenButton" value="Nuevo Antecedente">
+					<p:ajax update="form001"
+						listener="#{historiaClinicaDetalleController.actionNuevoAntecedente()}" />
+				</p:commandButton>
+			</div>
+
+		</div>
+
+
+		<!-- listado  -->
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<p:dataTable id="singleDT" var="item" widgetVar="AntecedenteTable"
+					value="#{historiaClinicaDetalleController.listaDetalleAntecedentes}"
+					selectionMode="single" scrollRows="10" scrollable="true"
+					liveScroll="true" scrollHeight="150"
+					selection="#{historiaClinicaDetalleController.detalleAntecedenteSelected}"
+					style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+					emptyMessage="No se encontraron Registros." rowKey="#{item.id}"
+					reflow="true">
+
+					<p:ajax event="rowSelect"
+						listener="#{historiaClinicaDetalleController.onRowSelectAntecedente}"
+						oncomplete="PF('dlgAntecedenteUpdate').show()" update="form001" />
+
+					<p:column headerText="Antecedente" width="30%"
+						filterBy="#{item.antecedente.descripcion}">
+						<h:outputText value="#{item.antecedente.descripcion}" />
+					</p:column>
+
+					<p:column width="30%" headerText="Médico"
+						filterBy="#{item.medico.nombre}">
+						<h:outputText
+							value="#{item.medico.nombre} #{item.medico.apellidoPaterno} #{item.medico.apellidoMaterno} - #{item.medico.obtenerEspecialidadActiva().nombre}" />
+					</p:column>
+
+					<p:column width="20%" headerText="Comentario"
+						filterBy="#{item.detalle}">
+						<h:outputText value="#{item.detalle}" />
+					</p:column>
+
+					<p:column width="20%" headerText="Fecha Registro"
+						filterBy="#{item.fechaRegistro}">
+						<h:outputText value="#{item.fechaRegistro}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+					<p:column style="width:30px">
+						<p:commandButton type="button" icon="fa fa-trash-o"
+							styleClass="Fs14 White RedButton">
+							<p:ajax update="singleDT"
+								listener="#{historiaClinicaDetalleController.onRowDeleteAntecedente(item)}" />
+						</p:commandButton>
+					</p:column>
+					<f:facet name="footer">
+						<h:outputText
+							value="#{historiaClinicaDetalleController.listaDetalleAntecedentes.size()} Registros en Total" />
+					</f:facet>
+				</p:dataTable>
+				<p:growl id="msgs2" showDetail="true" for="singleDT" />
+			</div>
+		</div>
+
+
+
+		<!-- BEGIN DIALOG -->
+		<div class="Container0 Responsive100 TexAlLeft">
+			<p:dialog id="dialog" header="INFORMACION DE ANTECEDENTES"
+				showEffect="clip" hideEffect="clip" widgetVar="dlgAntecedente"
+				responsive="true" modal="true" resizable="false" closable="false"
+				width="700px">
+				<h:form id="formDlg001">
+					<p:focus for="busquedaAntecedente" />
+
+					<div class="Container80 Responsive100 TexAlLeft">
+						<div class="Container20 Responsive100 TexAlLef">
+							<p:outputLabel for="busquedaAntecedente" value="Antecedente:" />
+						</div>
+						<div class="Container40 Responsive100 TexAlLef">
+							<p:inputText id="busquedaAntecedente"
+								value="#{historiaClinicaDetalleController.query}">
+								<p:ajax event="keyup" update="antecedentes"
+									listener="#{historiaClinicaDetalleController.onKeyUpQueryAntecedente}" />
+							</p:inputText>
+						</div>
+						<div class="Container40 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-check" value="Nuevo"
+								styleClass="Fs14 White GreenButton"
+								oncomplete="PF('dlgAntecedenteNuevo').show()" update="form001">
+							</p:commandButton>
+						</div>
+					</div>
+
+					<div class="Container80 Responsive100 TexAlLeft">
+
+						<div class="Container20 Responsive100 TexAlLeft">
+							<p:outputLabel for="tipoAntecedente" value="Grupos:" />
+						</div>
+						<div class="Container80 Responsive100 TexAlLeft">
+							<p:selectOneMenu id="tipoAntecedente"
+								value="#{historiaClinicaDetalleController.tipoAntecedente.nombre}">
+								<f:selectItem itemLabel="Seleccione el grupo" />
+								<f:selectItems
+									value="#{historiaClinicaDetalleController.listaTipoAntecedentes}" />
+								<p:ajax event="change"
+									listener="#{historiaClinicaDetalleController.onSelectTipoAntecedente}"
+									update="antecedentes" />
+							</p:selectOneMenu>
+
+							<p:message for="tipoAntecedente" display="tooltip" />
+						</div>
+					</div>
+
+					<div class="Container80 Responsive100 TexAlLeft">
+
+						<div class="Container20 Responsive100 TexAlLeft">
+							<p:outputLabel for="especialidad" value="Especialidad:" />
+						</div>
+						<div class="Container80 Responsive100 TexAlLeft">
+							<p:selectOneMenu id="especialidad"
+								value="#{historiaClinicaDetalleController.especialidad.nombre}">
+								<f:selectItem itemLabel="Seleccione la especialidad"
+									itemValue="" />
+								<f:selectItems
+									value="#{historiaClinicaDetalleController.listaEspecialidades}" />
+								<p:ajax event="change"
+									listener="#{historiaClinicaDetalleController.onSelectEspecialidad}"
+									update="antecedentes" />
+							</p:selectOneMenu>
+
+							<p:message for="especialidad" display="tooltip" />
+						</div>
+					</div>
+
+					<div class="Container80 Responsive100 TexAlLeft">
+
+						<div class="Container20 Responsive100 TexAlLeft">
+							<p:outputLabel for="antecedentes" value="Antecedentes:" />
+						</div>
+						<div class="Container80 Responsive100 TexAlLeft">
+							<p:pickList id="antecedentes"
+								value="#{historiaClinicaDetalleController.listaAntecedentesDual}"
+								var="cities" itemLabel="#{cities}" itemValue="#{cities}"
+								showCheckbox="true">
+								<p:ajax event="transfer" update="antecedentes" />
+							</p:pickList>
+
+							<p:message for="antecedentes" display="tooltip" />
+						</div>
+
+					</div>
+
+					<div class="Container50 Responsive100 TexAlLeft">
+						<p:panelGrid id="grid3" columns="2" cellpadding="5" layout="grid"
+							style="border:0px !important; background:none;"
+							styleClass="ui-panelgrid-blank">
+
+							<div class="Container50 Responsive100 TexAlLeft">
+								<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+									styleClass="Fs14 White OrangeButton"
+									oncomplete="PF('dlgAntecedente').hide()">
+								</p:commandButton>
+							</div>
+							<div class="Container50 Responsive100 TexAlLeft">
+								<p:commandButton icon="fa fa-check" value="Guardar"
+									styleClass="Fs14 White GreenButton" update="formDlg001,form001"
+									actionListener="#{historiaClinicaDetalleController.registrarAntecedente}">
+								</p:commandButton>
+							</div>
+						</p:panelGrid>
+					</div>
+
+				</h:form>
+			</p:dialog>
+			<!-- END DIALOG -->
+		</div>
+
+		<div class="Container0 Responsive100 TexAlLeft">
+			<p:dialog id="dialog1" header="ACTUALIZACIÓN DE ANTECEDENTES"
+				widgetVar="dlgAntecedenteUpdate" responsive="true" modal="true"
+				resizable="false" closable="false" appendTo="@(content)"
+				showEffect="clip" hideEffect="clip" width="600px">
+				<h:form id="formDlg002">
+					<p:focus for="antecedenteUpdate" />
+					<div class="Container80 Responsive100 TexAlLeft">
+
+						<div class="Container20 Responsive100 TexAlLeft">
+							<p:outputLabel for="antecedenteUpdate" value="Diagnostico:" />
+						</div>
+						<div class="Container80 Responsive100 TexAlLeft">
+							<p:selectOneMenu id="antecedenteUpdate" required="true"
+								requiredMessage="Debe seleccionar el antecedente para su actualiación"
+								value="#{historiaClinicaDetalleController.antecedenteDetalle.descripcion}">
+								<f:selectItems
+									value="#{historiaClinicaDetalleController.listaAntecedentes}" />
+								<p:ajax event="change" update="antecedenteUpdate"
+									listener="#{historiaClinicaDetalleController.onSelectAntecedenteDetalle}" />
+							</p:selectOneMenu>
+							<p:message for="antecedenteUpdate" display="tooltip" />
+						</div>
+					</div>
+
+					<div class="Container80 Responsive100 TexAlLeft">
+
+						<div class="Container20 Responsive100 TexAlLeft">
+							<p:outputLabel for="detalleUpdate" value="Comentario:" />
+						</div>
+						<div class="Container80 Responsive100 TexAlLeft">
+							<p:inputText id="detalleUpdate"
+								value="#{historiaClinicaDetalleController.detalleAntecedente.detalle}"
+								style="width:100%">
+								<p:ajax event="change" update="detalleUpdate" />
+							</p:inputText>
+							<p:message for="detalleUpdate" display="tooltip" />
+						</div>
+
+					</div>
+
+					<div class="Container50 Responsive100 TexAlLeft">
+
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+								styleClass="Fs14 White OrangeButton"
+								oncomplete="PF('dlgAntecedenteUpdate').hide()">
+							</p:commandButton>
+						</div>
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-check" value="Guardar"
+								styleClass="Fs14 White GreenButton">
+								<p:ajax update="form001"
+									listener="#{historiaClinicaDetalleController.actualizarAntecedente()}" />
+							</p:commandButton>
+						</div>
+					</div>
+
+				</h:form>
+			</p:dialog>
+			<!-- END DIALOG -->
+		</div>
+
+		<div class="Container0 Responsive100 TexAlLeft">
+			<p:dialog id="dialog2" header="REGISTRO DE ANTECEDENTE"
+				widgetVar="dlgAntecedenteNuevo" responsive="true" modal="true"
+				resizable="false" closable="false" appendTo="@(content)"
+				showEffect="clip" hideEffect="clip" width="600px">
+				<h:form id="formDlg003">
+					<p:focus for="descripcion" />
+
+					<div class="Container80 Responsive100 TexAlLeft">
+
+						<div class="Container20 Responsive100 TexAlLeft">
+							<p:outputLabel for="descripcion" value="Antecedente:" />
+						</div>
+						<div class="Container80 Responsive100 TexAlLeft">
+							<p:inputText id="descripcion"
+								value="#{historiaClinicaDetalleController.descripcionAntecedente}"
+								style="width:100%">
+								<p:ajax event="change" update="descripcion" />
+							</p:inputText>
+							<p:message for="descripcion" display="tooltip" />
+						</div>
+
+					</div>
+
+					<div class="Container50 Responsive100 TexAlLeft">
+
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+								styleClass="Fs14 White OrangeButton"
+								oncomplete="PF('dlgAntecedenteNuevo').hide()">
+							</p:commandButton>
+						</div>
+						<div class="Container50 Responsive100 TexAlLeft">
+							<p:commandButton icon="fa fa-check" value="Guardar"
+								styleClass="Fs14 White GreenButton">
+								<p:ajax update="form001"
+									listener="#{historiaClinicaDetalleController.registrarAntecedenteNuevo()}" />
+							</p:commandButton>
+						</div>
+					</div>
+
+				</h:form>
+			</p:dialog>
+			<!-- END DIALOG -->
+		</div>
+
+	</div>
+
+
+</ui:composition>

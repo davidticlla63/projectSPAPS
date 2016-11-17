@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Tareas</title>
+		<f:event listener="#{tareaController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TexAlLeft">
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{tareaController.crear}"
+								styleClass="Fs14 White GreenButton" value="Nuevo Tarea">
+								<p:ajax update="form001"
+									listener="#{tareaController.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{tareaController.modificar or tareaController.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001" listener="#{tareaController.initNew()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{tareaController.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar">
+								<p:ajax update="form001"
+									listener="#{tareaController.registrar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{tareaController.modificar}" value="Modificar"
+								styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{tareaController.actualizar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{tareaController.modificar}" value="Eliminar"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{tareaController.eliminar()}" />
+							</p:commandButton>
+						</div>
+						<div class="Container25 Responsive100 TexAlRight">
+							<p:breadCrumb>
+								<p:menuitem value="."
+									url="#{request.contextPath}/dashboard.xhtml" />
+								<p:menuitem value="Seguridad"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+								<p:menuitem value="Pais"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+							</p:breadCrumb>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment
+						rendered="#{tareaController.modificar or tareaController.registrar}">
+
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<div class="CardBigTopic">INFORMACIÓN DE TAREA</div>
+								<div class="SeparatorFull"></div>
+								<div class="Container100 ui-fluid">
+									<p:focus for="nombreTarea" />
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+										<div class="Container100 Responsive100 TexAlLeft">
+											<div class="Container40 Responsive100 TexAlLeft">
+												<p:outputLabel for="nombreTarea" value="Tarea:" />
+											</div>
+											<div class="Container60 Responsive100 TexAlLeft">
+												<p:autoComplete id="nombreTarea"
+													value="#{tareaController.tarea.nombreTarea}"
+													completeMethod="#{tareaController.onCompleteNombreTarea}"
+													converter="nombreTareaConverter" minQueryLength="1"
+													forceSelection="true" var="_var" itemLabel="#{_var.nombre}"
+													itemValue="#{_var}"
+													placeholder="Escriba el criterio de busqueda"
+													maxResults="10" dropdown="true">
+													<p:ajax event="itemSelect" immediate="true"
+														update="nombreTarea"
+														listener="#{tareaController.onSelectNombreTareaClick}" />
+													<p:column>
+														<h:outputText value="#{_var.nombre}" />
+													</p:column>
+												</p:autoComplete>
+												<p:message for="nombreTarea" display="tooltip" />
+											</div>
+										</div>
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="fecha" value="Fecha:" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:calendar id="fecha" required="true" timeZone="GMT-4"
+												value="#{tareaController.tarea.fechaPlazo}"
+												pattern="dd/MM/yyyy HH:mm" mask="true" lang="es">
+												<p:ajax event="change" update="fecha" />
+												<p:ajax event="dateSelect" update="fecha" />
+											</p:calendar>
+											<p:message for="fecha" display="tooltip" />
+										</div>
+
+										<div class="Container40 Responsive100 TexAlLeft">
+											<p:outputLabel for="tipoTarea" value="Tipo de Tarea:" />
+										</div>
+										<div class="Container60 Responsive100 TexAlLeft">
+											<p:autoComplete id="tipoTarea"
+												value="#{tareaController.tarea.tipoTarea}"
+												completeMethod="#{tareaController.onCompleteTipoTarea}"
+												converter="tipoTareaConverter" minQueryLength="1"
+												forceSelection="true" var="_var" itemLabel="#{_var.nombre}"
+												itemValue="#{_var}"
+												placeholder="Escriba el criterio de busqueda"
+												maxResults="10" dropdown="true">
+												<p:ajax event="itemSelect" immediate="true"
+													update="tipoTarea"
+													listener="#{tareaController.onSelectTipoTareaClick}" />
+												<p:column>
+													<h:outputText value="#{_var.nombre}" />
+												</p:column>
+											</p:autoComplete>
+											<p:message for="tipoTarea" display="tooltip" />
+										</div>
+
+										<div class="Container40 Responsive100 TexAlLeft">
+											<p:outputLabel for="medico" value="Personal:" />
+										</div>
+										<div class="Container60 Responsive100 TexAlLeft">
+											<p:autoComplete id="medico" required="true"
+												requiredMessage="El medico auditor es un campo obligatorio."
+												value="#{tareaController.tarea.personal}"
+												completeMethod="#{tareaController.onCompletePersonal}"
+												converter="personalConverter" minQueryLength="1"
+												forceSelection="true" var="_var"
+												itemLabel="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}"
+												itemValue="#{_var}"
+												placeholder="Escriba el nombre del medico" maxResults="10"
+												dropdown="true">
+												<p:ajax event="itemSelect" immediate="true" update="medico"
+													listener="#{tareaController.onSelectPersonalClick}" />
+												<p:column>
+													<h:outputText
+														value="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}" />
+												</p:column>
+											</p:autoComplete>
+											<p:message for="medico" display="tooltip" />
+										</div>
+
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="estados" value="Estado" />
+										</div>
+										<div class="Container60 Responsive50">
+											<p:selectOneMenu id="estados" style=""
+												value="#{tareaController.tarea.estado}">
+												<p:ajax event="valueChange" update="estados" />
+												<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+												<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+												<f:selectItem itemLabel="ELIMINADO" itemValue="RM" />
+											</p:selectOneMenu>
+											<p:message for="estados" display="tooltip" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</ui:fragment>
+
+
+					<!-- listado  -->
+					<ui:fragment rendered="#{tareaController.crear}">
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<p:dataTable id="singleDT" var="item" widgetVar="TareaTable"
+									value="#{tareaController.listaTarea}" selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{tareaController.tarea}" rowKey="#{item.id}"
+									reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{tareaController.onRowSelect}" update="form001" />
+
+									<p:column width="20%" headerText="Descripcion"
+										filterBy="#{item.nombreTarea.nombre}">
+										<h:outputText value="#{item.nombreTarea.nombre}" />
+									</p:column>
+									<p:column width="20%" headerText="Tipo"
+										filterBy="#{item.tipoTarea.nombre}">
+										<h:outputText value="#{item.tipoTarea.nombre}" />
+									</p:column>
+									<p:column width="20%" headerText="Encargado"
+										filterBy="#{item.personal.nombre} #{item.personal.apellidoPaterno} #{item.personal.apellidoMaterno}">
+										<h:outputText
+											value="#{item.personal.nombre} #{item.personal.apellidoPaterno} #{item.personal.apellidoMaterno}" />
+									</p:column>
+									<p:column width="15%" headerText="Fecha Plazo"
+										filterBy="#{item.fechaPlazo}">
+										<h:outputText value="#{item.fechaPlazo}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column width="10%" headerText="Usuario Registro"
+										filterBy="#{item.usuarioRegistro}">
+										<h:outputText value="#{item.usuarioRegistro}" />
+									</p:column>
+									<p:column width="15%" headerText="Fecha Registro"
+										filterBy="#{item.fechaRegistro}">
+										<h:outputText value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{tareaController.listaTarea.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

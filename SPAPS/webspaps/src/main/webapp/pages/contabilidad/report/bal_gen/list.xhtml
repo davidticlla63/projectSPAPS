@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">BALANCE GENERAL</div>
+			<div class="SeparatorFull"></div>
+			<div class="Responsive100 Container25">
+				<p:outputLabel for="selectedfecha" value="FILTRAR BUSQUEDA: " />
+				<p:selectOneRadio id="selectedfecha"
+					value="#{balanceGeneralController.filtroFecha}" layout="grid"
+					columns="1">
+					<p:ajax event="valueChange" update="form001" />
+					<f:selectItem itemLabel="A UNA FECHAS" itemValue="FECHAS" />
+					<f:selectItem itemLabel="A UN PERIODO" itemValue="PERIODO" />
+				</p:selectOneRadio>
+			</div>
+			<div class="Responsive100 Container25">
+				<p:outputLabel for="grid01" value="#{' . '}"
+					rendered="#{balanceGeneralController.filtroFecha == 'FECHAS'}" />
+				<h:panelGrid id="grid01" columns="2"
+					rendered="#{balanceGeneralController.filtroFecha == 'FECHAS'}">
+					<p:outputLabel for="fecha" value="Fecha" />
+					<p:calendar id="fecha" value="#{balanceGeneralController.fecha}"
+						locale="es" styleClass="myWid100" required="true"
+						maxdate="#{balanceGeneralController.fechaMax}"
+						requiredMessage="Fecha requerido" pattern="dd/MM/yyyy">
+						<p:ajax event="dateSelect" />
+					</p:calendar>
+
+				</h:panelGrid>
+			</div>
+			<div class="Responsive100 Container25">
+				<p:outputLabel for="grid02" value="NIVEL:" />
+				<h:panelGrid id="grid02" columns="1">
+					<p:selectOneMenu id="nivel" value="CAPITULO">
+						<p:ajax update="form001" event="valueChange" />
+						<f:selectItem itemLabel="CAPITULO" itemValue="CAPITULO" />
+						<f:selectItem itemLabel="CUENTA" itemValue="CUENTA" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</div>
+			<div class="Responsive100 Container25">
+				<p:outputLabel for="grid03" value="INCLUIR CEROS:" />
+				<h:panelGrid id="grid03" columns="1">
+					<p:selectOneRadio id="selectedIncluirCeros" value="CON_CEROS"
+						layout="grid" columns="1">
+						<p:ajax event="valueChange" update="form001" />
+						<f:selectItem itemLabel="SI" itemValue="CON_CEROS" />
+						<f:selectItem itemLabel="NO" itemValue="SIN_CEROS" />
+					</p:selectOneRadio>
+				</h:panelGrid>
+			</div>
+			<div class="Container100 ui-fluid">
+				<p:dataTable id="dataTableComprobante" var="item"
+					widgetVar="comprobanteTable" paginator="true" rows="20"
+					value="#{balanceGeneralController.listBalanceGeneral}" reflow="true"
+					emptyMessage="No se encontraron comprobantes."
+					rowKey="#{item.lineaContable.id}">
+
+					<p:column width="30%" headerText="Nª Cuenta"
+						filterBy="#{item.codigoPlanCuenta}"
+						filterStyle="width: 100%; height:25px;" style="text-align:left;">
+						<h:outputText
+							value="#{item.codigoPlanCuenta}">
+						</h:outputText>
+					</p:column>
+
+					<p:column width="50%" headerText="Titulo Cuenta"
+						filterBy="#{item.nombrePlanCuenta}"
+						filterStyle="width: 100%; height:25px;" style="text-align:left;">
+						<h:outputText value="#{item.nombrePlanCuenta}">
+						</h:outputText>
+					</p:column>
+
+					<p:column width="20%" headerText="Monto Bs."
+						filterBy="#{item.deudorSaldoNacional}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.deudorSaldoNacional}">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column width="20%" headerText="Monto $us."
+						filterBy="#{item.deudorSaldoExtranjero}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.deudorSaldoExtranjero}">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</h:outputText>
+					</p:column>
+					
+					<f:facet name="footer">
+						<h:outputText
+							value="#{balanceGeneralController.listBalanceGeneral.size()} Registros en Total" />
+					</f:facet>
+				</p:dataTable>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

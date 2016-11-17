@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">INFORMACIÓN HORARIOS</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+				<div class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="nombreEspecialidad" value="Nombre" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="nombreEspecialidad" required="true"
+							value="#{rrHhTurnoController.rrHhTurno.nombre}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="nombreEspecialidad" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="horaInicio" value="Hora Ingreso" />
+						<p:outputLabel for="horaInicioI" value="" />
+						<p:outputLabel for="horaInicioP" value="" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:inputMask id="horaInicioI" style="text-align:right;" slotChar="07:00"
+							value="#{rrHhTurnoController.rrHhTurno.horaEntradaI}"
+							mask="99:99" maxlength="5">
+							<p:ajax event="change" />
+						</p:inputMask>
+						<p:message for="horaInicioI" display="tooltip" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:inputMask id="horaInicio" style="text-align:right;"
+							value="#{rrHhTurnoController.rrHhTurno.horaEntrada}" mask="99:99" slotChar="08:00"
+							maxlength="5">
+							<p:ajax event="change" />
+						</p:inputMask>
+						<p:message for="horaInicio" display="tooltip" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:inputMask id="horaInicioP" style="text-align:right;" slotChar="09:00"
+							value="#{rrHhTurnoController.rrHhTurno.horaEntradaP}"
+							mask="99:99" maxlength="5">
+							<p:ajax event="change" />
+						</p:inputMask>
+						<p:message for="horaInicioP" display="tooltip" />
+
+					</div>
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="horaSalida" value="Hora Salida" />
+						<p:outputLabel for="horaSalidaI" value="" />
+						<p:outputLabel for="horaSalidaP" value="" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:inputMask id="horaSalidaI" style="text-align:right;"
+							value="#{rrHhTurnoController.rrHhTurno.horaSalidaI}" slotChar="11:00"
+							mask="99:99" maxlength="5">
+							<p:ajax event="change" />
+						</p:inputMask>
+						<p:message for="horaSalidaI" display="tooltip" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:inputMask id="horaSalida" style="text-align:right;"
+							value="#{rrHhTurnoController.rrHhTurno.horaSalida}" mask="99:99" slotChar="12:00"
+							maxlength="5">
+							<p:ajax event="change" />
+						</p:inputMask>
+						<p:message for="horaSalida" display="tooltip" />
+					</div>
+					<div class="Container20 Responsive50 TexAlRight">
+						<p:inputMask id="horaSalidaP" style="text-align:right;"
+							value="#{rrHhTurnoController.rrHhTurno.horaSalidaP}" slotChar="13:00"
+							mask="99:99" maxlength="5">
+							<p:ajax event="change" />
+						</p:inputMask>
+						<p:message for="horaSalidaP" display="tooltip" />
+
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="estados" value="Estado" />
+					</div>
+					<div class="Container60 Responsive50">
+						<p:selectOneMenu id="estados" style=""
+							value="#{rrHhTurnoController.rrHhTurno.estado}">
+							<p:ajax event="valueChange" update="estados" />
+							<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+							<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+						</p:selectOneMenu>
+						<p:message for="estados" display="tooltip" />
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</ui:composition>

@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Mis Tareas</title>
+		<f:event listener="#{misTareaController.initConversation}"
+			type="preRenderView"></f:event>
+		<style type="text/css">
+.ui-datatable-reflow .ui-datatable-data .ui-expanded-row-content thead .ui-column-title
+	{
+	display: inline;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+
+					<!-- listado  -->
+					<ui:fragment>
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<p:dataTable id="singleDT" var="item" widgetVar="misTareasTable"
+									value="#{misTareaController.vistaTareas}"
+									selectionMode="single"
+									selection="#{misTareaController.edTarea}"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									rowKey="#{item.tarea.id}" reflow="true"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="5,10,15">
+
+									<p:ajax event="rowSelect"
+										listener="#{misTareaController.onRowSelect}" update="form001" />
+
+									<p:column width="4%">
+										<p:rowToggler />
+									</p:column>
+
+									<p:column width="11%" headerText="Codigo"
+										filterBy="#{item.tarea.ordenServicio.codigo}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'PE'}"
+												value="#{item.tarea.ordenServicio.codigo}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'AE'}"
+												value="#{item.tarea.ordenServicio.codigo}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'NR'}"
+												value="#{item.tarea.ordenServicio.codigo}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'RE'}"
+												value="#{item.tarea.ordenServicio.codigo}" /></span>
+
+									</p:column>
+									<p:column width="17%" headerText="Cliente"
+										filterBy="#{item.tarea.ordenServicio.cliente.nombre} #{item.tarea.ordenServicio.cliente.apellidoPaterno} #{item.tarea.ordenServicio.cliente.apellidoMaterno}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'PE'}"
+												value="#{item.tarea.ordenServicio.cliente.nombre} #{item.tarea.ordenServicio.cliente.apellidoPaterno} #{item.tarea.ordenServicio.cliente.apellidoMaterno}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'AE'}"
+												value="#{item.tarea.ordenServicio.cliente.nombre} #{item.tarea.ordenServicio.cliente.apellidoPaterno} #{item.tarea.ordenServicio.cliente.apellidoMaterno}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'NR'}"
+												value="#{item.tarea.ordenServicio.cliente.nombre} #{item.tarea.ordenServicio.cliente.apellidoPaterno} #{item.tarea.ordenServicio.cliente.apellidoMaterno}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'RE'}"
+												value="#{item.tarea.ordenServicio.cliente.nombre} #{item.tarea.ordenServicio.cliente.apellidoPaterno} #{item.tarea.ordenServicio.cliente.apellidoMaterno}" /></span>
+									</p:column>
+									<p:column width="17%" headerText="Entidad"
+										filterBy="#{item.tarea.ordenServicio.empresa.descripcion}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'PE'}"
+												value="#{item.tarea.ordenServicio.empresa.descripcion} - #{item.tarea.ordenServicio.empresa.telefono}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'AE'}"
+												value="#{item.tarea.ordenServicio.empresa.descripcion} - #{item.tarea.ordenServicio.empresa.telefono}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'NR'}"
+												value="#{item.tarea.ordenServicio.empresa.descripcion} - #{item.tarea.ordenServicio.empresa.telefono}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'RE'}"
+												value="#{item.tarea.ordenServicio.empresa.descripcion} - #{item.tarea.ordenServicio.empresa.telefono}" /></span>
+									</p:column>
+									<p:column width="17%" headerText="Origen"
+										filterBy="#{item.tarea.ordenServicio.sucursal.descripcion}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'PE'}"
+												value="#{item.tarea.ordenServicio.sucursal.descripcion} - #{item.tarea.ordenServicio.sucursal.ciudad.nombre}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'AE'}"
+												value="#{item.tarea.ordenServicio.sucursal.descripcion} - #{item.tarea.ordenServicio.sucursal.ciudad.nombre}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'NR'}"
+												value="#{item.tarea.ordenServicio.sucursal.descripcion} - #{item.tarea.ordenServicio.sucursal.ciudad.nombre}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'RE'}"
+												value="#{item.tarea.ordenServicio.sucursal.descripcion} - #{item.tarea.ordenServicio.sucursal.ciudad.nombre}" /></span>
+									</p:column>
+									<p:column width="17%" headerText="Asunto"
+										filterBy="#{item.tarea.nombreTarea.nombre}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'PE'}"
+												value="#{item.tarea.nombreTarea.nombre}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'AE'}"
+												value="#{item.tarea.nombreTarea.nombre}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'NR'}"
+												value="#{item.tarea.nombreTarea.nombre}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'RE'}"
+												value="#{item.tarea.nombreTarea.nombre}" /></span>
+									</p:column>
+									<p:column width="17%" headerText="Progreso">
+										<p:progressBar widgetVar="pbAjax" ajax="true"
+											value="#{item.tarea.ordenServicio.progreso}"
+											labelTemplate="{value}%" styleClass="animated" global="false">
+											<p:ajax event="complete" update="form001" />
+										</p:progressBar>
+									</p:column>
+									<p:column width="10%" headerText="Estado"
+										filterBy="#{item.tarea.estado}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado=='PE'}"
+												value="Pendiente" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado=='AE'}"
+												value="Aprobada y Enviada" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado=='NR'}"
+												value="Retrasada" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado=='RE'}"
+												value="Terminada" /></span>
+									</p:column>
+									<p:column width="11%" headerText="Fecha Registro"
+										filterBy="#{item.tarea.fechaRegistro}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'PE'}"
+												value="#{item.tarea.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'AE'}"
+												value="#{item.tarea.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'NR'}"
+												value="#{item.tarea.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.tarea.ordenServicio.estado == 'RE'}"
+												value="#{item.tarea.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText></span>
+									</p:column>
+
+									<p:rowExpansion>
+
+										<div class="CardBigTopic Container100 Responsive10 TexAlRight"
+											style="padding-top: 0px; padding-bottom: 1px; height: 10px;">
+											<p:commandButton icon="fa fa-plus"
+												styleClass="Fs12 White OrangeButton">
+												<p:ajax immediate="true" update="form001"
+													listener="#{misTareaController.enviarMensaje(item)}" />
+											</p:commandButton>
+										</div>
+
+										<p:dataTable var="var" value="#{item.mensajes}" reflow="true"
+											paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+											rowsPerPageTemplate="5,10,15">
+
+											<f:facet name="header">
+												Mensajes
+											</f:facet>
+
+											<p:column>
+												<f:facet name="header">
+													<h:outputText value="De" />
+												</f:facet>
+												<h:outputText
+													value="#{var.emisor.nombre} #{var.emisor.apellidoPaterno} #{var.emisor.apellidoMaterno}" />
+											</p:column>
+
+											<p:column>
+												<f:facet name="header">
+													<h:outputText value="Para" />
+												</f:facet>
+												<h:outputText
+													value="#{var.receptor.nombre} #{var.receptor.apellidoPaterno} #{var.receptor.apellidoMaterno}" />
+											</p:column>
+
+											<p:column>
+												<f:facet name="header">
+													<h:outputText value="Mensaje" />
+												</f:facet>
+												<h:outputText value="#{var.mensaje}" />
+											</p:column>
+
+											<p:column>
+												<f:facet name="header">
+													<h:outputText value="Enviado" />
+												</f:facet>
+												<h:outputText value="#{var.fechaRegistro}">
+													<f:convertDateTime pattern="dd/MM/yyyy H:mm" />
+												</h:outputText>
+											</p:column>
+
+										</p:dataTable>
+
+										<p:dataTable var="varOrdenLab" widgetVar="ordenLabTable"
+											value="#{item.tarea.ordenServicio.ordenLab}"
+											style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+											emptyMessage="No se encontraron Registros."
+											rowKey="#{item.tarea.ordenServicio.ordenLab.id}"
+											reflow="true">
+
+											<f:facet name="header">
+												Orden de Laboratorio
+											</f:facet>
+
+											<p:column width="2%">
+												<p:rowToggler />
+											</p:column>
+
+											<p:column>
+												<f:facet name="header">
+													<h:outputText value="Codigo" />
+												</f:facet>
+												<h:outputText value="#{varOrdenLab.codigo}" />
+											</p:column>
+
+											<p:rowExpansion>
+
+												<p:dataTable var="examenes"
+													value="#{item.tarea.ordenServicio.ordenLab.listOrdenDetalle}"
+													style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+													emptyMessage="No se encontraron Registros."
+													rowKey="#{item.tarea.ordenServicio.ordenLab.id}"
+													reflow="true">
+
+													<f:facet name="header">
+														Examenes
+													</f:facet>
+
+													<p:column width="2%">
+														<p:rowToggler />
+													</p:column>
+
+													<p:column>
+														<f:facet name="header">
+															<h:outputText value="Examen" />
+														</f:facet>
+														<h:outputText value="#{examenes.descripcion}" />
+													</p:column>
+
+													<p:rowExpansion>
+
+														<p:dataTable var="resultados"
+															value="#{examenes.listOrdenSubDetalle}" reflow="true">
+
+															<f:facet name="header">
+																Resultados
+															</f:facet>
+
+															<p:column width="25%" headerText="Estudios"
+																filterBy="#{resultados.descripcion}">
+																<h:outputText value="#{resultados.descripcion}" />
+															</p:column>
+
+															<p:column width="25%" headerText="Valor de Referencia"
+																filterBy="#{resultados.parametros}">
+																<h:outputText
+																	value="#{resultados.parametros} #{resultados.unidaMedida}" />
+															</p:column>
+
+															<p:column width="25%" headerText="Resultado"
+																filterBy="#{resultados.resultado}">
+																<h:outputText value="#{resultados.resultado}" />
+															</p:column>
+
+														</p:dataTable>
+
+													</p:rowExpansion>
+
+												</p:dataTable>
+
+											</p:rowExpansion>
+
+										</p:dataTable>
+
+										<p:dataTable var="varOrdenImag" widgetVar="ordenImagTable"
+											value="#{item.tarea.ordenServicio.ordenImag}"
+											style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+											emptyMessage="No se encontraron Registros."
+											rowKey="#{item.tarea.ordenServicio.ordenImag.id}"
+											reflow="true">
+
+											<f:facet name="header">
+												Orden de Imageneologia
+											</f:facet>
+
+											<p:column width="2%">
+												<p:rowToggler />
+											</p:column>
+
+											<p:column>
+												<f:facet name="header">
+													<h:outputText value="Codigo" />
+												</f:facet>
+												<h:outputText value="#{varOrdenImag.codigo}" />
+											</p:column>
+
+											<p:rowExpansion>
+
+												<p:dataTable var="examenes"
+													value="#{item.tarea.ordenServicio.ordenImag.listOrdenDetalle}"
+													style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+													emptyMessage="No se encontraron Registros."
+													rowKey="#{item.tarea.ordenServicio.ordenImag.id}"
+													reflow="true">
+
+													<f:facet name="header">
+														Examenes
+													</f:facet>
+
+													<p:column width="2%">
+														<p:rowToggler />
+													</p:column>
+
+													<p:column>
+														<f:facet name="header">
+															<h:outputText value="Examen" />
+														</f:facet>
+														<h:outputText value="#{examenes.descripcion}" />
+													</p:column>
+
+													<p:rowExpansion>
+
+														<p:dataTable var="resultados"
+															value="#{examenes.listOrdenSubDetalle}" reflow="true">
+
+															<f:facet name="header">
+																Resultados
+															</f:facet>
+
+															<p:column width="25%" headerText="Estudios"
+																filterBy="#{resultados.descripcion}">
+																<h:outputText value="#{resultados.descripcion}" />
+															</p:column>
+
+															<p:column width="25%" headerText="Valor de Referencia"
+																filterBy="#{resultados.parametros}">
+																<h:outputText
+																	value="#{resultados.parametros} #{resultados.unidaMedida}" />
+															</p:column>
+
+															<p:column width="25%" headerText="Resultado"
+																filterBy="#{resultados.resultado}">
+																<h:outputText value="#{resultados.resultado}" />
+															</p:column>
+
+														</p:dataTable>
+
+													</p:rowExpansion>
+
+												</p:dataTable>
+
+											</p:rowExpansion>
+
+										</p:dataTable>
+
+									</p:rowExpansion>
+
+									<f:facet name="footer">
+										<h:outputText
+											value="#{misTareaController.vistaTareas.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+
+			<div class="Container0 Responsive100 TexAlLeft">
+				<p:dialog id="dialog1" header="ENVIO DE MENSAJE"
+					widgetVar="dlgMensaje" responsive="true" modal="true"
+					resizable="false" closable="false" appendTo="@(content)"
+					showEffect="clip" hideEffect="clip" width="600px">
+					<h:form id="formDlg001">
+						<p:focus for="mensaje" />
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<div
+								class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="receptor" value="Para:" />
+							</div>
+							<div class="Container60 Responsive50">
+								<p:autoComplete id="receptor" required="true"
+									requiredMessage="El medico auditor es un campo obligatorio."
+									value="#{misTareaController.mensaje.receptor}"
+									completeMethod="#{misTareaController.onCompletePersonal}"
+									converter="personalConverter" minQueryLength="1"
+									forceSelection="true" var="_var"
+									itemLabel="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}"
+									itemValue="#{_var}" placeholder="Escriba el nombre del medico"
+									maxResults="10" dropdown="true">
+									<p:ajax event="itemSelect" immediate="true" update="receptor"
+										listener="#{misTareaController.onSelectPersonalClick}" />
+									<p:column>
+										<h:outputText
+											value="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}" />
+									</p:column>
+								</p:autoComplete>
+								<p:message for="receptor" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<div
+								class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="mensaje" value="Mensaje:" />
+							</div>
+							<div class="Container60 Responsive50">
+								<p:inputTextarea id="mensaje" required="true"
+									requiredMessage="El mensaje es un campo obligatorio."
+									style="width:400px"
+									value="#{misTareaController.mensaje.mensaje}">
+									<p:ajax event="change" update="mensaje" />
+								</p:inputTextarea>
+								<p:message for="mensaje" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container50 Responsive100 TexAlLeft">
+
+							<div class="Container50 Responsive100 TexAlLeft">
+								<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+									styleClass="Fs14 White OrangeButton"
+									oncomplete="PF('dlgMensaje').hide(); window.location.reload();">
+									<p:ajax update="form001"
+										listener="#{misTareaController.initNew()}" />
+								</p:commandButton>
+							</div>
+							<div class="Container50 Responsive100 TexAlLeft">
+								<p:commandButton icon="fa fa-check" value="Guardar"
+									oncomplete="window.location.reload()"
+									styleClass="Fs14 White GreenButton">
+									<p:ajax update="form001"
+										listener="#{misTareaController.send()}" />
+								</p:commandButton>
+							</div>
+						</div>
+					</h:form>
+				</p:dialog>
+				<!-- END DIALOG -->
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

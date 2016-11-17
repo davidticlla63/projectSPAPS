@@ -1,0 +1,252 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">LIBRO MAYOR</div>
+			<div class="SeparatorFull"></div>
+			<div class="Responsive100 Container25 ">
+				<p:outputLabel for="selectedCuenta" value="Filtrar por cuenta :" />
+				<p:selectOneRadio id="selectedCuenta"
+					value="#{libroMayorController.filtroCuenta}" layout="grid"
+					columns="1">
+					<p:ajax event="valueChange" update="form001" />
+					<f:selectItem itemLabel="Todas las cuentas" itemValue="TODAS" />
+					<f:selectItem itemLabel="Seleccion cuenta" itemValue="SELECCION" />
+					<f:selectItem itemLabel="Rango de cuenta" itemValue="RANGO" />
+				</p:selectOneRadio>
+			</div>
+			<div class="Responsive100 Container25 ">
+				<h:panelGrid id="grid000" columns="1"
+					rendered="#{libroMayorController.filtroCuenta == 'SELECCION'}">
+					<p:outputLabel value="Cuenta"
+						rendered="#{libroMayorController.filtroCuenta == 'SELECCION'}" />
+					<p:outputLabel value="Cuenta Inicial"
+						rendered="#{libroMayorController.filtroCuenta == 'RANGO'}" />
+					<p:autoComplete id="dialogAutoCompleteCuenta"
+						converter="planCuentaConverter"
+						value="#{libroMayorController.planCuentaInicial}"
+						completeMethod="#{planCuentaController.onCompleteTextCuentaAuxiliar}"
+						minQueryLength="2" forceSelection="true" var="item"
+						itemLabel="#{item.descripcion}" itemValue="#{item}"
+						placeholder="Código o Nombre Cuenta" maxResults="10"
+						inputStyle="mbr-inputText">
+						<p:ajax event="itemSelect" update="form001"
+							listener="#{libroMayorController.onItemSelectCuentaInicial}" />
+						<p:column>
+							<h:outputText value="#{item.codigoAuxiliar}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{item.descripcion}" />
+						</p:column>
+					</p:autoComplete>
+
+				</h:panelGrid>
+				<h:panelGrid id="grid00" columns="1"
+					rendered="#{libroMayorController.filtroCuenta == 'RANGO'}">
+					<p:outputLabel value="Cuenta Inicial" />
+					<p:autoComplete id="dialogAutoCompleteCuentaInicial"
+						converter="planCuentaConverter"
+						value="#{libroMayorController.planCuentaInicial}"
+						completeMethod="#{planCuentaController.onCompleteTextCuentaAuxiliar}"
+						minQueryLength="2" forceSelection="true" var="item"
+						itemLabel="#{item.descripcion}" itemValue="#{item}"
+						placeholder="Código o Nombre Cuenta" maxResults="10"
+						inputStyle="mbr-inputText">
+						<p:ajax event="itemSelect" update="form001"
+							listener="#{libroMayorController.onItemSelectCuentaInicial}" />
+						<p:column>
+							<h:outputText value="#{item.codigoAuxiliar}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{item.descripcion}" />
+						</p:column>
+					</p:autoComplete>
+					<p:outputLabel value="Cuenta Final" />
+					<p:autoComplete id="dialogAutoCompleteCuentaFinal"
+						converter="planCuentaConverter"
+						value="#{libroMayorController.planCuentaFinal}"
+						completeMethod="#{planCuentaController.onCompleteTextCuentaAuxiliar}"
+						minQueryLength="2" forceSelection="true" var="item"
+						itemLabel="#{item.descripcion}" itemValue="#{item}"
+						placeholder="Código o Nombre Cuenta" maxResults="10"
+						inputStyle="mbr-inputText">
+						<p:ajax event="itemSelect" update="dialogAutoCompleteCuentaFinal"
+							listener="#{libroMayorController.onItemSelectCuentaFinal}" />
+						<p:column>
+							<h:outputText value="#{item.codigoAuxiliar}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{item.descripcion}" />
+						</p:column>
+					</p:autoComplete>
+				</h:panelGrid>
+
+			</div>
+			<div class="Responsive100 Container25 ">
+				<p:outputLabel for="selectedfecha" value="Filtrar por fecha : " />
+				<p:selectOneRadio id="selectedfecha"
+					value="#{libroMayorController.filtroFecha}" layout="grid"
+					columns="1">
+					<p:ajax event="valueChange" update="form001" />
+					<f:selectItem itemLabel="Por fechas" itemValue="FECHAS" />
+					<f:selectItem itemLabel="Por periodo" itemValue="PERIODO" />
+				</p:selectOneRadio>
+			</div>
+			<div class="Responsive100 Container25 ">
+				<p:outputLabel for="grid01" value="#{' . '}"
+					rendered="#{libroMayorController.filtroFecha == 'FECHAS'}" />
+				<h:panelGrid id="grid01" columns="2"
+					rendered="#{libroMayorController.filtroFecha == 'FECHAS'}">
+					<p:outputLabel for="fechaInicial" value="Fecha Inicial" />
+					<p:calendar id="fechaInicial"
+						value="#{libroMayorController.fechaIni}" locale="es"
+						styleClass="myWid100" required="true"
+						requiredMessage="Fecha requerido" pattern="dd/MM/yyyy">
+						<p:ajax event="dateSelect" />
+					</p:calendar>
+
+					<p:outputLabel for="fechaFinal" value="Fecha Final" />
+					<p:calendar id="fechaFinal"
+						value="#{libroMayorController.fechaFin}" locale="es"
+						styleClass="myWid100" required="true"
+						requiredMessage="Fecha requerido" pattern="dd/MM/yyyy">
+						<p:ajax event="dateSelect" />
+					</p:calendar>
+				</h:panelGrid>
+			</div>
+
+			<div class="SeparatorFull"></div>
+
+			<div class="Responsive100 Container75 ">
+				<h:panelGrid id="grid02" columns="3">
+					<p:outputLabel for="cuentaCodigoSeleccionada" value="Cuenta" />
+					<p:inputText id="cuentaCodigoSeleccionada" readonly="true"
+						value="#{libroMayorController.planCuenta.codigoAuxiliar} ">
+					</p:inputText>
+
+					<p:inputText id="cuentaNombreSeleccionada" readonly="true"
+						value="#{libroMayorController.planCuenta.descripcion}">
+					</p:inputText>
+
+					<p:commandButton icon="fa fa-arrow-left" value="Anterior"
+						rendered="#{libroMayorController.filtroCuenta == 'RANGO' || libroMayorController.filtroCuenta == 'TODAS'}"
+						disabled="#{! libroMayorController.habilitarPaginadorIzq}"
+						styleClass="Fs14 White BlueButton" immediate="true" update="form001"
+						actionListener="#{libroMayorController.anteriorCuenta()}">
+					</p:commandButton>
+					<p:commandButton icon="fa fa-arrow-right" iconPos="right"
+						value="Siguiente"
+						rendered="#{libroMayorController.filtroCuenta == 'RANGO' || libroMayorController.filtroCuenta == 'TODAS'}"
+						disabled="#{! libroMayorController.habilitarPaginadorDer}"
+						styleClass="Fs14 White BlueButton" immediate="true" update="form001"
+						actionListener="#{libroMayorController.siguienteCuenta()}">
+					</p:commandButton>
+				</h:panelGrid>
+			</div>
+
+			<div class="Responsive100 Container25 ">
+				<h:panelGrid id="grid03" columns="2">
+					<p:outputLabel for="saldoNacional" value="Saldo Bolivianos" />
+					<p:inputText id="saldoNacional"
+						value="#{libroMayorController.saldoNacional}" readonly="true">
+						<f:convertNumber type="number" groupingUsed="true"
+							minFractionDigits="2" pattern="#0.00" />
+						<p:ajax event="change" />
+					</p:inputText>
+
+					<p:outputLabel for="saldoExtranjero" value="Saldo Dolares" />
+					<p:inputText id="saldoExtranjero"
+						value="#{libroMayorController.saldoExtranjero}" readonly="true">
+						<f:convertNumber type="number" groupingUsed="true"
+							minFractionDigits="2" pattern="#0.00" />
+						<p:ajax event="change" />
+					</p:inputText>
+				</h:panelGrid>
+			</div>
+
+			<div class="Container100 ui-fluid">
+				<p:dataTable id="dataTableComprobante" var="item"
+					widgetVar="comprobanteTable" paginator="true"
+					value="#{libroMayorController.listMayores}" reflow="true"
+					emptyMessage="No se encontraron comprobantes." rowKey="#{item.id}">
+
+					<p:column width="7%" headerText="Número" filterBy="#{item.id}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.comprobante.correlativo}" />
+					</p:column>
+
+					<p:column width="6%" headerText="Fecha" filterBy="#{item.dato}"
+						priority="2" filterStyle="width: 100%; height:25px;"
+						style="text-align:center;">
+						<h:outputText value="#{item.comprobante.fechaRegistro}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column width="6%" headerText="T. Cambio" filterBy="#{item.dato}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.comprobante.tipoCambio}">
+						</h:outputText>
+					</p:column>
+
+					<p:column width="15%" headerText="Glosa"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;"
+						filterBy="#{item.dato}">
+						<h:outputText value="#{item.comprobante.glosa}">
+						</h:outputText>
+					</p:column>
+
+					<p:column width="7%" headerText="Debe" filterBy="#{item.dato}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.debeNacional}">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</h:outputText>
+					</p:column>
+
+					<p:column width="7%" headerText="Haber" filterBy="#{item.dato}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.haberNacional}">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</h:outputText>
+					</p:column>
+
+					<p:column width="7%" headerText="Saldo" filterBy="#{item.saldo}"
+						filterStyle="width: 100%; height:25px;" style="text-align:left;">
+						<h:outputText value="#{item.saldoNacional}">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</h:outputText>
+					</p:column>
+
+					<p:columnGroup type="footer" rendered="false">
+						<p:row>
+							<p:column colspan="4" style="text-align:right"
+								footerText="Total:" />
+							<p:column footerText="#{libroMayorController.totalDebeNacional}" />
+
+							<p:column footerText="#{libroMayorController.totalHaberNacional}" />
+							<p:column footerText="." />
+						</p:row>
+					</p:columnGroup>
+
+					<f:facet name="footer">
+						<h:outputText
+							value="#{libroMayorController.listMayores.size()} Registros en Total" />
+					</f:facet>
+
+				</p:dataTable>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

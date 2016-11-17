@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container60 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic Container70 Responsive100 TexAlLeft">PLAN
+					CUENTA</div>
+				<div class="CardBigTopic Container30 Responsive100 TexAlRight"
+					style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+					<p:inputSwitch onLabel="Desplegado" offLabel="Contraído"
+						rendered="#{ planCuentaController.mostrarTableBusqueda}"
+						value="#{planCuentaController.stateExpandingPlanCuenta}">
+						<p:ajax event="change" update="form001"
+							listener="#{planCuentaController.expanding()}" />
+					</p:inputSwitch>
+				</div>
+
+				<div class="SeparatorFull"></div>
+				<div class="Container100 ui-fluid">
+					<div class="Responsive100 Container20">
+						<p:outputLabel value="Buscar Cuenta" />
+					</div>
+					<div class="Responsive100 Container50">
+						<p:inputText value="#{planCuentaController.filterByCuenta}"
+							placeholder="Nombre Cuenta o Código">
+							<p:ajax event="change" />
+						</p:inputText>
+					</div>
+					<div class="Responsive100 Container30">
+						<p:commandButton value="Buscar" styleClass="Fs14 White BlueButton"
+							update="form001" immediate="true"
+							actionListener="#{planCuentaController.buscarCuentasByFilter()}">
+						</p:commandButton>
+					</div>
+					<div class="Responsive100 Container100 ">
+						<ui:fragment
+							rendered="#{ planCuentaController.mostrarTableBusqueda}">
+							<p:treeTable id="docs" scrollable="true" resizableColumns="true"
+								value="#{planCuentaController.root}" var="node"
+								selectionMode="single" emptyMessage="No se encontraron Cuentas."
+								selection="#{planCuentaController.selectedNode}">
+								<p:ajax event="select" update="form001"
+									listener="#{planCuentaController.onRowSelectPlanCuentaNode}" />
+								<p:column headerText="Código" width="40%">
+									<ui:fragment rendered="#{node.clase == 'CONTROL'}">
+										<h:outputText value="#{node.pc.codigoAuxiliar}">
+										</h:outputText>
+									</ui:fragment>
+									<ui:fragment rendered="#{node.clase != 'CONTROL'}">
+										<h:outputText value="#{node.pc.codigoAuxiliar}"
+											style="color:#5B9BE1;">
+										</h:outputText>
+									</ui:fragment>
+								</p:column>
+								<p:column headerText="Cuenta" width="30%">
+									<ui:fragment rendered="#{node.clase == 'CONTROL'}">
+										<h:outputText value="#{node.cuenta}" />
+									</ui:fragment>
+									<ui:fragment rendered="#{node.clase != 'CONTROL'}">
+										<h:outputText value="#{node.cuenta}" style="color:#5B9BE1; " />
+									</ui:fragment>
+								</p:column>
+								<p:column headerText="Moneda" width="30%" rendered="false">
+									<ui:fragment rendered="#{node.clase == 'CONTROL'}">
+										<h:outputText value="#{node.moneda}" />
+									</ui:fragment>
+									<ui:fragment rendered="#{node.clase != 'CONTROL'}">
+										<h:outputText value="#{node.moneda}" style="color:#5B9BE1; " />
+									</ui:fragment>
+								</p:column>
+							</p:treeTable>
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{ ! planCuentaController.mostrarTableBusqueda}">
+							<p:dataTable id="dataTableQuery" var="item"
+								widgetVar="queryTable" selectionMode="single"
+								value="#{planCuentaController.listPlanCuentaCoincidencias}"
+								emptyMessage="No se encontraron Cuentas"
+								selection="#{planCuentaController.planCuenta}"
+								rowKey="#{item.id}" reflow="true">
+
+								<p:ajax event="rowSelect" update="form001"
+									listener="#{planCuentaController.onRowSelectPlanCuentaObject}" />
+
+								<p:column headerText="Código" style="text-align:center;">
+									<h:outputText value="#{item.codigoAuxiliar}"
+										style="text-align:center; color:#5B9BE1;" />
+								</p:column>
+
+								<p:column headerText="Cuenta">
+									<h:outputText value="#{item.descripcion}"
+										style="text-align:center; color:#5B9BE1;" />
+								</p:column>
+
+								<p:column headerText="Moneda" rendered="false">
+									<h:outputText value="#{item.monedaEmpresa.moneda.nombre}"
+										style="text-align:center; color:#5B9BE1;" />
+								</p:column>
+
+							</p:dataTable>
+						</ui:fragment>
+
+						<p:commandButton value="Cancelar"
+							rendered="#{ ! planCuentaController.mostrarTableBusqueda}"
+							styleClass="Fs14 White OrangeButton" update="form001"
+							immediate="true"
+							actionListener="#{planCuentaController.cancelarBusqueda()}">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="Container40 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic">DETALLE CUENTA SELECCIONADA</div>
+				<div class="SeparatorFull"></div>
+				<div class="Container100 ui-fluid">
+					<div class="Responsive100 Container100 ">
+						<p:outputLabel for="selectedCodigoCuenta" value="Código"
+							rendered="#{ planCuentaController.crear or planCuentaController.seleccionado}" />
+						<p:outputLabel for="selectedCodigoCuenta"
+							rendered="#{planCuentaController.registrar}"
+							value="Codigo de: #{planCuentaController.tamanioDigito} Dígito(s)" />
+						<p:inputText id="selectedCodigoCuenta"
+							disabled="#{planCuentaController.crear}" readonly="#{planCuentaController.seleccionado}"
+							rendered="#{planCuentaController.maskCodigoCuenta.length()==0}"
+							value="#{planCuentaController.planCuenta.codigoAuxiliar}"
+							onkeypress="return validateOnlyNumber(event)"
+							maxlength="#{planCuentaController.tamanioDigito}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:inputMask id="ssn1"
+							rendered="#{planCuentaController.maskCodigoCuenta.length()!=0}"
+							value="#{planCuentaController.planCuenta.codigo}"
+							mask="#{planCuentaController.maskCodigoCuenta}" />
+
+					</div>
+					<div class="Responsive100 Container100 ">
+						<p:outputLabel for="selectedNombreCuenta" value="Nombre" />
+						<p:inputText id="selectedNombreCuenta" style="text-transform:uppercase;"
+							disabled="#{planCuentaController.crear}"
+							readonly="#{planCuentaController.seleccionado}"
+							value="#{planCuentaController.planCuenta.descripcion}">
+							<p:ajax event="change" />
+						</p:inputText>
+					</div>
+					<div class="Responsive100 Container100 ">
+						<p:outputLabel for="selectedClaseCuenta" value="Clase" rendered="false" />
+						<p:selectOneMenu id="selectedClaseCuenta" rendered="false"
+							disabled="#{planCuentaController.seleccionado or planCuentaController.registrar or planCuentaController.crear}"
+							value="#{planCuentaController.planCuenta.clase}">
+							<p:ajax event="change" />
+							<f:selectItem itemValue="CONTROL" itemLabel="CONTROL" />
+							<f:selectItem itemValue="AUXILIAR" itemLabel="AUXILIAR" />
+						</p:selectOneMenu>
+					</div>
+					<ui:fragment
+						rendered="#{planCuentaController.planCuenta.clase.equals('AUXILIAR')}">
+						<div class="Responsive100 Container100 ">
+							<p:outputLabel value="Moneda" rendered="false" />
+							<p:selectOneMenu id="monedaEmpresa" rendered="false"
+								converter="monedaEmpresaConverter"
+								value="#{planCuentaController.monedaEmpresa}">
+								<p:ajax update="form001" event="valueChange"
+									listener="#{planCuentaController.changeOneMenuMonedaEmpresa()}" />
+								<f:selectItems value="#{sessionContable.listMonedaEmpresa}"
+									var="item" itemLabel="#{item.moneda.nombre}"
+									itemValue="#{item}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="Responsive100 Container100 ">
+							<p:outputLabel value="Ufv" rendered="false" />
+						</div>
+						<p:inputSwitch onLabel="Si" offLabel="No" rendered="false"
+							value="#{planCuentaController.planCuenta.ufv}">
+						</p:inputSwitch>
+						<div class="SeparatorFull"></div>
+						<div class="Responsive100 Container100 ">
+							<p:outputLabel for="selectedAjuste" value="Ajuste Automático:" />
+							<p:selectOneRadio id="selectedAjuste"
+								value="#{planCuentaController.planCuenta.ajuste}" layout="grid"
+								columns="1">
+								<f:selectItem itemLabel="Ajuste Por Inflación" itemValue="API" />
+								<f:selectItem itemLabel="Ajuste Por Diferencia de Cambio"
+									itemValue="APDC" />
+								<f:selectItem itemLabel="Ajuste Por Correción Monetaria"
+									itemValue="APCM" />
+								<f:selectItem itemLabel="Ajuste Al Capital" itemValue="AAC" />
+								<f:selectItem itemLabel="Ajuste de Reservas Patrimoniales"
+									itemValue="ARP" />
+								<f:selectItem itemLabel="Sin Ajuste" itemValue="SA" />
+							</p:selectOneRadio>
+						</div>
+						<div class="Responsive100 Container100 ">
+							<p:outputLabel for="selectedMovimeinto" value="Movimiento:" />
+							<p:selectOneRadio id="selectedMovimeinto"
+								value="#{planCuentaController.planCuenta.movimiento}"
+								layout="grid" columns="1">
+								<f:selectItem itemLabel="Ambos" itemValue="A" />
+								<f:selectItem itemLabel="Movimiento al Debe" itemValue="MD" />
+								<f:selectItem itemLabel="Movimiento al Haber" itemValue="MH" />
+								<f:selectItem itemLabel="Ninguno" itemValue="N" />
+							</p:selectOneRadio>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

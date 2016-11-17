@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic">LISTADO DE EMPRESA | USUARIO SUPER
+					ADMINISTRADOR</div>
+				<div class="SeparatorFull"></div>
+				<div class="Container100 ui-fluid">
+					<p:dataTable id="singleDT" var="var" expandedRow="#{true}"
+						value="#{compania2Controller.listCompania}" rowKey="#{var.id}"
+						emptyMessage="No se encontraron registros." reflow="true">
+						<f:facet name="header">
+                        	Seleccione una sucursal para ingresar al sistema
+                        </f:facet>
+
+						<p:column style="width:16px">
+							<p:rowToggler />
+						</p:column>
+
+						<p:rowExpansion>
+							<br />
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group ">
+										<div class="col-md-12">
+											<p:dataTable id="dataTableDetalleSucursal" var="itemDetail"
+												value="#{var.listSucursal}" selectionMode="single"
+												selection="#{compania2Controller.sucursal}"
+												rowKey="#{itemDetail.id}">
+
+												<p:ajax update="form001" event="rowSelect"
+													listener="#{compania2Controller.onRowSelectSucursal}" />
+
+												<p:column width="25%" headerText="Nombre Sucursal"
+													style="text-align:center;">
+													<h:outputText value="#{itemDetail.nombre}" />
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</div>
+						</p:rowExpansion>
+
+
+
+						<p:column width="25%" headerText="Nombre Empresa"
+							style="text-align:center;">
+							<h:outputText value="#{var.nombre.toUpperCase()}" />
+						</p:column>
+
+						<p:column width="12%" headerText="Tipo" style="text-align:center;">
+							<span class="FontLatoBold Fs14 Green DispBlock"><h:outputText
+									rendered="#{var.tipo.equals('P')}" value="Principal" /></span>
+							<span class="FontLatoBold Fs14 Orange DispBlock"><h:outputText
+									rendered="#{var.tipo.equals('N')}" value="Normal" /></span>
+						</p:column>
+
+						<p:column width="12%" rendered="#{sessionMain.usuarioLogin.tipo=='SUPER'}" headerText="Modificar" 
+							style="text-align:center;">
+							<p:commandButton icon="fa fa-edit"
+								styleClass="Fs14 White BlueButton" update="form001"
+								actionListener="#{compania2Controller.actionModificar(var.id)}"></p:commandButton>
+						</p:column>
+						<f:facet name="footer">
+							<h:outputText
+								value="#{compania2Controller.listCompania.size()} Registros en Total" />
+						</f:facet>
+					</p:dataTable>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

@@ -1,0 +1,202 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<div class="Container100">
+			<div class="Card">
+				<div class="Container75 Responsive100 TexAlLeft"></div>
+				<div class="Container25 Responsive100 TexAlRight">
+					<p:breadCrumb>
+						<p:menuitem value="." url="/pages/dashboard.xhtml" />
+						<p:menuitem value="Parametros admision"
+							url="/pages/admision/index.xhtml" />
+					</p:breadCrumb>
+				</div>
+			</div>
+		</div>
+
+		<p:panel header="SEGURO" toggleable="true">
+			<div class="Container100 ui-fluid">
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/registro_seguro.xhtml'">
+					<div class="Card OrangeBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">SEGURIO</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/registro_plan_seguro.xhtml'">
+					<div class="Card RedBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">PLAN
+							SEGURO</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+			</div>
+		</p:panel>
+
+		<p:panel header="EMPRESA" toggleable="true">
+			<div class="Container100 ui-fluid">
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/registro_empresa.xhtml'">
+					<div class="Card OrangeBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">EMPRESA</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				
+			</div>
+		</p:panel>
+
+		<p:panel header="GEOGRAFICO" toggleable="true">
+			<div class="Container100 ui-fluid">
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/registro_pais.xhtml'">
+					<div class="Card OrangeBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">PAIS</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/registro_departamento.xhtml'">
+					<div class="Card BlackBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">DEPARTAMENTO</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/registro_provincia.xhtml'">
+					<div class="Card RedBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">PROVINCIA</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/barrio.xhtml'">
+					<div class="Card GreenBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">BARRIO</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/unidad_vecinal.xhtml'">
+					<div class="Card AquaBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">UNIDAD
+							VECINAL</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/ciudad/index.xhtml'">
+					<div class="Card YellowBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">CIUDAD</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+			</div>
+		</p:panel>
+		<p:panel header="DATOS PACIENTE" toggleable="true">
+			<div class="Container100 ui-fluid">
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/documento_identidad.xhtml'">
+					<div class="Card OrangeBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">DOCUMENTOS</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/estado_civil.xhtml'">
+					<div class="Card BlackBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">ESTADO CIVIL</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/grupo_familiar.xhtml'">
+					<div class="Card RedBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">GRUPO FAMILIAR</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/nivel_academico.xhtml'">
+					<div class="Card GreenBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">NIVEL ACADEMICO</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/parentesco.xhtml'">
+					<div class="Card AquaBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">PARENTEZCO</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/raza.xhtml'">
+					<div class="Card YellowBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">RAZA</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/grupo_sanguineo.xhtml'">
+					<div class="Card OrangeBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">GRUPO SANGUINEO</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+				<div class="Container25 Responsive50 Flex" style="cursor: pointer"
+					onclick="location.href='#{request.contextPath}/pages/admision/registro_cargo.xhtml'">
+					<div class="Card PurpleBack TexAlCenter">
+						<i class="icon-wallet15 Fs50 Blue DispBlock"></i>
+						<div class="EmptyBox5"></div>
+						<span class="FontLatoBlack Fs22 White DispBlock">CARGO EMPRESA</span>
+						<div class="EmptyBox10"></div>
+					</div>
+				</div>
+			</div>
+		</p:panel>
+
+		<ui:include src="/pages/reportes/dialogIndex.xhtml" />
+
+	</ui:define>
+
+</ui:composition>

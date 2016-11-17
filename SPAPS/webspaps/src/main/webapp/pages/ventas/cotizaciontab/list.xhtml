@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100 NoIndent Flex FlexWrap">
+		<div class="Container100 Responsive100 Flex">
+			<div class="Card">
+				<div class="CardBigTopic">LISTADO DE COTIZACIONES</div>
+				<div class="SeparatorFull"></div>
+				<div class="Container100 ui-fluid">
+					<p:dataTable id="singleDT" var="var"
+						value="#{cotizacionController1.listaCotizacion}"
+						selectionMode="single"
+						selection="#{cotizacionController1.cotizacion}" rowKey="#{var.id}"
+						paginator="true" emptyMessage="No se encontraron registros."
+						reflow="true">
+						<f:facet name="header">
+							Seleccione una Cotizacion.
+						</f:facet>
+						<p:ajax update="form001" event="rowSelect"
+							listener="#{cotizacionController1.onRowSelect}" />
+
+						<p:column width="8%" headerText="Código" filterBy="#{var.codigo}">
+							<h:outputText value="#{var.codigo}" />
+						</p:column>
+
+						<p:column width="18%" headerText="Paciente"
+							filterBy="#{var.persona}">
+							<h:outputText value="#{var.persona}" />
+						</p:column>
+
+						<p:column width="20%" headerText="Observacion"
+							filterBy="#{var.observacion}">
+							<h:outputText value="#{var.observacion}" />
+						</p:column>
+
+						<p:column width="18%" headerText="Total"
+							filterBy="#{var.precioTotalBs}">
+							<h:outputText value="#{var.precioTotalBs}" />
+						</p:column>
+
+		
+						<p:column width="10%" headerText="Fecha Registro"
+							style="text-align:center;" filterBy="#{var.fechaRegistro}">
+							<h:outputText value="#{var.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<f:facet name="footer">
+							<h:outputText
+								value="#{cotizacionController1.listaCotizacion.size()} Registros en Total" />
+						</f:facet>
+					</p:dataTable>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

@@ -1,0 +1,38 @@
+<ui:composition 
+
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    
+    
+    <!-- LAYOUT TOPBAR COVER -->
+    <div id="layout-topbar-cover">
+        <div id="layout-topbar-row">
+            <div id="layout-topbar-left">
+                <a href="#{request.contextPath}/pages/dashboard.xhtml" id="logo"><h:graphicImage name="image/logo.png" id="logo" library="spaps" /></a>
+            </div>
+            <div id="layout-topbar-right">
+				
+                <a id="menu-resize-btn" class="topbar-link Animated03"><h:graphicImage name="images/menu-resize-btn-icon.svg" id="menu-resize-btn" library="olympos-layout" /></a>
+                <a id="mobile-menu-btn" class="topbar-link Animated03"><h:graphicImage name="images/menu-btn-icon.svg" id="menu-btn-icon" library="olympos-layout" /></a>
+				<!-- <a id="" class="topbar-link Animated03" href="#"> Usuario:#{sessionMain.usuarioLogin.nombre}</a> -->
+				<!-- <a id="" class="topbar-link Animated03" href="#"> Sucursal:</a> -->
+			<!-- 	<div class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+					<div class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel value="Codigo" />
+					</div>
+				</div> -->
+				
+                <a id="" class="topbar-link Animated03 Fright" href="#{request.contextPath}/pages/profile.xhtml"><i class="icon-user7"></i></a>
+                <a id="" class="topbar-link Animated03 Fright" href="#{request.contextPath}/logoutServlet"><i class="fa fa-power-off"></i></a>
+ 				
+
+                
+
+            </div>
+        </div>
+    </div>
+    
+</ui:composition>

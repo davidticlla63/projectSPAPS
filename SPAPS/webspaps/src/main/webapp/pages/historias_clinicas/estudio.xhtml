@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Estudio</title>
+		<f:event listener="#{estudioController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TexAlLeft">
+							<p:commandButton type="button" icon="fa fa-plus"
+								rendered="#{estudioController.crear}"
+								styleClass="Fs14 White GreenButton" value="Nuevo Estudio">
+								<p:ajax update="form001"
+									listener="#{estudioController.actionNuevo()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								rendered="#{estudioController.modificar or estudioController.registrar}"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{estudioController.initNew()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								rendered="#{estudioController.registrar}"
+								styleClass="Fs14 White GreenButton" value="Registrar">
+								<p:ajax update="form001"
+									listener="#{estudioController.registrar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-edit"
+								rendered="#{estudioController.modificar}" value="Modificar"
+								styleClass="Fs14 White BlueButton">
+								<p:ajax update="form001"
+									listener="#{estudioController.actualizar()}" />
+							</p:commandButton>
+
+							<p:commandButton type="button" icon="fa fa-trash-o"
+								rendered="#{estudioController.modificar}" value="Eliminar"
+								styleClass="Fs14 White RedButton">
+								<p:ajax update="form001"
+									listener="#{estudioController.eliminar()}" />
+							</p:commandButton>
+						</div>
+						<div class="Container25 Responsive100 TexAlRight">
+							<p:breadCrumb>
+								<p:menuitem value="."
+									url="#{request.contextPath}/dashboard.xhtml" />
+								<p:menuitem value="Seguridad"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+								<p:menuitem value="Pais"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+							</p:breadCrumb>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment
+						rendered="#{estudioController.modificar or estudioController.registrar}">
+
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<div class="CardBigTopic">INFORMACIÓN DE ESTUDIO</div>
+								<div class="SeparatorFull"></div>
+								<div class="Container100 ui-fluid">
+									<p:focus for="descripcionEstudio" />
+									<div
+										class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="descripcionEstudio" value="Nombre" />
+										</div>
+										<div class="Container60 Responsive50 TexAlRight">
+											<p:inputText id="descripcionEstudio" required="true"
+												value="#{estudioController.estudio.nombre}">
+												<p:ajax event="change" />
+											</p:inputText>
+											<p:message for="descripcionEstudio" display="tooltip" />
+										</div>
+
+
+										<div
+											class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+											<p:outputLabel for="estados" value="Estado" />
+										</div>
+										<div class="Container60 Responsive50">
+											<p:selectOneMenu id="estados" style=""
+												value="#{estudioController.estudio.estado}">
+												<p:ajax event="valueChange" update="estados" />
+												<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+												<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+												<f:selectItem itemLabel="ELIMINADO" itemValue="RM" />
+											</p:selectOneMenu>
+											<p:message for="estados" display="tooltip" />
+										</div>
+
+										<div class="Container80 Responsive100 ui-fluid TexAlLeft">
+											<div
+												class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+												<p:outputLabel for="tipoEstudio" value="Tipo de Estudio:" />
+											</div>
+											<div class="Container60 Responsive50 TexAlRight">
+												<p:autoComplete id="tipoEstudio" style="width: 100%"
+													inputStyle="width: 100%; color: #555555; background-image: none; padding: 5px 10px;"
+													value="#{estudioController.tipoEstudio.nombre}"
+													completeMethod="#{estudioController.onCompleteTipoEstudio}"
+													minQueryLength="1" forceSelection="true" var="_var"
+													itemLabel="#{_var}" itemValue="#{_var.nombre}"
+													placeholder="Escriba el Tipo de Estudio" maxResults="10"
+													dropdown="true">
+													<p:ajax event="itemSelect" update="form001"
+														listener="#{estudioController.onRowSelectTipoEstudioClick}" />
+													<p:column>
+														<h:outputText value="#{_var.nombre}" />
+													</p:column>
+												</p:autoComplete>
+												<p:message for="tipoEstudio" display="tooltip" />
+											</div>
+										</div>
+
+										<div class="Container100 Responsive100 Flex">
+											<div class="Card">
+												<div class="CardBigTopic">Listado de Tipos de Estudios</div>
+												<div class="SeparatorFull"></div>
+												<div class="Container100 ui-fluid">
+													<h:form id="formDetalle">
+														<p:dataTable id="cars1" var="car"
+															value="#{estudioController.listaDetalleTipoEstudio}"
+															editable="true" style="margin-bottom:20px" reflow="true">
+
+															<p:ajax event="rowEdit" immediate="true"
+																listener="#{estudioController.onRowEdit(car)}"
+																update="cars1" />
+															<p:ajax event="rowEditCancel" immediate="true"
+																listener="#{estudioController.onRowDelete(car)}"
+																update="cars1" />
+
+															<p:column headerText="Nombre de Tipo de Estudio">
+																<h:outputText value="#{car.tipoEstudio.nombre}" />
+															</p:column>
+
+															<p:column style="width:70px">
+																<p:commandButton type="button" icon="fa fa-trash-o"
+																	styleClass="Fs14 White RedButton">
+																	<p:ajax update="cars1"
+																		listener="#{estudioController.onRowDelete(car)}" />
+																</p:commandButton>
+															</p:column>
+
+														</p:dataTable>
+
+													</h:form>
+
+												</div>
+
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</ui:fragment>
+
+
+					<!-- listado  -->
+					<ui:fragment rendered="#{estudioController.crear}">
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<p:dataTable id="singleDT" var="item" widgetVar="EstudioTable"
+									value="#{estudioController.listaEstudio}"
+									selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{estudioController.estudio}" rowKey="#{item.id}"
+									reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{estudioController.onRowSelect}" update="form001" />
+
+									<p:column width="8%" headerText="Identificador"
+										filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" filterBy="#{item.id}">
+										<h:outputText value="#{item.id}" />
+									</p:column>
+									<p:column headerText="Nombre"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.nombre}">
+										<h:outputText value="#{item.nombre}" />
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										headerText="Estado" style="text-align:center;"
+										filterBy="#{item.estado}">
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado=='AC'}" value="Activo" /></span>
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado=='IN'}" value="Inactivo" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado=='RM'}" value="Eliminado" /></span>
+									</p:column>
+									<p:column width="10%" filterStyle="width: 100%; height:25px;"
+										style="text-align:center;" headerText="Usuario Registro"
+										filterBy="#{item.usuarioRegistro}">
+										<h:outputText value="#{item.usuarioRegistro}" />
+									</p:column>
+									<p:column width="10%" headerText="Fecha Registro"
+										style="text-align:center;"
+										filterStyle="width: 100%; height:25px;"
+										filterBy="#{item.fechaRegistro}">
+										<h:outputText value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{estudioController.listaEstudio.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

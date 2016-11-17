@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Aprobacion y Envio de Ordenes de Servicio</title>
+		<f:event
+			listener="#{desgOrdenServicioAprobacionController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment id="busqueda">
+
+					</ui:fragment>
+
+					<ui:fragment id="body">
+
+					</ui:fragment>
+
+					<!-- listado  -->
+					<ui:fragment
+						rendered="#{desgOrdenServicioAprobacionController.crear}">
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<p:dataTable id="singleDT" var="item"
+									widgetVar="DesgOrdenServicioTable"
+									value="#{desgOrdenServicioAprobacionController.listaDesgOrdenServicio}"
+									selectionMode="single"
+									style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+									emptyMessage="No se encontraron Registros."
+									selection="#{desgOrdenServicioAprobacionController.desgOrdenServicio}"
+									rowKey="#{item.id}" reflow="true">
+
+									<p:ajax event="rowSelect"
+										listener="#{desgOrdenServicioAprobacionController.onRowSelect}"
+										update="form001" />
+
+									<p:column width="11%" headerText="Codigo"
+										filterBy="#{item.codigo}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado == 'PE'}" value="#{item.codigo}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.estado == 'AE'}" value="#{item.codigo}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado == 'NR'}" value="#{item.codigo}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado == 'RE'}" value="#{item.codigo}" /></span>
+
+									</p:column>
+									<p:column width="17%" headerText="Cliente"
+										filterBy="#{item.cliente.nombre} #{item.cliente.apellidoPaterno} #{item.cliente.apellidoMaterno}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado == 'PE'}"
+												value="#{item.cliente.nombre} #{item.cliente.apellidoPaterno} #{item.cliente.apellidoMaterno}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.estado == 'AE'}"
+												value="#{item.cliente.nombre} #{item.cliente.apellidoPaterno} #{item.cliente.apellidoMaterno}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado == 'NR'}"
+												value="#{item.cliente.nombre} #{item.cliente.apellidoPaterno} #{item.cliente.apellidoMaterno}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado == 'RE'}"
+												value="#{item.cliente.nombre} #{item.cliente.apellidoPaterno} #{item.cliente.apellidoMaterno}" /></span>
+									</p:column>
+									<p:column width="17%" headerText="Medico Auditor"
+										filterBy="#{item.medicoAuditor.nombre} #{item.medicoAuditor.apellidoPaterno} #{item.medicoAuditor.apellidoMaterno}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado == 'PE'}"
+												value="#{item.medicoAuditor.nombre} #{item.medicoAuditor.apellidoPaterno} #{item.medicoAuditor.apellidoMaterno}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.estado == 'AE'}"
+												value="#{item.medicoAuditor.nombre} #{item.medicoAuditor.apellidoPaterno} #{item.medicoAuditor.apellidoMaterno}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado == 'NR'}"
+												value="#{item.medicoAuditor.nombre} #{item.medicoAuditor.apellidoPaterno} #{item.medicoAuditor.apellidoMaterno}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado == 'RE'}"
+												value="#{item.medicoAuditor.nombre} #{item.medicoAuditor.apellidoPaterno} #{item.medicoAuditor.apellidoMaterno}" /></span>
+									</p:column>
+									<p:column width="17%" headerText="Entidad"
+										filterBy="#{item.empresa.descripcion}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado == 'PE'}"
+												value="#{item.empresa.descripcion} - #{item.empresa.telefono}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.estado == 'AE'}"
+												value="#{item.empresa.descripcion} - #{item.empresa.telefono}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado == 'NR'}"
+												value="#{item.empresa.descripcion} - #{item.empresa.telefono}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado == 'RE'}"
+												value="#{item.empresa.descripcion} - #{item.empresa.telefono}" /></span>
+									</p:column>
+									<p:column width="17%" headerText="Destino"
+										filterBy="#{item.destino.descripcion}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado == 'PE'}"
+												value="#{item.destino.descripcion} - #{item.destino.ciudad.nombre}" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.estado == 'AE'}"
+												value="#{item.destino.descripcion} - #{item.destino.ciudad.nombre}" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado == 'NR'}"
+												value="#{item.destino.descripcion} - #{item.destino.ciudad.nombre}" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado == 'RE'}"
+												value="#{item.destino.descripcion} - #{item.destino.ciudad.nombre}" /></span>
+									</p:column>
+									<p:column width="10%" headerText="Estado"
+										filterBy="#{item.estado}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado=='PE'}" value="Pendiente" /></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.estado=='AE'}" value="Aprobada y Enviada" /></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado=='NR'}" value="Retrasada" /></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado=='RE'}" value="Terminada" /></span>
+									</p:column>
+									<p:column width="11%" headerText="Fecha Registro"
+										filterBy="#{item.fechaRegistro}">
+										<span style="color: orange"><h:outputText
+												rendered="#{item.estado == 'PE'}"
+												value="#{item.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText></span>
+										<span style="color: blue"><h:outputText
+												rendered="#{item.estado == 'AE'}"
+												value="#{item.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText></span>
+										<span style="color: red"><h:outputText
+												rendered="#{item.estado == 'NR'}"
+												value="#{item.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText></span>
+										<span style="color: green"><h:outputText
+												rendered="#{item.estado == 'RE'}"
+												value="#{item.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText></span>
+									</p:column>
+									<f:facet name="footer">
+										<h:outputText
+											value="#{desgOrdenServicioAprobacionController.listaDesgOrdenServicio.size()} Registros en Total" />
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</div>
+					</ui:fragment>
+				</div>
+			</div>
+
+			<div class="Container0 Responsive100 TexAlLeft">
+				<p:dialog id="dialog1"
+					header="REGISTRO DE TAREA DE ORDEN DE SERVICIO"
+					widgetVar="dlgTarea" responsive="true" modal="true"
+					resizable="false" closable="false" appendTo="@(content)"
+					showEffect="clip" hideEffect="clip" width="600px">
+					<h:form id="formDlg001">
+						<p:focus for="nombreTarea" />
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<div
+								class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="codigo" value="Codigo de Orden:" />
+							</div>
+							<div class="Container60 Responsive50">
+								<p:inputText id="codigo" required="true"
+									requiredMessage="El codigo es un campo obligatorio."
+									value="#{desgOrdenServicioAprobacionController.desgOrdenServicio.codigo}">
+									<p:ajax update="codigo" />
+								</p:inputText>
+								<p:message for="codigo" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<div
+								class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="cliente" value="Cliente:" />
+							</div>
+							<div class="Container60 Responsive50">
+								<p:inputText id="cliente" required="true"
+									requiredMessage="El cliente es un campo obligatorio."
+									value="#{desgOrdenServicioAprobacionController.desgOrdenServicio.cliente.nombre} #{desgOrdenServicioAprobacionController.desgOrdenServicio.cliente.apellidoPaterno} #{desgOrdenServicioAprobacionController.desgOrdenServicio.cliente.apellidoMaterno}">
+									<p:ajax update="cliente" />
+								</p:inputText>
+								<p:message for="cliente" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<div
+								class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="tipoTarea" value="Clase de Tarea:" />
+							</div>
+							<div class="Container60 Responsive50">
+								<p:autoComplete id="tipoTarea"
+									value="#{desgOrdenServicioAprobacionController.tarea.tipoTarea}"
+									completeMethod="#{desgOrdenServicioAprobacionController.onCompleteTipoTarea}"
+									converter="tipoTareaConverter" minQueryLength="1"
+									forceSelection="true" var="_var" itemLabel="#{_var.nombre}"
+									itemValue="#{_var}"
+									placeholder="Escriba el criterio de busqueda" maxResults="10"
+									dropdown="true">
+									<p:ajax event="itemSelect" immediate="true" update="tipoTarea"
+										listener="#{desgOrdenServicioAprobacionController.onSelectTipoTareaClick}" />
+									<p:column>
+										<h:outputText value="#{_var.nombre}" />
+									</p:column>
+								</p:autoComplete>
+								<p:message for="tipoTarea" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:outputLabel for="nombreTarea" value="Tarea:" />
+							</div>
+							<div class="Container20 Responsive100 TexAlLeft">
+								<p:autoComplete id="nombreTarea"
+									value="#{desgOrdenServicioAprobacionController.tarea.nombreTarea}"
+									completeMethod="#{desgOrdenServicioAprobacionController.onCompleteNombreTarea}"
+									converter="nombreTareaConverter" minQueryLength="1"
+									forceSelection="true" var="_var" itemLabel="#{_var.nombre}"
+									itemValue="#{_var}"
+									placeholder="Escriba el criterio de busqueda" maxResults="10"
+									dropdown="true">
+									<p:ajax event="itemSelect" immediate="true"
+										update="nombreTarea"
+										listener="#{desgOrdenServicioAprobacionController.onSelectNombreTareaClick}" />
+									<p:column>
+										<h:outputText value="#{_var.nombre}" />
+									</p:column>
+								</p:autoComplete>
+								<p:message for="tipoTarea" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<div
+								class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+								<p:outputLabel for="fechaPlazo" value="Fecha Plazo:" />
+							</div>
+							<div class="Container20 Responsive50 TexAlRight">
+								<p:calendar id="fechaPlazo" navigator="true" required="true"
+									requiredMessage="Ingrese la fecha plazo de la orden por favor."
+									effect="fold"
+									value="#{desgOrdenServicioAprobacionController.tarea.fechaPlazo}"
+									pattern="dd-MM-yyyy" mask="true">
+									<p:ajax event="change" update="fechaPlazo" />
+									<p:ajax event="dateSelect" update="fechaPlazo" />
+								</p:calendar>
+								<p:message for="fechaPlazo" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container100 Responsive100 TexAlLeft">
+							<div
+								class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80">
+								<p:outputLabel for="mensaje" value="Mensaje:" />
+							</div>
+							<div class="Container60 Responsive50">
+								<p:inputTextarea id="mensaje" required="true"
+									style="width:400px"
+									requiredMessage="El mensaje es un campo obligatorio."
+									value="#{desgOrdenServicioAprobacionController.mensaje.mensaje}">
+									<p:ajax update="mensaje" />
+								</p:inputTextarea>
+								<p:message for="mensaje" display="tooltip" />
+							</div>
+						</div>
+
+						<div class="Container50 Responsive100 TexAlLeft">
+
+							<div class="Container50 Responsive100 TexAlLeft">
+								<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+									styleClass="Fs14 White OrangeButton"
+									oncomplete="PF('dlgTarea').hide(); window.location.reload();">
+									<p:ajax update="form001"
+										listener="#{desgOrdenServicioAprobacionController.initNew()}" />
+								</p:commandButton>
+							</div>
+							<div class="Container50 Responsive100 TexAlLeft">
+								<p:commandButton icon="fa fa-check" value="Guardar"
+									styleClass="Fs14 White GreenButton">
+									<p:ajax update="form001"
+										listener="#{desgOrdenServicioAprobacionController.registrar()}" />
+								</p:commandButton>
+							</div>
+						</div>
+					</h:form>
+				</p:dialog>
+				<!-- END DIALOG -->
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

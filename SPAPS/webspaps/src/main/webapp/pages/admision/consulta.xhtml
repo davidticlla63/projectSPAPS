@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<title>Consulta</title>
+		<f:event listener="#{consultaController.initConversation}"
+			type="preRenderView"></f:event>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form001">
+			<div class="Container100">
+
+				<!-- top buttons-->
+				<div class="Container100">
+					<div class="Card">
+						<div class="Container75 Responsive100 TexAlLeft">
+
+							<p:commandButton type="button" icon="fa fa-arrow-left"
+								value="Cancelar" styleClass="Fs14 White OrangeButton">
+								<p:ajax update="form001"
+									listener="#{consultaController.initNew()}" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-floppy-o"
+								styleClass="Fs14 White GreenButton" value="Registrar">
+								<p:ajax update="form001"
+									listener="#{consultaController.registrar()}" />
+							</p:commandButton>
+						</div>
+						<div class="Container25 Responsive100 TexAlRight">
+							<p:breadCrumb>
+								<p:menuitem value="."
+									url="#{request.contextPath}/dashboard.xhtml" />
+								<p:menuitem value="Seguridad"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+								<p:menuitem value="Pais"
+									url="#{request.contextPath}/pages/security/user.xhtml" />
+							</p:breadCrumb>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- contenedor registro  -->
+				<div class="Container100 NoIndent Flex FlexWrap">
+					<ui:fragment>
+
+						<div class="Container100 Responsive100 Flex">
+							<div class="Card">
+								<div class="CardBigTopic">INFORMACIÓN DE CONSULTA</div>
+								<div class="SeparatorFull"></div>
+								<div class="Container100 Responsive100 TexAlLeft">
+									<p:focus for="tipoBusqueda" />
+									<div class="Container60 Responsive100 TexAlLeft">
+										<div class="Container20 Responsive100 TexAlLef">
+											<p:outputLabel for="tipoBusqueda" value="Buscar por:" />
+										</div>
+										<div class="Container80 Responsive100 TexAlLef">
+											<p:selectOneRadio id="tipoBusqueda" style="align:left;"
+												immediate="true" value="#{consultaController.tipoBusqueda}">
+												<p:ajax update="tipoBusqueda, busqueda" />
+												<f:selectItem itemLabel="Nombre de Paciente" itemValue="NP" />
+												<f:selectItem itemLabel="Codigo de Paciente" itemValue="CP" />
+												<f:selectItem itemLabel="Codigo de Historia Clinica"
+													itemValue="CH" />
+												<f:selectItem itemLabel="Documento de Identidad"
+													itemValue="DI" />
+											</p:selectOneRadio>
+											<p:message for="tipoBusqueda" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container60 Responsive100 ui-fluid TexAlLeft">
+										<div
+											class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+											<p:outputLabel for="busqueda" value="Paciente:" />
+										</div>
+										<div class="Container50 Responsive50 TexAlRight">
+											<p:autoComplete id="busqueda"
+												value="#{consultaController.paciente}"
+												completeMethod="#{consultaController.onComplete}"
+												converter="pacienteConverter" minQueryLength="1"
+												forceSelection="true" var="_var"
+												itemLabel="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}"
+												itemValue="#{_var}"
+												placeholder="Escriba el criterio de busqueda"
+												maxResults="10" dropdown="true">
+												<p:ajax event="itemSelect" update="form001"
+													listener="#{consultaController.onSelectPacienteClick}" />
+												<p:column>
+													<h:outputText
+														value="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}" />
+												</p:column>
+											</p:autoComplete>
+											<p:message for="busqueda" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container60 Responsive100 TexAlLeft">
+										<div class="Container20 Responsive100 TexAlLef">
+											<p:outputLabel for="tipoConsulta" value="Tipo de Consulta:" />
+										</div>
+										<div class="Container50 Responsive100 TexAlLef">
+											<p:selectOneMenu id="tipoConsulta" style="" immediate="true"
+												value="#{consultaController.tipoConsulta}">
+												<p:ajax update="tipoConsulta" />
+												<f:selectItem itemLabel="Consulta" itemValue="CO" />
+												<f:selectItem itemLabel="Reconsulta" itemValue="RC" />
+											</p:selectOneMenu>
+											<p:message for="tipoConsulta" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container60 Responsive100 TexAlLeft">
+										<div class="Container20 Responsive100 TexAlLef">
+											<p:outputLabel for="tipoAtencion" value="Tipo de Atencion:" />
+										</div>
+										<div class="Container80 Responsive100 TexAlLef">
+											<p:selectOneRadio id="tipoAtencion" immediate="true"
+												valueChangeListener="#{consultaController.cargarSeguros}">
+												<f:selectItem itemLabel="Particular" itemValue="P" />
+												<f:selectItem itemLabel="Seguro" itemValue="S" />
+												<f:selectItem itemLabel="Empresa" itemValue="E" />
+												<p:ajax update="form001" />
+											</p:selectOneRadio>
+											<p:message for="tipoAtencion" display="tooltip" />
+										</div>
+									</div>
+
+									<div class="Container100 Responsive100 TexAlLef">
+										<div class="Container40 Responsive100 TexAlLef">
+											<div class="Container40 Responsive100 TexAlLef">
+												<p:outputLabel for="seguros" value="Seguro:"
+													rendered="#{consultaController.tipoAtencion == 'S'}" />
+											</div>
+											<div class="Container60 Responsive100 TexAlLef">
+												<p:selectOneMenu id="seguros" immediate="true"
+													rendered="#{consultaController.tipoAtencion == 'S'}"
+													valueChangeListener="#{consultaController.selectSeguro}">
+													<p:ajax update="seguros" />
+													<f:selectItem itemLabel="Seleccione el seguro" itemValue=""
+														noSelectionOption="true" />
+													<f:selectItems value="#{consultaController.planesSeguros}"
+														var="var"
+														itemLabel="#{var.planSeguro.seguro.nombre} - #{var.planSeguro.descripcion}"
+														itemValue="#{var.id}" />
+												</p:selectOneMenu>
+												<p:message for="seguros" display="tooltip" />
+											</div>
+										</div>
+									</div>
+
+									<div class="Container100 Responsive100 TexAlLef">
+										<div class="Container40 Responsive100 TexAlLef">
+											<div class="Container40 Responsive100 TexAlLef">
+												<p:outputLabel for="empresas" value="Empresa:"
+													rendered="#{consultaController.tipoAtencion == 'E'}" />
+											</div>
+											<div class="Container60 Responsive100 TexAlLef">
+												<p:selectOneMenu id="empresas" immediate="true"
+													rendered="#{consultaController.tipoAtencion == 'E'}"
+													valueChangeListener="#{consultaController.selectEmpresa}">
+													<p:ajax update="empresas" />
+													<f:selectItem itemLabel="Seleccione la empresa"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems value="#{consultaController.empresas}"
+														var="var" itemLabel="#{var.empresa.descripcion}"
+														itemValue="#{var.empresa.id}" />
+												</p:selectOneMenu>
+												<p:message for="empresas" display="tooltip" />
+											</div>
+										</div>
+									</div>
+
+									<div class="Container100 Responsive100 TexAlLef">
+										<div class="Container40 Responsive100 TexAlLef">
+											<div class="Container40 Responsive100 TexAlLef">
+												<p:outputLabel for="ordenes" value="Orden de Servicio:"
+													rendered="#{consultaController.tipoAtencion == 'E'}" />
+											</div>
+											<div class="Container60 Responsive100 TexAlLef">
+												<p:selectOneMenu id="ordenes" immediate="true"
+													rendered="#{consultaController.tipoAtencion == 'E'}"
+													valueChangeListener="#{consultaController.selectOrdenServicio}">
+													<p:ajax update="ordenes" />
+													<f:selectItem itemLabel="Seleccione la orden de servicio"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems
+														value="#{consultaController.ordenesServicios}" var="var"
+														itemLabel="#{var.codigo}" itemValue="#{var.id}" />
+												</p:selectOneMenu>
+												<p:message for="ordenes" display="tooltip" />
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</ui:fragment>
+
+				</div>
+			</div>
+
+			<!-- START GROWL -->
+			<p:growl id="msgs1" showDetail="true" />
+			<!-- END GROWL -->
+		</h:form>
+	</ui:define>
+
+</ui:composition>

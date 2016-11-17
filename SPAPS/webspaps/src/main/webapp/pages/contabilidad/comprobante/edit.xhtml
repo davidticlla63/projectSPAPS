@@ -1,0 +1,217 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">REGISTRO COMPROBANTE</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+				<!-- 1era fila -->
+				<div class="row">
+					<div class="Responsive100 Container20 ">
+						Nro. Comprobante
+						<p:inputText
+							value="#{comprobanteController.comprobante.correlativo}"
+							style=" color: #555555; background-image: none; padding:5px 10px;"
+							styleClass="input-sm form-control" readonly="true">
+						</p:inputText>
+					</div>
+
+					<div class="Responsive100 Container20 ">
+						Tipo
+						<p:selectOneMenu id="tipoComprobante"
+							converter="tipoComprobanteConverter"
+							value="#{comprobanteController.tipoComprobante}">
+							<p:ajax update="form001" event="valueChange"
+								listener="#{comprobanteController.changeOneMenuTipoComprobante()}" />
+							<f:selectItems value="#{sessionContable.listTipoComprobante}"
+								var="item" itemLabel="#{item.nombre}" itemValue="#{item}" />
+						</p:selectOneMenu>
+					</div>
+					<div class="Responsive100 Container20 ">
+						Fecha
+						<p:calendar pattern="dd/MM/yyyy" id="fechaComp"
+							value="#{comprobanteController.comprobante.fecha}"
+							onkeypress="return permiteKey(event, 'none')"
+							styleClass="myWid100" locale="es">
+							<p:ajax event="dateSelect" />
+						</p:calendar>
+					</div>
+					<div class="Responsive100 Container20 ">
+						Tipo Cambio
+						<p:inputText id="tipoCambio"
+							value="#{comprobanteController.tipoCambio.unidad}"
+							style=" color: #555555; background-image: none; padding:5px 10px;"
+							styleClass="input-sm form-control" readonly="true">
+						</p:inputText>
+
+					</div>
+					<div class="Responsive100 Container20 ">
+						Moneda
+						<p:selectOneMenu id="monedaEmpresa"
+							converter="monedaEmpresaConverter"
+							value="#{comprobanteController.monedaEmpresa}">
+							<p:ajax update="form001" event="valueChange"
+								listener="#{comprobanteController.changeOneMenuMonedaEmpresa()}" />
+							<f:selectItems value="#{sessionContable.listMonedaEmpresa}"
+								var="item" itemLabel="#{item.moneda.nombre}" itemValue="#{item}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<!-- 2da fila -->
+				<div class="row">
+					<div class="Responsive100 Container60 ">
+						Glosa
+						<p:inputTextarea
+							value="#{comprobanteController.comprobante.glosa}"
+							style=" color: #555555; background-image: none; text-transform: uppercase; padding:5px 10px;"
+							styleClass="input-sm form-control" required="true"
+							requiredMessage="Glosa es requerido">
+							<p:ajax event="change" update="glosaLineaContable" listener="#{comprobanteController.actualizarGlosa()}"/>
+						</p:inputTextarea>
+					</div>
+					<div class="Responsive100 Container20 ">
+						<p:outputLabel value="#{comprobanteController.arrayNombrePersona[0]}" rendered="#{comprobanteController.tipoComprobante.nombre.equals('INGRESO')}"/>
+						<p:outputLabel value="#{comprobanteController.arrayNombrePersona[1]}" rendered="#{comprobanteController.tipoComprobante.nombre.equals('EGRESO')}"/>
+						<p:outputLabel value="#{comprobanteController.arrayNombrePersona[2]}" rendered="#{comprobanteController.tipoComprobante.nombre.equals('TRASPASO')}"/>
+						<p:outputLabel value="#{comprobanteController.arrayNombrePersona[3]}" rendered="#{comprobanteController.tipoComprobante.nombre.equals('AJUSTE')}"/>
+						<p:inputText value="#{comprobanteController.comprobante.nombre}"
+							required="true"
+							requiredMessage="Agregue un nombre">
+							<p:ajax event="change" />
+						</p:inputText>
+					</div>
+					<div class="Responsive100 Container20 ">
+						Sucursal
+						<p:selectOneMenu id="sucursal" styleClass="input-sm form-control" rendered="false"
+							value="#{comprobanteController.sucursal.id}">
+							<p:ajax update="sucursal" event="valueChange" />
+							<f:selectItems var="item" itemLabel="#{item.nombre}"
+								itemValue="#{item.id}" value="#{sessionMain.listSucursal}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<br />
+				<div class="SeparatorFull"></div>
+				<!-- BUTTON AGREGAR LINEA CONTABLE -->
+				<ui:include src="#{comprobanteController.currentTipoComprobante}" />
+				<br />
+				<!-- DATA TABLE LINEAS CONTABLES -->
+				<div class="row">
+					<div class="Responsive100 Container100 ">
+						<p:dataTable id="dataTableAsiento" var="var"
+							value="#{comprobanteController.listEDAsiento}" reflow="true"
+							emptyMessage="Agregue nuevas Cuentas."
+							style="font-size: 12px !important; line-height: 1.33846154 !important; font-family: sans-serif !important;"
+							rowKey="#{var.id}">
+							<f:facet name="header">
+           								Cuentas Agregadas
+       								</f:facet>
+							<p:column headerText="Código" width="17%">
+								<h:outputText value="#{var.cuenta.codigoAuxiliar}" />
+							</p:column>
+							<p:column headerText="Cuenta">
+								<h:outputText value="#{var.cuenta.descripcion}" />
+							</p:column>
+							<p:column headerText="C. Costo">
+								<h:outputText value="#{var.centroCosto.nombre}" />
+							</p:column>
+							<p:column headerText="Glosa">
+								<h:outputText value="#{var.glosa}" />
+							</p:column>
+							<p:column headerText="Debe" width="10%"
+								style="background-color: #FBFCFF;">
+								<h:outputText value="#{var.debeNacional}"
+									rendered="#{comprobanteController.verificarTipoMoneda('NACIONAL')}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</h:outputText>
+								<h:outputText value="#{var.debeExtranjero}"
+									rendered="#{comprobanteController.verificarTipoMoneda('EXTRANJERA')}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Haber" width="10%"
+								style="background-color: #FBFCFF;">
+								<h:outputText value="#{var.haberNacional}"
+									rendered="#{comprobanteController.verificarTipoMoneda('NACIONAL')}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</h:outputText>
+								<h:outputText value="#{var.haberExtranjero}"
+									rendered="#{comprobanteController.verificarTipoMoneda('EXTRANJERA')}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Nº Cheque" width="8%" rendered="false">
+								<h:outputText value="#{var.numeroCheque}" />
+							</p:column>
+							<p:column headerText="Nº factura" width="8%" rendered="false">
+								<h:outputText value="#{var.numeroFactura}" />
+							</p:column>
+							<p:column width="10%" headerText="Acción "
+								style="text-align:center;">
+								<p:commandButton icon="fa fa-edit"
+									styleClass="Fs14 White BlueButton" />
+								<p:commandButton icon="fa fa-trash-o"
+									styleClass="Fs14 White RedButton" update="form001" >
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+				<br />
+				<!-- TOTALES -->
+				<div class="row">
+					<div class="Responsive100 Container50 ">#{"&#160;"}</div>
+					<div class="Responsive100 Container10 ">TOTAL</div>
+					<div class="Responsive100 Container20 ">
+						Debe
+						<p:inputText
+							rendered="#{comprobanteController.verificarTipoMoneda('NACIONAL')}"
+							value="#{comprobanteController.comprobante.importeTotalDebeNacional}"
+							style=" color: #555555; background-image: none; padding:5px 10px;"
+							styleClass="input-lg form-control" readonly="true">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</p:inputText>
+						<p:inputText
+							rendered="#{comprobanteController.verificarTipoMoneda('EXTRANJERA')}"
+							value="#{comprobanteController.comprobante.importeTotalDebeExtranjero}"
+							style=" color: #555555; background-image: none; padding:5px 10px;"
+							styleClass="input-lg form-control" readonly="true">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</p:inputText>
+					</div>
+					<div class="Responsive100 Container20 ">
+						Haber
+						<p:inputText
+							rendered="#{comprobanteController.verificarTipoMoneda('NACIONAL')}"
+							value="#{comprobanteController.comprobante.importeTotalHaberNacional}"
+							style=" color: #555555; background-image: none; padding:5px 10px;"
+							styleClass="input-lg form-control" readonly="true">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</p:inputText>
+						<p:inputText
+							rendered="#{comprobanteController.verificarTipoMoneda('EXTRANJERA')}"
+							value="#{comprobanteController.comprobante.importeTotalHaberExtranjero}"
+							style=" color: #555555; background-image: none; padding:5px 10px;"
+							styleClass="input-lg form-control" readonly="true">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</p:inputText>
+					</div>
+				</div>
+			</div>
+			<!-- END ui-fluid -->
+		</div>
+	</div>
+</ui:composition>

@@ -1,0 +1,186 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">LIBRO DIARIO</div>
+			<div class="SeparatorFull"></div>
+			<div class="Responsive100 Container25 ">
+				<p:outputLabel for="selectedfecha" value="FILTRAR POR FECHA: " />
+				<p:selectOneRadio id="selectedfecha"
+					value="#{libroDiarioController.filtroFecha}" layout="grid"
+					columns="1">
+					<p:ajax event="valueChange" update="form001" />
+					<f:selectItem itemLabel="POR FECHAS" itemValue="FECHAS" />
+					<f:selectItem itemLabel="POR PERIODO" itemValue="PERIODO" />
+				</p:selectOneRadio>
+			</div>
+			<div class="Responsive100 Container25 ">
+				<p:outputLabel for="grid01" value="#{' . '}"
+					rendered="#{libroDiarioController.filtroFecha == 'FECHAS'}" />
+				<h:panelGrid id="grid01" columns="2"
+					rendered="#{libroDiarioController.filtroFecha == 'FECHAS'}">
+					<p:outputLabel for="fechaInicial" value="Fecha Inicial" />
+					<p:calendar id="fechaInicial"
+						value="#{libroDiarioController.fechaIni}" locale="es"
+						styleClass="myWid100" required="true"
+						requiredMessage="Fecha requerido" pattern="dd/MM/yyyy">
+						<p:ajax event="dateSelect" />
+					</p:calendar>
+
+					<p:outputLabel for="fechaFinal" value="Fecha Final" />
+					<p:calendar id="fechaFinal"
+						value="#{libroDiarioController.fechaFin}" locale="es"
+						styleClass="myWid100" required="true"
+						requiredMessage="Fecha requerido" pattern="dd/MM/yyyy">
+						<p:ajax event="dateSelect" />
+					</p:calendar>
+				</h:panelGrid>
+				<h:panelGrid id="grid02" columns="2"
+					rendered="#{libroDiarioController.filtroFecha == 'PERIODO'}">
+					<p:outputLabel for="tipoPeriodo" value="." />
+					<p:selectOneMenu id="tipoPeriodo"
+						value="#{libroDiarioController.mes}">
+						<p:ajax update="form001" event="valueChange" />
+						<f:selectItem itemLabel="ENERO" itemValue="1" />
+						<f:selectItem itemLabel="FEBRERO" itemValue="2" />
+						<f:selectItem itemLabel="MARZO" itemValue="3" />
+						<f:selectItem itemLabel="ABRIL" itemValue="4" />
+						<f:selectItem itemLabel="MAYO" itemValue="5" />
+						<f:selectItem itemLabel="JUNIO" itemValue="6" />
+						<f:selectItem itemLabel="JULIO" itemValue="7" />
+						<f:selectItem itemLabel="AGOSTO" itemValue="8" />
+						<f:selectItem itemLabel="SEPTIEMBRE" itemValue="9" />
+						<f:selectItem itemLabel="OCTUBRE" itemValue="10" />
+						<f:selectItem itemLabel="NOVIEMBRE" itemValue="11" />
+						<f:selectItem itemLabel="DICIEMBRE" itemValue="12" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</div>
+			<div class="Responsive100 Container25">
+				<p:outputLabel for="grid03" value="#{' . '}" />
+				<h:panelGrid id="grid03" columns="2">
+					<p:outputLabel value="Moneda" />
+					<p:selectOneMenu id="monedaEmpresa"
+						converter="monedaEmpresaConverter"
+						value="#{libroDiarioController.monedaEmpresa}">
+						<p:ajax update="form001" event="valueChange"
+							listener="#{libroDiarioController.changeOneMenuMonedaEmpresa()}" />
+						<f:selectItems value="#{sessionContable.listMonedaEmpresa}"
+							var="item" itemLabel="#{item.moneda.nombre}" itemValue="#{item}" />
+					</p:selectOneMenu>
+					</h:panelGrid>
+			</div>
+			<div class="Responsive100 Container25"></div>
+
+			<div class="Container100 ui-fluid">
+				<p:dataTable id="dataTableComprobante" var="item"
+					widgetVar="comprobanteTable" paginator="true"
+					value="#{libroDiarioController.listLibroDiario}" reflow="true"
+					emptyMessage="No se encontraron comprobantes."
+					rowKey="#{item.lineaContable.id}">
+
+					<p:column width="7%" headerText="Número"
+						filterBy="#{item.lineaContable.comprobante.correlativo}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText
+							value="#{item.lineaContable.comprobante.correlativo}"
+							rendered="#{ ! item.yaSeMostro}" />
+					</p:column>
+
+					<p:column width="6%" headerText="Fecha"
+						filterBy="#{item.lineaContable.fecha}" priority="2"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.lineaContable.fecha}"
+							rendered="#{ ! item.yaSeMostro}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column width="6%" headerText="T. Cambio"
+						filterBy="#{item.lineaContable.comprobante.tipoCambio}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.lineaContable.comprobante.tipoCambio}"
+							rendered="#{ ! item.yaSeMostro}">
+						</h:outputText>
+					</p:column>
+
+					<p:column width="11%" headerText="Nª Cuenta"
+						filterBy="#{item.lineaContable.planCuenta.codigoAuxiliar}"
+						filterStyle="width: 100%; height:25px;" style="text-align:left;">
+						<h:outputText
+							value="#{item.lineaContable.planCuenta.codigoAuxiliar}">
+						</h:outputText>
+					</p:column>
+
+					<p:column width="10%" headerText="Titulo Cuenta"
+						filterBy="#{item.lineaContable.planCuenta.descripcion}"
+						filterStyle="width: 100%; height:25px;" style="text-align:left;">
+						<h:outputText value="#{item.lineaContable.planCuenta.descripcion}">
+						</h:outputText>
+					</p:column>
+
+					<p:column width="15%" headerText="Glosa"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;"
+						filterBy="#{item.lineaContable.glosa}">
+						<h:outputText value="#{item.lineaContable.glosa}">
+						</h:outputText>
+					</p:column>
+
+					<p:column width="7%" headerText="Debe"
+						filterBy="#{item.lineaContable.debeNacional}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.lineaContable.debeNacional}"
+							rendered="#{libroDiarioController.verificarTipoMoneda('NACIONAL')}">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</h:outputText>
+						<h:outputText value="#{item.lineaContable.debeExtranjero}"
+							rendered="#{libroDiarioController.verificarTipoMoneda('EXTRANJERA')}">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</h:outputText>
+					</p:column>
+
+					<p:column width="7%" headerText="Haber"
+						filterBy="#{item.lineaContable.haberNacional}"
+						filterStyle="width: 100%; height:25px;" style="text-align:center;">
+						<h:outputText value="#{item.lineaContable.haberNacional}"
+							rendered="#{libroDiarioController.verificarTipoMoneda('NACIONAL')}">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</h:outputText>
+						<h:outputText value="#{item.lineaContable.haberExtranjero}"
+							rendered="#{libroDiarioController.verificarTipoMoneda('EXTRANJERA')}">
+							<f:convertNumber type="number" groupingUsed="true"
+								minFractionDigits="2" pattern="#0.00" />
+						</h:outputText>
+					</p:column>
+					
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column colspan="6" style="text-align:right"
+								footerText="Totals:" />
+								
+							<p:column headerText="1" />
+							
+							<p:column footerText="#{libroDiarioController.totalHaber}" />
+						</p:row>
+					</p:columnGroup>
+
+
+					<f:facet name="footer">
+						<h:outputText
+							value="#{libroDiarioController.listLibroDiario.size()} Registros en Total" />
+					</f:facet>
+
+				</p:dataTable>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

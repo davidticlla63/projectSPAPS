@@ -1,0 +1,196 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container70 Responsive100 TexAlLeft">
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{permissionController.seleccionado}" value="Cancelar"
+							styleClass="Fs14 White OrangeButton" update="form001"
+							immediate="true"
+							actionListener="#{permissionController.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{permissionController.seleccionado}"
+							value="Registrar Permisos" styleClass="Fs14 White GreenButton"
+							update="form001"
+							actionListener="#{permissionController.registrarPermiso()}">
+						</p:commandButton>
+
+					</div>
+					<div class="Container30 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/dashboard.xhtml" />
+							<p:menuitem value="Seguridad"
+								url="/pages/security/permission.xhtml" />
+							<p:menuitem value="Permisos"
+								url="/pages/security/permission.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<div class="Container60 Responsive100 Flex">
+					<div class="Card">
+						<div class="CardBigTopic Container90 Responsive100 TexAlLeft">GRUPOS
+							DE USUARIO</div>
+						<div class="CardBigTopic Container10 Responsive100 TexAlRight"
+							style="padding-top: 0px; padding-bottom: 1px; height: 25px;">
+							<p:commandButton icon="fa fa-plus"
+								styleClass="Fs14 White GreenButton" immediate="true"
+								actionListener="#{permissionController.actionNuevoRol()}" />
+						</div>
+
+						<div class="SeparatorFull"></div>
+						<div class="Container100 ui-fluid">
+							<p:dataTable id="singleDT1" var="var"
+								value="#{permissionController.listRol}" selectionMode="single"
+								selection="#{permissionController.rol}" rowKey="#{var.id}"
+								rows="10" paginator="true"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								emptyMessage="No se encontraron registros." reflow="true">
+								<f:facet name="header">
+									Seleccione un grupo de usuario para ver sus permisos
+								</f:facet>
+
+								<p:ajax event="rowSelect" update="form001"
+									listener="#{permissionController.onRowSelect}" />
+
+								<p:column width="18%" headerText="Nombre">
+									<h:outputText value="#{var.nombre}" />
+								</p:column>
+								<p:column width="20%" headerText="Descripcion">
+									<h:outputText value="#{var.descripcion}" />
+								</p:column>
+								<p:column width="9%" headerText="Estado">
+									<p:outputLabel styleClass="FontLatoBold Green"
+										rendered="#{var.estado=='AC'}" value="Activo"></p:outputLabel>
+									<p:outputLabel styleClass="FontLatoBold Red"
+										rendered="#{var.estado=='IN'}" value="Inactivo"></p:outputLabel>
+								</p:column>
+								<p:column width="10%" headerText="Fecha Registro">
+									<h:outputText value="#{var.fechaRegistro}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column width="12%" headerText="Acción">
+									<p:commandButton icon="fa fa-edit"
+										styleClass="Fs14 White BlueButton"
+										actionListener="#{permissionController.actionMdificarRol(var.id)}" />
+									<p:commandButton icon="fa fa-trash-o"
+										styleClass="Fs14 White RedButton" update="form001"
+										actionListener="#{permissionController.eliminarRol(var.id)}">
+										<p:confirm
+											header="¿ESTA SEGURO DE ELIMINAR ESTE GRUPO USUARIO ?"
+											message="Tenga en cuenta que será eliminado definitivamente del sistema."
+											icon="ui-icon-alert" />
+									</p:commandButton>
+								</p:column>
+								<f:facet name="footer">
+									<h:outputText
+										value="#{permissionController.listRol.size()} Registros en Total" />
+								</f:facet>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+				<div class="Container40 Responsive100 Flex">
+					<div class="Card">
+						<div class="CardBigTopic">PERMISOS ASOCIADOS AL GRUPO DE
+							USUARIO</div>
+						<div class="SeparatorFull"></div>
+						<div class="Container100 ui-fluid">
+							<p:tree id="permisoTree" value="#{permissionController.root}"
+								var="node"
+								selectionMode="#{permissionController.selectionModeTreeNode}"
+								style="font-size: 13px !important; padding: 0 0 0 16px !important; width: 100%; font-family: sans-serif !important;"
+								selection="#{permissionController.selectedNodes}">
+								<p:ajax event="select" update="form001" />
+								<p:ajax event="unselect" update="form001" />
+
+								<p:treeNode expandedIcon="ui-icon-folder-open"
+									collapsedIcon="ui-icon-folder-collapsed">
+									<h:outputText value="#{node}" />
+								</p:treeNode>
+
+								<p:treeNode type="1" icon="ui-icon-document">
+									<h:outputText value="#{node}" />
+								</p:treeNode>
+
+								<p:treeNode type="2" icon="ui-icon-star">
+									<h:outputText value="#{node}" />
+								</p:treeNode>
+
+							</p:tree>
+						</div>
+					</div>
+				</div>
+			</div>
+			<p:growl id="growl" showDetail="true" />
+
+		</h:form>
+
+		<!-- BEGIN DIALOG -->
+		<p:dialog header="INFORMACIÓN GRUPO USUARIO"
+			widgetVar="dlgGrupoUsuario" responsive="true" modal="true"
+			resizable="false" closable="false">
+			<h:form id="formDlg001">
+				<div class="Container100 ui-fluid">
+					<p:panelGrid id="grid1" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" styleClass="ui-panelgrid-blank"
+						layout="grid" style="border:0px !important; background:none;">
+
+						<p:outputLabel for="nombreGrupo" value="Nombre" />
+						<p:inputText id="nombreGrupo" required="true"
+							value="#{permissionController.rol.nombre}">
+							<p:ajax event="change" />
+						</p:inputText>
+
+
+						<p:outputLabel for="descripcionGrupo" value="Descrición" />
+						<p:inputTextarea id="descripcionGrupo" rows="3" required="true"
+							value="#{permissionController.rol.descripcion}">
+							<p:ajax event="change" />
+						</p:inputTextarea>
+
+						<p:outputLabel for="estadosGrupo" value="Estado" />
+						<p:selectOneMenu id="estadosGrupo" style=""
+							value="#{permissionController.rol.estado}">
+							<p:ajax event="valueChange" />
+							<f:selectItem itemLabel="ACTIVO" itemValue="AC" />
+							<f:selectItem itemLabel="INACTIVO" itemValue="IN" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+					<p:panelGrid id="grid2" columns="2" styleClass="ui-panelgrid-blank"
+						layout="grid" style="border:0px !important; background:none;">
+						<p:commandButton icon="fa fa-arrow-left" value="Cancelar"
+							styleClass="Fs14 White OrangeButton" immediate="true"
+							oncomplete="PF('dlgGrupoUsuario').hide()">
+						</p:commandButton>
+						<p:commandButton icon="fa fa-check" value="Aceptar"
+							styleClass="Fs14 White GreenButton" update="formDlg001,form001"
+							actionListener="#{permissionController.registrarOModificarRol()}">
+						</p:commandButton>
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+		<!-- END DIALOG -->
+
+	</ui:define>
+
+</ui:composition>

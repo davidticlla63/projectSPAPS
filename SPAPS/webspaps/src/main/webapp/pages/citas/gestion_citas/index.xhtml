@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputScript name="js/validator.js" library="mbr" />
+		<!-- IMPEDIR QUE EL USUARIO REGRESE A ESTA PAGINA -->
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<h:outputScript name="locale.js" library="js" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/resources/css/style-agenda.css" />
+		<script type="text/javascript">
+			if(history.forward(1)){
+			    location.replace( history.forward(1) );
+			 }
+		</script>
+		<style type="text/css">
+.fc-content {
+	padding: 2px;
+	padding-top: 2px;
+	padding-right: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+}
+
+.fc-time {
+	font-size: 1.20em;
+	white-space: nowrap;
+}
+
+.fc-title {
+	font-size: 1.20em;
+	padding: 0;
+}
+</style>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+
+		<h:form id="form001">
+
+			<!-- top buttons-->
+			<div class="Container100">
+				<div class="Card">
+					<div class="Container75 Responsive100 TexAlLeft">
+						<p:commandButton icon="fa fa-plus" rendered="false"
+							styleClass="Fs14 White GreenButton" value="Nueva Cita"
+							update="form001" immediate="true"
+							actionListener="#{citas2Controller.actionNuevo()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-arrow-left"
+							rendered="#{citas2Controller.seleccionado or citas2Controller.registrar}"
+							styleClass="Fs14 White OrangeButton" value="Cancelar"
+							update="form001" immediate="true"
+							actionListener="#{citas2Controller.actionCancelar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-floppy-o"
+							rendered="#{citas2Controller.registrar}"
+							styleClass="Fs14 White GreenButton" value="Registrar"
+							update="form001" actionListener="#{citas2Controller.registrar()}">
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-edit"
+							rendered="#{citas2Controller.seleccionado}" value="Modificar"
+							styleClass="Fs14 White BlueButton" update="form001"
+							actionListener="#{citas2Controller.actualizar()}">
+						</p:commandButton>
+
+					</div>
+					<div class="Container25 Responsive100 TexAlRight">
+						<p:breadCrumb>
+							<p:menuitem value="." url="/pages/dashboard.xhtml" />
+							<p:menuitem value="Citas"
+								url="/pages/citas/gestion_citas/index.xhtml" />
+							<p:menuitem value="Parametrización"
+								url="/pages/citas/gestion_citas/index.xhtml" />
+						</p:breadCrumb>
+					</div>
+				</div>
+			</div>
+
+			<!-- center boxes -->
+			<div class="Container100 NoIndent Flex FlexWrap">
+				<ui:include src="#{citas2Controller.currentPage}" />
+
+			</div>
+			<p:growl id="growl" showDetail="true" />
+			<ui:include src="/WEB-INF/confirmation.xhtml" />
+		</h:form>
+
+
+	</ui:define>
+
+
+</ui:composition>

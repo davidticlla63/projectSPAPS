@@ -1,0 +1,197 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<!-- center boxes -->
+	<div class="Container100">
+		<div class="Card">
+			<div class="CardBigTopic">INFORMACIÓN CITAS</div>
+			<div class="SeparatorFull"></div>
+			<div class="Container100 ui-fluid">
+
+				<div class="Container80 Responsive100 NoIndent OvHidden ui-fluid">
+					<div class="Container20 Responsive100 TexAlLef">
+						<p:outputLabel for="tipoBusqueda" value="Buscar por:" />
+					</div>
+					<div class="Container70 Responsive100 TexAlLef">
+						<p:selectOneRadio id="tipoBusqueda" style="align:left;"
+							immediate="true" value="#{citas2Controller.tipoBusqueda}">
+							<p:ajax update="tipoBusqueda, busqueda" />
+							<f:selectItem itemLabel="Nombre de Paciente" itemValue="NP" />
+							<f:selectItem itemLabel="Codigo de Paciente" itemValue="CP" />
+							<f:selectItem itemLabel="Codigo de Historia Clinica"
+								itemValue="CH" />
+							<f:selectItem itemLabel="Documento de Identidad" itemValue="DI" />
+						</p:selectOneRadio>
+						<p:message for="tipoBusqueda" display="tooltip" />
+					</div>
+
+					<div
+						class="Container20 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+						<p:outputLabel for="busqueda" value="Paciente:" />
+					</div>
+					<div class="Container30 Responsive50 TexAlRight">
+						<p:autoComplete id="busqueda"
+							value="#{citas2Controller.selectedIndividuo}"
+							completeMethod="#{citas2Controller.onComplete}"
+							converter="pacienteConverter" minQueryLength="1"
+							forceSelection="true" var="_var"
+							itemLabel="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}"
+							itemValue="#{_var}" placeholder="Escriba el criterio de busqueda"
+							maxResults="10" dropdown="true">
+							<p:ajax event="itemSelect" update="form001"
+								listener="#{citas2Controller.onSelectPacienteClick}" />
+							<p:column>
+								<h:outputText
+									value="#{_var.nombre} #{_var.apellidoPaterno} #{_var.apellidoMaterno}" />
+							</p:column>
+						</p:autoComplete>
+						<p:message for="busqueda" display="tooltip" />
+					</div>
+				</div>
+
+				<div class="Container40 Responsive100 NoIndent OvHidden ui-fluid">
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="medico" value="Medico" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="medico" required="true" disabled="true"
+							value="#{citas2Controller.personal.nombre} #{citas2Controller.personal.apellidoPaterno} #{citas2Controller.personal.apellidoMaterno}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="medico" display="tooltip" />
+					</div>
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="nombreEspecialidad" value="Motivo" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:inputText id="nombreEspecialidad" required="false"
+							value="#{citas2Controller.cita.motivo}">
+							<p:ajax event="change" />
+						</p:inputText>
+						<p:message for="nombreEspecialidad" display="tooltip" />
+					</div>
+
+
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80 TexAlLeft">
+						<p:outputLabel for="fechaNacimiento" value="Fecha Hora" />
+					</div>
+					<div class="Container60 Responsive50 TexAlRight">
+						<p:calendar id="fechaNacimiento" required="false" timeZone="GMT+2"
+							value="#{citas2Controller.cita.hora}" pattern="dd/MM/yyyy HH:mm"
+							mask="true" lang="en" />
+						<p:message for="fechaNacimiento" display="tooltip" />
+					</div>
+
+
+					<div
+						class="Container40 Responsive50 FontLatoBold Fs14 Black Opac80">
+						<p:outputLabel for="clase" value="Tipo de Consulta:" />
+					</div>
+					<div class="Container60 Responsive50">
+						<p:selectOneMenu id="clase" style=""
+							value="#{citas2Controller.cita.clase}">
+							<p:ajax event="valueChange" />
+							<f:selectItem itemLabel="Consulta" itemValue="CO" />
+							<f:selectItem itemLabel="Re Consulta" itemValue="RC" />
+						</p:selectOneMenu>
+						<p:message for="clase" display="tooltip" />
+					</div>
+				</div>
+
+				<div class="Container70 Responsive100 NoIndent OvHidden ui-fluid">
+					<div class="Container25 Responsive100 TexAlLef">
+						<p:outputLabel for="tipoAtencion" value="Tipo de Atencion:" />
+					</div>
+					<div class="Container60 Responsive100 TexAlLef">
+						<p:selectOneRadio id="tipoAtencion" immediate="true"
+							valueChangeListener="#{citas2Controller.cargarSeguros}">
+							<f:selectItem itemLabel="Particular" itemValue="P" />
+							<f:selectItem itemLabel="Seguro" itemValue="S" />
+							<f:selectItem itemLabel="Empresa" itemValue="E" />
+							<p:ajax update="form001" />
+						</p:selectOneRadio>
+						<p:message for="tipoAtencion" display="tooltip" />
+					</div>
+				</div>
+
+				<div class="Container100 Responsive100 TexAlLef">
+					<div class="Container40 Responsive100 TexAlLef">
+						<div class="Container40 Responsive100 TexAlLef">
+							<p:outputLabel for="seguros" value="Seguro:"
+								rendered="#{citas2Controller.tipoAtencion == 'S'}" />
+						</div>
+						<div class="Container60 Responsive100 TexAlLef">
+							<p:selectOneMenu id="seguros" immediate="true"
+								rendered="#{citas2Controller.tipoAtencion == 'S'}"
+								valueChangeListener="#{citas2Controller.selectSeguro}">
+								<p:ajax update="seguros" />
+								<f:selectItem itemLabel="Seleccione el seguro" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{citas2Controller.planesSeguros}"
+									var="var"
+									itemLabel="#{var.planSeguro.seguro.nombre} - #{var.planSeguro.descripcion}"
+									itemValue="#{var.id}" />
+							</p:selectOneMenu>
+							<p:message for="seguros" display="tooltip" />
+						</div>
+					</div>
+				</div>
+
+				<div class="Container100 Responsive100 TexAlLef">
+					<div class="Container40 Responsive100 TexAlLef">
+						<div class="Container40 Responsive100 TexAlLef">
+							<p:outputLabel for="empresas" value="Empresa:"
+								rendered="#{citas2Controller.tipoAtencion == 'E'}" />
+						</div>
+						<div class="Container60 Responsive100 TexAlLef">
+							<p:selectOneMenu id="empresas" immediate="true"
+								rendered="#{citas2Controller.tipoAtencion == 'E'}"
+								valueChangeListener="#{citas2Controller.selectEmpresa}">
+								<p:ajax update="empresas" />
+								<f:selectItem itemLabel="Seleccione la empresa" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{citas2Controller.empresas}" var="var"
+									itemLabel="#{var.empresa.descripcion}"
+									itemValue="#{var.empresa.id}" />
+							</p:selectOneMenu>
+							<p:message for="empresas" display="tooltip" />
+						</div>
+					</div>
+				</div>
+
+				<div class="Container100 Responsive100 TexAlLef">
+					<div class="Container40 Responsive100 TexAlLef">
+						<div class="Container40 Responsive100 TexAlLef">
+							<p:outputLabel for="ordenes" value="Orden de Servicio:"
+								rendered="#{citas2Controller.tipoAtencion == 'E'}" />
+						</div>
+						<div class="Container60 Responsive100 TexAlLef">
+							<p:selectOneMenu id="ordenes" immediate="true"
+								rendered="#{citas2Controller.tipoAtencion == 'E'}"
+								valueChangeListener="#{citas2Controller.selectOrdenServicio}">
+								<p:ajax update="ordenes" />
+								<f:selectItem itemLabel="Seleccione la orden de servicio"
+									itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{citas2Controller.ordenesServicios}"
+									var="var" itemLabel="#{var.codigo}" itemValue="#{var.id}" />
+							</p:selectOneMenu>
+							<p:message for="ordenes" display="tooltip" />
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</ui:composition>
